@@ -1,5 +1,6 @@
 .container {
   padding: 0 2rem;
+  @apply dark:bg-slate-700 bg-slate-300;
 }
 
 .main {
