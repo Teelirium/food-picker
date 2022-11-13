@@ -26,21 +26,35 @@ const Login: NextPage = () => {
         <title>Log In</title>
         <meta charSet='utf-8' />
       </Head>
-      <div className='bg-green-200 m-0 p-6 h-screen w-screen'>
-        <form className='flex flex-col gap-2 w-1/3' onSubmit={handleSubmit(onSubmit)}>
-          <label>
-            Логин
-            <input type={"text"} {...register("username")} required />
+      <div className={styles.container}>
+      <div className={styles.schoolName}>
+        <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
+      </div>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+
+          <label className={styles.label}>
+            <p>Логин</p>
+            <div className={styles.inputBorder}>
+              <input type={"text"} {...register("username")} placeholder="Логин" required />
+            </div>
           </label>
-          <label>
-            Пароль
-            <input type={"password"} {...register("password")} required />
+
+          <label className={styles.label}>
+          <p>Пароль</p>
+          <div className={styles.inputBorder}>
+            <input type={"password"} {...register("password")} placeholder="Пароль" required />
+          </div>
           </label>
-          <label>
-            <input type={"checkbox"} {...register("rememberMe")} />
-            Запомнить меня
+
+          <label className={styles.labelRememberMe}>
+            <label className={styles.checkboxLabel}>
+              <input className={styles.checkbox} type={"checkbox"} {...register("rememberMe")} />
+              <span className={styles.customCheckbox}></span>
+            </label>
+            <p>Запомнить меня</p>
           </label>
-          <button className='bg-gray-100'>Войти</button>
+
+          <button className={styles.logInButton}>Войти</button>
         </form>
       </div>
     </>
