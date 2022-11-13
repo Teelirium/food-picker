@@ -1,33 +1,41 @@
 import { NextPage } from "next";
-import styles from '../styles/login.module.css';
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import styles from "../styles/login.module.css";
+import { signInErrors } from "../utils/nextAuthErrors";
 
 type LoginFormData = {
-    username: string;
-    password: string;
-    rememberMe?: boolean;
-}
+  username: string;
+  password: string;
+  rememberMe?: boolean;
+};
 
 const Login: NextPage = () => {
   const { register, handleSubmit } = useForm<LoginFormData>();
   const router = useRouter();
 
-  function onSubmit(data: LoginFormData) {
-    fetch('/api/login', {method: 'POST', body: JSON.stringify(data)})
-    .then(() => router.push('/dashboard'))
-    .catch(() => alert('Неверный логин или пароль'))
-  }
+  const onSubmit = handleSubmit((data: LoginFormData) => {
+    signIn("credentials", { redirect: false, ...data })
+    .then((resp) => {
+      if (resp?.ok) {
+        return router.push("/dashboard");
+      }
+      if (resp?.error) {
+        alert(signInErrors[resp?.error]);
+      }
+    });
+  });
 
   return (
     <>
       <Head>
-        <title>Log In</title>
+        <title>Вход</title>
         <meta charSet='utf-8' />
       </Head>
       <div className='bg-green-200 m-0 p-6 h-screen w-screen'>
-        <form className='flex flex-col gap-2 w-1/3' onSubmit={handleSubmit(onSubmit)}>
+        <form className='flex flex-col gap-2 w-1/3' onSubmit={onSubmit}>
           <label>
             Логин
             <input type={"text"} {...register("username")} required />
