@@ -10,7 +10,8 @@ const Register: NextPage = () => {
 
   const onSubmit = handleSubmit(data => {
     axios.post('/api/auth/register', {user: data})
-    .then(() => console.log("Пользователь зарегистрирован"))
+    .then(resp => console.log("Пользователь зарегистрирован"))
+    .catch(console.log);
   })
 
   return (

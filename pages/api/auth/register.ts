@@ -25,7 +25,7 @@ const handler: NextApiHandler = async (req, res) => {
             })
             break;
         default:
-            break;
+            return res.status(501).send('Not implemented');
       }
       return res.send("OK");
 
