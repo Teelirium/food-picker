@@ -38,7 +38,7 @@ const Login: NextPage = () => {
       <div className={styles.schoolName}>
         <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
       </div>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <form className={styles.form} onSubmit={onSubmit}>
 
           <label className={styles.label}>
             <p>Логин</p>
