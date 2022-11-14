@@ -13,7 +13,6 @@ export type UserFormData = {
 } & UserData;
 
 export type dbUserData = {
-  id: number;
   role?: UserRole;
 } & UserData;
 

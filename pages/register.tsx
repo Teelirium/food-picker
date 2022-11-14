@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
@@ -8,7 +9,8 @@ const Register: NextPage = () => {
   const { register, handleSubmit } = useForm<UserFormData>();
 
   const onSubmit = handleSubmit(data => {
-    alert(JSON.stringify(data))
+    axios.post('/api/auth/register', {user: data})
+    .then(() => console.log("Пользователь зарегистрирован"))
   })
 
   return (
@@ -18,12 +20,12 @@ const Register: NextPage = () => {
       </Head>
       <form className="flex flex-col" onSubmit={onSubmit}>
         <label>
-          Имя
-          <input type={"text"} {...register("name")} required />
-        </label>
-        <label>
           Фамилия
           <input type={"text"} {...register("surname")} required />
+        </label>
+        <label>
+          Имя
+          <input type={"text"} {...register("name")} required />
         </label>
         <label>
           Отчество
@@ -31,11 +33,11 @@ const Register: NextPage = () => {
         </label>
         <label>
           Логин
-          <input type={"text"} {...register("middleName")} required />
+          <input type={"text"} {...register('username')} required />
         </label>
         <label>
           Пароль
-          <input type={"text"} {...register("middleName")} required />
+          <input type={"text"} {...register('password')} required />
         </label>
         <label>
           Роль
