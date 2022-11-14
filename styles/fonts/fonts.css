@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Century Gothic';
+    font-style: normal;
+    font-weight: 400;
+    src: url(centurygothic.ttf)
+}
+
+@font-face {
+    font-family: 'Century Gothic Bold';
+    font-style: normal;
+    font-weight: 400;
+    src: url(centurygothic_bold.ttf)
+}
