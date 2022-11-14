@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Parent {
+  id         Int     @id @default(autoincrement())
+  name       String
+  surname    String
+  middleName String?
+  username   String  @unique
+  password   String
+}
+
+model Teacher {
+  id         Int     @id @default(autoincrement())
+  name       String
+  surname    String
+  middleName String?
+  username   String  @unique
+  password   String
+}
+
+model Worker {
+  id         Int     @id @default(autoincrement())
+  name       String
+  surname    String
+  middleName String?
+  username   String  @unique
+  password   String
+  role       Role    @default(WORKER)
+}
+
+enum Role {
+  WORKER
+  ADMIN
+}

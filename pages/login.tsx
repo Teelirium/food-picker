@@ -1,36 +1,44 @@
 import { NextPage } from "next";
-import styles from '../styles/login.module.css';
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import styles from "../styles/login.module.css";
+import { signInErrors } from "../utils/nextAuthErrors";
 
 type LoginFormData = {
-    username: string;
-    password: string;
-    rememberMe?: boolean;
-}
+  username: string;
+  password: string;
+  rememberMe?: boolean;
+};
 
 const Login: NextPage = () => {
   const { register, handleSubmit } = useForm<LoginFormData>();
   const router = useRouter();
 
-  function onSubmit(data: LoginFormData) {
-    fetch('/api/login', {method: 'POST', body: JSON.stringify(data)})
-    .then(() => router.push('/dashboard'))
-    .catch(() => alert('Неверный логин или пароль'))
-  }
+  const onSubmit = handleSubmit((data: LoginFormData) => {
+    signIn("credentials", { redirect: false, ...data })
+    .then((resp) => {
+      if (resp?.ok) {
+        return router.push("/dashboard");
+      }
+      if (resp?.error) {
+        alert(signInErrors[resp?.error]);
+      }
+    });
+  });
 
   return (
     <>
       <Head>
-        <title>Log In</title>
+        <title>Вход</title>
         <meta charSet='utf-8' />
       </Head>
       <div className={styles.container}>
       <div className={styles.schoolName}>
         <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
       </div>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <form className={styles.form} onSubmit={onSubmit}>
 
           <label className={styles.label}>
             <p>Логин</p>
