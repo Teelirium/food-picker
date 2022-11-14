@@ -14,8 +14,8 @@ datasource db {
 
 model Parent {
   id         Int     @id @default(autoincrement())
-  surname    String
   name       String
+  surname    String
   middleName String?
   username   String  @unique
   password   String
@@ -23,8 +23,8 @@ model Parent {
 
 model Teacher {
   id         Int     @id @default(autoincrement())
-  surname    String
   name       String
+  surname    String
   middleName String?
   username   String  @unique
   password   String
@@ -32,8 +32,8 @@ model Teacher {
 
 model Worker {
   id         Int     @id @default(autoincrement())
-  surname    String
   name       String
+  surname    String
   middleName String?
   username   String  @unique
   password   String

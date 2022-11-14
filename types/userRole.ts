@@ -1,1 +1,0 @@
-export type UserRole = 'PARENT' | 'TEACHER' | 'WORKER' | 'ADMIN'
