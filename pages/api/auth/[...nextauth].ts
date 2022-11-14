@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { SessionData, UserData } from "../../../types/userData";
+import { SessionData } from "../../../types/userData";
 
 const prisma = new PrismaClient();
 
@@ -35,9 +35,9 @@ export const options: NextAuthOptions = {
           return null;
         }
 
-        const pwdCorrect = await compare(password, user.password);
+        const isCorrectPassword = await compare(password, user.password);
 
-        if (pwdCorrect) {
+        if (isCorrectPassword) {
           const data: SessionData = {
             id: user.id.toString(),
             role: "PARENT",
