@@ -1,6 +1,10 @@
+import { PrismaClient } from "@prisma/client";
+import { compare } from "bcryptjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { SessionData, UserData } from "../../../types/userData";
+
+const prisma = new PrismaClient();
 
 export const options: NextAuthOptions = {
   pages: {
@@ -17,12 +21,25 @@ export const options: NextAuthOptions = {
         password: { label: "Пароль", type: "password" },
       },
       async authorize(credentials, req) {
-        if (
-          credentials?.username === "admin" &&
-          credentials.password === "admin"
-        ) {
+        if (!credentials) {
+          return null;
+        }
+
+        const { username, password } = credentials;
+        const user = await prisma.parent.findUnique({
+          where: {
+            username,
+          },
+        });
+        if (!user) {
+          return null;
+        }
+
+        const pwdCorrect = await compare(password, user.password);
+
+        if (pwdCorrect) {
           const data: SessionData = {
-            id: "1",
+            id: user.id.toString(),
             role: "PARENT",
           };
           return data;
@@ -33,7 +50,7 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     jwt({ token, user, account, profile, isNewUser }) {
-      console.log("JWT", token, "User", user);
+      //console.log("JWT", token, "User", user);
       if (user) {
         token.user = user;
       }
