@@ -1,11 +1,14 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { SessionData, UserData } from "../../../types/userData";
 
 export const options: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-  session: {},
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     Credentials({
       name: "Credentials",
@@ -14,19 +17,33 @@ export const options: NextAuthOptions = {
         password: { label: "Пароль", type: "password" },
       },
       async authorize(credentials, req) {
-        if (credentials?.username === 'admin' && credentials.password === 'admin') {
-            return {id: '1', name: 'Admin', extra: 'extra'}
+        if (
+          credentials?.username === "admin" &&
+          credentials.password === "admin"
+        ) {
+          const data: SessionData = {
+            id: "1",
+            role: "PARENT",
+          };
+          return data;
         }
         return null;
       },
-
     }),
   ],
   callbacks: {
-    session({ session, user, token }) {
-        console.log(session)
-        return session
-    }
+    jwt({ token, user, account, profile, isNewUser }) {
+      console.log("JWT", token, "User", user);
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+    session({ session, token, user }) {
+      //console.log(session, token, user)
+      session.user = token.user as SessionData;
+      return session;
+    },
   },
 };
 

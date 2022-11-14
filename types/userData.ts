@@ -1,5 +1,11 @@
-import { UserRole } from "./userRole"
+import { UserRole } from "./userRole";
 
 export type UserData = {
-    role: UserRole
-}
+  name: string;
+  role: UserRole;
+};
+
+export type SessionData = {
+  id: string;
+  role: UserRole;
+};
