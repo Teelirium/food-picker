@@ -43,8 +43,8 @@ model Grade {
   letter    String    @db.Char(1)
   number    Int
   students  Student[]
-  teacher   Teacher   @relation(fields: [teacherId], references: [id])
-  teacherId Int       @unique
+  teacher   Teacher?  @relation(fields: [teacherId], references: [id])
+  teacherId Int?      @unique
 }
 
 model Student {
@@ -53,9 +53,10 @@ model Student {
   surname       String
   middleName    String?
   parentStudent ParentStudent[]
+  grade         Grade?          @relation(fields: [gradeId], references: [id])
+  gradeId       Int?
   preferences   Preference[]
-  grade         Grade           @relation(fields: [gradeId], references: [id])
-  gradeId       Int             @default(1)
+  Order         Order[]
 }
 
 model ParentStudent {
@@ -72,7 +73,7 @@ enum Role {
 }
 
 model Dish {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   name        String
   imgURL      String
   price       Int
@@ -84,6 +85,7 @@ model Dish {
   calories    Int
   type        DishType
   preferences Preference[]
+  Order       Order[]
 }
 
 enum DishType {
@@ -95,6 +97,16 @@ enum DishType {
 model Preference {
   id        Int      @id @default(autoincrement())
   dayOfWeek Int
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  cost      Int
   Dish      Dish?    @relation(fields: [dishId], references: [id])
   dishId    Int?
   Student   Student? @relation(fields: [studentId], references: [id])
