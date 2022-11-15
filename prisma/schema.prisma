@@ -53,6 +53,7 @@ model Student {
   surname       String
   middleName    String?
   parentStudent ParentStudent[]
+  preferences   Preference[]
   grade         Grade           @relation(fields: [gradeId], references: [id])
   gradeId       Int             @default(1)
 }
@@ -82,10 +83,20 @@ model Dish {
   ingredients String
   calories    Int
   type        DishType
+  preferences Preference[]
 }
 
 enum DishType {
   PRIMARY
   SECONDARY
   DRINK
+}
+
+model Preference {
+  id        Int      @id @default(autoincrement())
+  dayOfWeek Int
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
 }
