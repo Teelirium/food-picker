@@ -1,24 +1,21 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Parent {
-  id         Int     @id @default(autoincrement())
-  name       String
-  surname    String
-  middleName String?
-  username   String  @unique
-  password   String
+  id            Int             @id @default(autoincrement())
+  name          String
+  surname       String
+  middleName    String?
+  username      String          @unique
+  password      String
+  parentStudent ParentStudent[]
 }
 
 model Teacher {
@@ -28,6 +25,7 @@ model Teacher {
   middleName String?
   username   String  @unique
   password   String
+  Grade      Grade?
 }
 
 model Worker {
@@ -40,7 +38,77 @@ model Worker {
   role       Role    @default(WORKER)
 }
 
+model Grade {
+  id        Int       @id @default(autoincrement())
+  letter    String    @db.Char(1)
+  number    Int
+  students  Student[]
+  teacher   Teacher?  @relation(fields: [teacherId], references: [id])
+  teacherId Int?      @unique
+}
+
+model Student {
+  id            Int             @id @default(autoincrement())
+  name          String
+  surname       String
+  middleName    String?
+  parentStudent ParentStudent[]
+  grade         Grade?          @relation(fields: [gradeId], references: [id])
+  gradeId       Int?
+  preferences   Preference[]
+  Order         Order[]
+}
+
+model ParentStudent {
+  id        Int      @id @default(autoincrement())
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+  parent    Parent?  @relation(fields: [parentId], references: [id])
+  parentId  Int?
+}
+
 enum Role {
   WORKER
   ADMIN
+}
+
+model Dish {
+  id          Int          @id @default(autoincrement())
+  name        String
+  imgURL      String
+  price       Int
+  proteins    Int
+  carbs       Int
+  fats        Int
+  weightGrams Int
+  ingredients String
+  calories    Int
+  type        DishType
+  preferences Preference[]
+  Order       Order[]
+}
+
+enum DishType {
+  PRIMARY
+  SECONDARY
+  DRINK
+}
+
+model Preference {
+  id        Int      @id @default(autoincrement())
+  dayOfWeek Int
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  cost      Int
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
 }
