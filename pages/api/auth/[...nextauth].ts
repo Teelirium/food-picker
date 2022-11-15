@@ -2,9 +2,40 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { SessionData } from "../../../types/userData";
+import { SessionData, dbUserData } from "../../../types/userData";
 
 const prisma = new PrismaClient();
+
+async function findUser(username: string): Promise<dbUserData | null> {
+  const parent = await prisma.parent.findUnique({
+    where: {
+      username,
+    },
+  });
+  if (parent) {
+    return { ...parent, role: "PARENT" };
+  }
+
+  const teacher = await prisma.teacher.findUnique({
+    where: {
+      username,
+    },
+  });
+  if (teacher) {
+    return { ...teacher, role: "TEACHER" };
+  }
+
+  const worker = await prisma.worker.findUnique({
+    where: {
+      username,
+    },
+  });
+  if (worker) {
+    return worker;
+  }
+
+  return null;
+}
 
 export const options: NextAuthOptions = {
   pages: {
@@ -26,24 +57,20 @@ export const options: NextAuthOptions = {
         }
 
         const { username, password } = credentials;
-        const user = await prisma.parent.findUnique({
-          where: {
-            username,
-          },
-        });
+        const user = await findUser(username);
         if (!user) {
           return null;
         }
 
         const isCorrectPassword = await compare(password, user.password);
-
         if (isCorrectPassword) {
           const data: SessionData = {
             id: user.id.toString(),
-            role: "PARENT",
+            role: user.role,
           };
           return data;
         }
+        
         return null;
       },
     }),

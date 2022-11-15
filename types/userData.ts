@@ -3,7 +3,7 @@ export type UserRole = "PARENT" | "TEACHER" | "WORKER" | "ADMIN";
 export type UserData = {
   name: string;
   surname: string;
-  middleName?: string;
+  middleName?: string | null;
   username: string;
   password: string;
 };
@@ -13,7 +13,8 @@ export type UserFormData = {
 } & UserData;
 
 export type dbUserData = {
-  role?: UserRole;
+  id: number;
+  role: UserRole;
 } & UserData;
 
 export type SessionData = {
