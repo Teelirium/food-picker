@@ -57,3 +57,23 @@ enum Role {
   WORKER
   ADMIN
 }
+
+model Dish {
+  id          Int      @id @default(autoincrement())
+  name        String
+  imgURL      String
+  price       Int
+  proteins    Int
+  carbs       Int
+  fats        Int
+  weightGrams Int
+  ingredients String
+  calories    Int
+  type        DishType
+}
+
+enum DishType {
+  PRIMARY
+  SECONDARY
+  DRINK
+}
