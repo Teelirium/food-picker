@@ -39,6 +39,7 @@ const handler: NextApiHandler = async (req, res) => {
               role: user.role,
             }
           })
+          break;
         default:
           return res.status(422).send("Invalid role");
       }
