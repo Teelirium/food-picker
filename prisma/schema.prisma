@@ -25,6 +25,7 @@ model Teacher {
   middleName String?
   username   String  @unique
   password   String
+  Grade      Grade?
 }
 
 model Worker {
@@ -37,19 +38,30 @@ model Worker {
   role       Role    @default(WORKER)
 }
 
+model Grade {
+  id        Int       @id @default(autoincrement())
+  letter    String    @db.Char(1)
+  number    Int
+  students  Student[]
+  teacher   Teacher   @relation(fields: [teacherId], references: [id])
+  teacherId Int       @unique
+}
+
 model Student {
   id            Int             @id @default(autoincrement())
   name          String
   surname       String
   middleName    String?
   parentStudent ParentStudent[]
+  grade         Grade           @relation(fields: [gradeId], references: [id])
+  gradeId       Int             @default(1)
 }
 
 model ParentStudent {
   id        Int      @id @default(autoincrement())
-  Student   Student? @relation(fields: [studentId], references: [id])
+  student   Student? @relation(fields: [studentId], references: [id])
   studentId Int?
-  Parent    Parent?  @relation(fields: [parentId], references: [id])
+  parent    Parent?  @relation(fields: [parentId], references: [id])
   parentId  Int?
 }
 
