@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { PartialDish } from "types/Dish";
+import verifyRoleServerSide from "utils/verifyRoleServerSide";
 
 const prisma = new PrismaClient();
 
@@ -28,6 +29,8 @@ const prisma = new PrismaClient();
  *    responses:
  *      201:
  *        description: Возвращает обновлённое блюдо
+ *  delete:
+ *    summary: Удаляет блюдо
  */
 const handler: NextApiHandler = async (req, res) => {
   const { dishId } = req.query;
@@ -35,6 +38,11 @@ const handler: NextApiHandler = async (req, res) => {
   if (!dishId) {
     return res.status(404).send("");
   }
+
+  const isWorkerOrAdmin = await verifyRoleServerSide(req, res, [
+    "WORKER",
+    "ADMIN",
+  ]);
 
   switch (req.method) {
     case "GET":
@@ -49,6 +57,10 @@ const handler: NextApiHandler = async (req, res) => {
       return res.send(dish);
 
     case "PUT":
+      if (!isWorkerOrAdmin) {
+        return res.status(403).send("");
+      }
+
       const { partialDish } = req.body as { partialDish: PartialDish };
       try {
         const newDish = await prisma.dish.update({
@@ -58,7 +70,23 @@ const handler: NextApiHandler = async (req, res) => {
         return res.status(201).send(newDish);
       } catch (err) {
         console.error(err);
-        return res.status(500).send("Updating dish failed");
+        return res.status(500).send(err);
+      }
+
+    case "DELETE":
+      if (!isWorkerOrAdmin) {
+        return res.status(403).send("");
+      }
+      try {
+        await prisma.dish.delete({
+          where: {
+            id: +dishId,
+          },
+        });
+        return res.send("OK");
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send(err);
       }
 
     default:

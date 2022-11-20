@@ -29,8 +29,14 @@ const prisma = new PrismaClient();
  *    responses:
  *      201:
  *        description: Возвращает добавленное блюдо
+ *  delete:
+ *    summary: Удаляет все блюда
  */
-const handler: NextApiHandler = async (req, res) => { 
+const handler: NextApiHandler = async (req, res) => {
+  const isWorkerOrAdmin = await verifyRoleServerSide(req, res, [
+    "WORKER",
+    "ADMIN",
+  ]);
 
   switch (req.method) {
     case "GET":
@@ -38,9 +44,8 @@ const handler: NextApiHandler = async (req, res) => {
       return res.json(dishes);
 
     case "POST":
-      const authorized = await verifyRoleServerSide(req, res, ['WORKER', 'ADMIN']);
-      if (!authorized) {
-        return res.status(403).send('')
+      if (!isWorkerOrAdmin) {
+        return res.status(403).send("");
       }
 
       const { dish } = req.body as { dish: Dish };
@@ -52,7 +57,20 @@ const handler: NextApiHandler = async (req, res) => {
         return res.status(201).json(result);
       } catch (err) {
         console.error(err);
-        return res.status(500).send("Creating dish failed");
+        return res.status(500).send(err);
+      }
+
+    case "DELETE":
+      if (!isWorkerOrAdmin) {
+        return res.status(403).send("");
+      }
+
+      try {
+        await prisma.dish.deleteMany({});
+        return res.send("OK");
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send(err);
       }
 
     default:
