@@ -4,15 +4,10 @@ import type { NextApiHandler } from "next";
 const prisma = new PrismaClient();
 
 const handler: NextApiHandler = async (req, res) => {
-  const data = await prisma.student.findMany({
-    where: {
-      parentStudent: {
-        every: {
-          parentId: 5,
-        },
-      },
-    },
-  });
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).send('');
+  }
+  const data = await prisma.parent.findMany({});
   return res.json(data);
 };
 
