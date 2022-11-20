@@ -32,12 +32,14 @@ const handler: NextApiHandler = async (req, res) => {
 
     case "POST":
       const { dish } = req.body as { dish: Dish };
+      console.log(dish);
       try {
         const result = await prisma.dish.create({
-          data: dish,
+          data: { ...dish, preferences: {}, Orders: {} },
         });
         return res.status(201).json(result);
-      } catch {
+      } catch (err) {
+        console.log(err);
         return res.status(500).send("Creating dish failed");
       }
 
