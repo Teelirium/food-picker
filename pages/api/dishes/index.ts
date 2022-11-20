@@ -20,6 +20,9 @@ const prisma = new PrismaClient();
  *        application/json:
  *          schema:
  *            type: object
+ *            properties:
+ *              dish:
+ *                type: object
  *    responses:
  *      201:
  *        description: Возвращает добавленное блюдо
@@ -39,7 +42,7 @@ const handler: NextApiHandler = async (req, res) => {
         });
         return res.status(201).json(result);
       } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).send("Creating dish failed");
       }
 
