@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { Dish } from "../../../types/Dish";
+import { unstable_getServerSession } from "next-auth";
+import { options } from "pages/api/auth/[...nextauth]";
+import { Dish } from "types/Dish";
+import verifyRoleServerSide from "utils/verifyRoleServerSide";
 
 const prisma = new PrismaClient();
 
@@ -27,13 +30,19 @@ const prisma = new PrismaClient();
  *      201:
  *        description: Возвращает добавленное блюдо
  */
-const handler: NextApiHandler = async (req, res) => {
+const handler: NextApiHandler = async (req, res) => { 
+
   switch (req.method) {
     case "GET":
       const dishes = await prisma.dish.findMany({});
       return res.json(dishes);
 
     case "POST":
+      const authorized = await verifyRoleServerSide(req, res, ['WORKER', 'ADMIN']);
+      if (!authorized) {
+        return res.status(403).send('')
+      }
+
       const { dish } = req.body as { dish: Dish };
       console.log(dish);
       try {

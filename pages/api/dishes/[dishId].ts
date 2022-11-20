@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { PartialDish } from "../../../types/Dish";
+import { PartialDish } from "types/Dish";
 
 const prisma = new PrismaClient();
+
 /**
  * @swagger
  * /api/dishes/{dishId}:
