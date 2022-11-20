@@ -75,6 +75,7 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  
   callbacks: {
     jwt({ token, user, account, profile, isNewUser }) {
       //console.log("JWT", token, "\n", "User", user);

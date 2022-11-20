@@ -1,0 +1,173 @@
+@import './fonts/fonts.css';
+
+.daySelect_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    min-width: 400px;
+    background-color: #181818;
+}
+
+.daySelect_header {
+    display: flex;
+    width: 400px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px 0 24px;
+    margin-bottom: 22px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.daySelect_menuButton {
+    background-image: url(../public/img/menuButton.png);
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 90px;
+    z-index: 100;
+}
+
+.daySelect_childName {
+    color: white;
+    font-size: 20px;
+    max-width: 300px;
+    text-decoration: underline;
+    font-family: 'Century Gothic';
+    user-select: none;
+    text-align: center;
+    z-index: 0;
+}
+
+.daySelect_daysContainer {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px 0 15px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.daySelect_dayOfTheWeek {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 270px;
+    height: 80px;
+    background: linear-gradient(to right, #3E1F47, #144552);
+    border-radius: 30px;
+    margin-bottom: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.daySelect_dayOfTheWeek span {
+    color: white;
+    font-family: 'Century Gothic';
+    font-size: 20px;
+}
+
+/* Modal */
+
+.activeModal {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+
+}
+
+.inactiveModal {
+    opacity: 0;
+    display: none;
+
+}
+
+.modal_window {
+    width: 320px;
+    height: 435px;
+    background: linear-gradient(to right, #3E1F47, #144552);
+    border-radius: 30px;
+}
+
+.modal_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    margin-bottom: 45px;
+}
+
+.modal_header span {
+    font-family: 'Century Gothic';
+    font-size: 18px;
+    color: linear-gradient(to right, #3E1F47, #144552);
+    font-weight: 600;
+}
+
+.modal_body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 365px;
+    width: 100%;
+}
+
+.modal_chooseFoodSpan {
+    font-family: 'Century Gothic';
+    font-size: 18px;
+    color: white;
+    margin-left: 27px;
+    margin-bottom: 25px;
+}
+
+.modal_childname {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    height: 60px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.modal_activeChildname {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    height: 60px;
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 30px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.modal_childname span, .modal_activeChildname span{
+    font-family: 'Century Gothic';
+    font-size: 20px;
+    color: white;
+    user-select: none;
+}
+
+.modal_logOutBtn {
+    position: absolute;
+    align-self: center;
+    bottom: 70px;
+    width: 230px;
+    height: 40px;
+    border-radius: 30px;
+    background: white;
+    color: black;
+    font-family: 'Century Gothic';
+    font-size: 18px;
+    user-select: none;
+}
