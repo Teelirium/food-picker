@@ -1,9 +1,12 @@
 export type UserRole = "PARENT" | "TEACHER" | "WORKER" | "ADMIN";
 
-export type UserData = {
+export type FullName = {
   name: string;
   surname: string;
   middleName?: string | null;
+};
+
+export type UserData = FullName & {
   username: string;
   password: string;
 };

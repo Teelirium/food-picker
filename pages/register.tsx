@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
-import { UserFormData, UserRole } from "../types/userData";
+import { UserFormData, UserRole } from "../types/UserData";
 
 const Register: NextPage = () => {
   const roles: UserRole[] = ['PARENT', 'TEACHER', 'WORKER', 'ADMIN'];

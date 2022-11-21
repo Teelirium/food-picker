@@ -1,41 +1,32 @@
-import { makeAutoObservable} from "mobx";
-import { useStaticRendering } from "mobx-react";
-
-const isServer = typeof window === "undefined";
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useStaticRendering(isServer);
-
-type SerializedStore = {
-    parentName: string;
-    childs: [];
-    selectedChild: string;
-}
+import { makeAutoObservable } from "mobx";
+import { Parent } from "types/Parent";
 
 class ParentStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
+  parent: Parent | null;
+  selectedChildIndex: number;
 
-    params = {
-        parentName: "",  
-        childs: [],
-        selectedChild: ""
-    }
+  constructor() {
+    this.parent = null;
+    this.selectedChildIndex = 0;
+    makeAutoObservable(this);
+  }
 
-    hydrate(serializedStore: SerializedStore) {
-        this.params.parentName = serializedStore.parentName != null ? serializedStore.parentName: "";
-        this.params.selectedChild = serializedStore.selectedChild != null ? serializedStore.selectedChild: "";
-        this.params.childs = serializedStore.childs != null ? serializedStore.childs : [];
-        
-    }
+  fetchParent() {
+    this.parent = {
+      name: "Редискова",
+      surname: "Светлана",
+      middleName: "Сергеевна",
+      children: ["Редисков Андрей Сергеевич", "Редисков Иван Андреевич"],
+    };
+  }
 
-    setParent = (parentName: string) => {
-        this.params.parentName = parentName != null ? parentName : this.params.parentName;
-    }
+  get selectedChild() {
+    return this.parent?.children[this.selectedChildIndex];
+  }
 
-    setChild = (childName: string) => {
-        this.params.selectedChild = childName != null ? childName : this.params.parentName;
-    }
+  selectChild(index: number) {
+    this.selectedChildIndex = index;
+  }
 }
 
 const parentStore = new ParentStore();

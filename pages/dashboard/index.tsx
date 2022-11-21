@@ -1,8 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
-import Parent from "../../pages-content/parent/components";
-import parentStore from "../../stores/ParentStore";
+import Parent from "pages-content/parent/components";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession({ ctx });
@@ -25,11 +24,9 @@ const Index: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       {
-        session.user.role === "PARENT" &&
-        <Parent/>
+        session.user.role === "PARENT" ?
+        <Parent/> : null
       }
-
-      {/* <div>Logged in as {JSON.stringify(session?.user)}</div> */}
     </>
   );
 };

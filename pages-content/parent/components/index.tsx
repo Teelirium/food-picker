@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { inject, observer } from "mobx-react";
-import parentStore from "../../../stores/ParentStore";
+import { observer } from "mobx-react";
+import parentStore from "../../../stores/parentStore";
 import styles from "../../../styles/parent.module.css";
 import Modal from "./modal";
-import { runInThisContext } from "vm";
 
 const Parent = () => {
-//   useEffect(() => {
-//     parentStore.setParent("Anastasia");
-//   }, []);
+  useEffect(() => {
+    parentStore.fetchParent();
+  }, []);
 
-  const session = useSession();
-  const parentName = "Редискова Светлана Сергеевна";
-  const childs = ["Редисков Андрей Сергеевич", "Редисков Иван Андреевич"];
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  const [isModalOpen, closeOpenModal] = useState(false);
-  const [selectedChild, selectChild] = useState("Редисков Андрей Сергеевич");
+  if (!parentStore.parent) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -24,9 +21,11 @@ const Parent = () => {
         <div className={styles.daySelect_header}>
           <div
             className={styles.daySelect_menuButton}
-            onClick={() => closeOpenModal(!isModalOpen)}
+            onClick={() => setModalOpen(!isModalOpen)}
           ></div>
-          <div className={styles.daySelect_childName}>{selectedChild}</div>
+          <div className={styles.daySelect_childName}>
+            {parentStore.selectedChild}
+          </div>
         </div>
         <div className={styles.daySelect_daysContainer}>
           <div className={styles.daySelect_dayOfTheWeek}>
@@ -50,13 +49,7 @@ const Parent = () => {
         </div>
       </div>
 
-      <Modal
-        selectedChild={selectedChild}
-        selectChild={selectChild}
-        childs={childs}
-        parentName={parentName}
-        isModalOpen={isModalOpen}
-      />
+      <Modal isModalOpen={isModalOpen} />
     </>
   );
 };
