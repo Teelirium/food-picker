@@ -20,7 +20,6 @@ class ParentStore {
         parentName: "",  
         childs: [],
         selectedChild: ""
-        
     }
 
     hydrate(serializedStore: SerializedStore) {
@@ -39,4 +38,6 @@ class ParentStore {
     }
 }
 
-export default ParentStore;
+const parentStore = new ParentStore();
+
+export default parentStore;
