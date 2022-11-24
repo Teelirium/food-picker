@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
+import Parent from "pages-content/parent/components";
 import { getSession, useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -23,11 +24,9 @@ const Index: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       {
-        session.user.role === "ADMIN" 
-        ? <p>YOU ARE ADMIN!!!</p> 
-        : null
+        session.user.role === "PARENT" ?
+        <Parent/> : null
       }
-      <div>Logged in as {JSON.stringify(session.user)}</div>
     </>
   );
 };

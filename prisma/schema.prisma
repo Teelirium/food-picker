@@ -71,7 +71,6 @@ enum Role {
   WORKER
   ADMIN
 }
-
 model Dish {
   id          Int          @id @default(autoincrement())
   name        String

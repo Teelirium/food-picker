@@ -1,5 +1,5 @@
 import NextAuth, { DefaultSession } from "next-auth"
-import { SessionData, UserData } from "./userData"
+import { SessionData } from "./UserData"
 
 declare module "next-auth" {
   /**
