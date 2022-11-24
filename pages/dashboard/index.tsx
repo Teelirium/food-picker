@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 import Parent from "pages-content/parent/components";
+import { getSession, useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession({ ctx });
