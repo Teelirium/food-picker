@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession({ ctx });
@@ -22,7 +22,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const Index: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
-      <div>Logged in as {JSON.stringify(session?.user)}</div>
+      {
+        session.user.role === "ADMIN" 
+        ? <p>YOU ARE ADMIN!!!</p> 
+        : null
+      }
+      <div>Logged in as {JSON.stringify(session.user)}</div>
     </>
   );
 };

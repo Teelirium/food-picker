@@ -56,15 +56,15 @@ model Student {
   grade         Grade?          @relation(fields: [gradeId], references: [id])
   gradeId       Int?
   preferences   Preference[]
-  Order         Order[]
+  Orders        Order[]
 }
 
 model ParentStudent {
-  id        Int      @id @default(autoincrement())
-  student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
-  parent    Parent?  @relation(fields: [parentId], references: [id])
-  parentId  Int?
+  id        Int     @id @default(autoincrement())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+  parent    Parent  @relation(fields: [parentId], references: [id])
+  parentId  Int
 }
 
 enum Role {
@@ -85,7 +85,7 @@ model Dish {
   calories    Int
   type        DishType
   preferences Preference[]
-  Order       Order[]
+  Orders      Order[]
 }
 
 enum DishType {
@@ -95,12 +95,12 @@ enum DishType {
 }
 
 model Preference {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   dayOfWeek Int
-  Dish      Dish?    @relation(fields: [dishId], references: [id])
-  dishId    Int?
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
+  Dish      Dish    @relation(fields: [dishId], references: [id])
+  dishId    Int
+  Student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
 }
 
 model Order {
