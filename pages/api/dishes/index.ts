@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { options } from "pages/api/auth/[...nextauth]";
 import { Dish } from "types/Dish";
 import verifyRoleServerSide from "utils/verifyRoleServerSide";
 

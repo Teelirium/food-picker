@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
  *        description: Возвращает найденное блюдо
  *      404:
  *        description: Блюдо не найдено
- *  put:
+ *  patch:
  *    summary: Обновляет блюдо с новыми данными
  *    requestBody:
  *      required: true
