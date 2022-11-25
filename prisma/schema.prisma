@@ -43,8 +43,8 @@ model Grade {
   letter    String    @db.Char(1)
   number    Int
   students  Student[]
-  teacher   Teacher?  @relation(fields: [teacherId], references: [id])
-  teacherId Int?      @unique
+  teacher   Teacher   @relation(fields: [teacherId], references: [id])
+  teacherId Int       @unique
 }
 
 model Student {
@@ -71,6 +71,7 @@ enum Role {
   WORKER
   ADMIN
 }
+
 model Dish {
   id          Int          @id @default(autoincrement())
   name        String
@@ -89,12 +90,15 @@ model Dish {
 
 enum DishType {
   PRIMARY
+  SIDE
   SECONDARY
   DRINK
+  EXTRA
 }
 
 model Preference {
   id        Int     @id @default(autoincrement())
+  isDefault Boolean @default(false)
   dayOfWeek Int
   Dish      Dish    @relation(fields: [dishId], references: [id])
   dishId    Int
@@ -106,8 +110,8 @@ model Order {
   id        Int      @id @default(autoincrement())
   date      DateTime
   cost      Int
-  Dish      Dish?    @relation(fields: [dishId], references: [id])
-  dishId    Int?
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
+  Dish      Dish     @relation(fields: [dishId], references: [id])
+  dishId    Int
+  Student   Student  @relation(fields: [studentId], references: [id])
+  studentId Int
 }
