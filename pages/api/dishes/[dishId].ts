@@ -56,7 +56,7 @@ const handler: NextApiHandler = async (req, res) => {
       }
       return res.send(dish);
 
-    case "PUT":
+    case "PATCH":
       if (!isWorkerOrAdmin) {
         return res.status(403).send("");
       }
