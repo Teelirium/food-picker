@@ -1,5 +1,5 @@
-import { FullName } from "./UserData";
+import { Prisma } from "@prisma/client";
 
-export type Parent = FullName & {
-  children: string[]
-}
+export type Parent = Omit<Prisma.ParentGetPayload<{}>, "password"> & {
+  children: Prisma.StudentGetPayload<{}>[];
+};
