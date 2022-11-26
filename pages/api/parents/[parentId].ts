@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
  *    summary: Получает родителя по id
  *    parameters:
  *      - in: path
- *        name: id
+ *        name: parentId
  *        schema:
  *          type: integer
  *          required: true
@@ -27,9 +27,9 @@ const prisma = new PrismaClient();
  *        description: Родитель не найден
  */
 const handler: NextApiHandler = async (req, res) => {
-  const { id, children } = req.query;
+  const { parentId, children } = req.query;
 
-  if (!id) {
+  if (!parentId) {
     return res.status(404).send("");
   }
 
@@ -37,7 +37,7 @@ const handler: NextApiHandler = async (req, res) => {
     case "GET":
       const data = await prisma.parent.findUnique({
         where: {
-          id: +id,
+          id: +parentId,
         },
       });
       if (!data) {
@@ -48,7 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
       if (children === "true") {
         const parentStudents = await prisma.parentStudent.findMany({
           where: {
-            parentId: +id,
+            parentId: +parentId,
           },
           include: {
             student: true,
