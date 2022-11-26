@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { options } from "pages/api/auth/[...nextauth]";
+import { Preference } from "types/Preference";
+import isValidDay from "utils/isValidDay";
 import verifyRoleServerSide from "utils/verifyRoleServerSide";
 
 const prisma = new PrismaClient();
@@ -11,14 +13,14 @@ const handler: NextApiHandler = async (req, res) => {
   if (!studentId) return res.status(404).send("");
 
   const day = req.query.day ? +req.query.day : undefined;
-  if (typeof day === "number" && (day < 0 || day > 6))
+  if (typeof day === "number" && !isValidDay(day))
     return res.status(400).send("Invalid day");
 
   const session = await unstable_getServerSession(req, res, options);
-  if (!session) return res.status(403).send("");
+  if (!session) return res.status(403).send("1");
 
   const allowed = await verifyRoleServerSide(req, res, ["ADMIN", "PARENT"]);
-  if (!allowed) return res.status(403).send("");
+  if (!allowed) return res.status(403).send("2");
 
   if (session.user.role === "PARENT") {
     const parentStudents = await prisma.parentStudent.count({
@@ -27,12 +29,12 @@ const handler: NextApiHandler = async (req, res) => {
         parentId: +session.user.id,
       },
     });
-    if (parentStudents === 0) return res.status(403).send("");
+    if (parentStudents === 0) return res.status(403).send("3");
   }
 
   switch (req.method) {
-    case "GET":
-      const prefs = await prisma.preference.findMany({
+    case "GET": {
+      const prefs: Preference[] = await prisma.preference.findMany({
         where:
           typeof day === "number"
             ? {
@@ -47,8 +49,8 @@ const handler: NextApiHandler = async (req, res) => {
         },
       });
       return res.send(prefs);
-
-    case "POST":
+    }
+    case "POST": {
       const { dishId } = req.body;
       if (typeof day !== "number" || typeof dishId !== "number")
         return res.status(400).send("");
@@ -95,7 +97,7 @@ const handler: NextApiHandler = async (req, res) => {
             include: { Dish: true },
           });
       return res.json(result);
-
+    }
     default:
       return res.status(405).send("Method not allowed");
   }

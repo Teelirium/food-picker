@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { Dish } from "types/Dish";
+import { DishFormData } from "types/Dish";
 import verifyRoleServerSide from "utils/verifyRoleServerSide";
 
 const prisma = new PrismaClient();
@@ -46,7 +46,7 @@ const handler: NextApiHandler = async (req, res) => {
         return res.status(403).send("");
       }
 
-      const { dish } = req.body as { dish: Dish };
+      const { dish } = req.body as { dish: DishFormData };
       console.log(dish);
       try {
         const result = await prisma.dish.create({
