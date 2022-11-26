@@ -42,15 +42,59 @@ const handler: NextApiHandler = async (req, res) => {
             : {
                 studentId: +studentId,
               },
+        include: {
+          Dish: true,
+        },
       });
       return res.send(prefs);
 
     case "POST":
-      if (typeof day !== "number") return res.status(400).send("");
+      const { dishId } = req.body;
+      if (typeof day !== "number" || typeof dishId !== "number")
+        return res.status(400).send("");
 
-      const { preference } = req.body;
-      //const result = await prisma.preference.create({});
-      break;
+      const dishType = await prisma.dish.findUnique({
+        where: {
+          id: dishId,
+        },
+        select: {
+          type: true,
+        },
+      });
+      if (!dishType) return res.status(404).send("Dish not found");
+
+      const existingPref = await prisma.preference.findFirst({
+        where: {
+          studentId: +studentId,
+          dayOfWeek: day,
+          Dish: {
+            type: dishType.type,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const result = existingPref
+        ? await prisma.preference.update({
+            where: {
+              id: existingPref.id,
+            },
+            data: {
+              dishId,
+            },
+            include: { Dish: true },
+          })
+        : await prisma.preference.create({
+            data: {
+              studentId: +studentId,
+              dayOfWeek: day,
+              dishId,
+            },
+            include: { Dish: true },
+          });
+      return res.json(result);
 
     default:
       return res.status(405).send("Method not allowed");
