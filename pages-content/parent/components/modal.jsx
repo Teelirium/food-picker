@@ -1,4 +1,4 @@
-import parentStore from "stores/parentStore";
+import parentStore from "stores/ParentStore";
 import styles from "../../../styles/parent.module.css";
 import getFullName from "utils/getFullName";
 

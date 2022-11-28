@@ -13,6 +13,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+
+  if (session.user.role == "WORKER") {
+    return {
+      redirect: {
+        destination: "/addDish",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
       session,
@@ -26,6 +36,10 @@ const Index: NextPage<{ session: Session }> = ({ session }) => {
       {
         session.user.role === "PARENT" ?
         <Parent/> : null
+      }
+
+      {
+
       }
     </>
   );
