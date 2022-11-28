@@ -13,10 +13,12 @@ class ParentStore {
 
   fetchParent() {
     this.parent = {
+      id: 12,
+      username: "hi",
       name: "Редискова",
       surname: "Светлана",
       middleName: "Сергеевна",
-      children: ["Редисков Андрей Сергеевич", "Редисков Иван Андреевич"],
+      children: [],
     };
   }
 

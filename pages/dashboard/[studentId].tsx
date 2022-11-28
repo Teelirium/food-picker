@@ -1,9 +1,9 @@
+import { Preference } from "types/Preference";
 import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { options } from "pages/api/auth/[...nextauth]";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import isValidDay from "utils/isValidDay";
+import dayMap from "utils/dayMap";
 
 type Props = {
   studentId: number;
@@ -33,12 +33,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
 const StudentChoice: NextPage<Props> = (props) => {
   const { studentId, day } = props;
+  const [prefs, setPrefs] = useState<Preference[] | null>(null);
   useEffect(() => {
     axios
       .get(`/api/preferences?studentId=${studentId}&day=${day}`)
-      .then(console.log);
+      .then((p) => p.data)
+      .then((data) => setPrefs(data))
+      .catch(alert);
   }, [studentId, day]);
-  return <div></div>;
+
+  return (
+    <div className='bg-black w-screen h-screen text-white'>
+      <h1>{dayMap[day]}</h1>
+      <div className='p-3 border-white border'>
+        {prefs?.map((p) => (
+          <span key={p.id}>
+            {p.Dish.type}
+            <div>{p.Dish.name}</div>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default StudentChoice;
