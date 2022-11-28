@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import parentStore from "../../../stores/ParentStore";
-import styles from "../../../styles/parent.module.css";
+import parentStore from "stores/ParentStore";
+import styles from "styles/parent.module.css";
 import Modal from "./modal";
+import { useSession } from "next-auth/react";
+import getFullName from "utils/getFullName";
+import Link from "next/link";
 
 const Parent = () => {
+  const session = useSession();
+
   useEffect(() => {
-    parentStore.fetchParent();
-  }, []);
+    if (session.data) {
+      parentStore.fetchParent(+session.data.user.id);
+    }
+  }, [session]);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -18,35 +25,39 @@ const Parent = () => {
   return (
     <>
       <div className={styles.daySelect_container}>
-        <div className={styles.daySelect_innerContainer}>
-          <div className={styles.daySelect_header}>
-            <div
-              className={styles.daySelect_menuButton}
-              onClick={() => setModalOpen(!isModalOpen)}
-            ></div>
-            <div className={styles.daySelect_childName}>
-              {parentStore.selectedChild}
-            </div>
+        <div className={styles.daySelect_header}>
+          <div
+            className={styles.daySelect_menuButton}
+            onClick={() => setModalOpen(!isModalOpen)}
+          ></div>
+          <div className={styles.daySelect_childName}>
+            {parentStore.currentChild
+              ? getFullName(parentStore.currentChild)
+              : null}
           </div>
-          <div className={styles.daySelect_daysContainer}>
+        </div>
+        <div className={styles.daySelect_daysContainer}>
+          <Link href={`/dashboard/${parentStore.currentChild?.id}?day=${0}`}>
             <div className={styles.daySelect_dayOfTheWeek}>
               <span>ПОНЕДЕЛЬНИК</span>
             </div>
+          </Link>
+          <Link href={`/dashboard/${parentStore.currentChild?.id}?day=${1}`}>
             <div className={styles.daySelect_dayOfTheWeek}>
               <span>ВТОРНИК</span>
             </div>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>СРЕДА</span>
-            </div>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>ЧЕТВЕРГ</span>
-            </div>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>ПЯТНИЦА</span>
-            </div>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>СУББОТА</span>
-            </div>
+          </Link>
+          <div className={styles.daySelect_dayOfTheWeek}>
+            <span>СРЕДА</span>
+          </div>
+          <div className={styles.daySelect_dayOfTheWeek}>
+            <span>ЧЕТВЕРГ</span>
+          </div>
+          <div className={styles.daySelect_dayOfTheWeek}>
+            <span>ПЯТНИЦА</span>
+          </div>
+          <div className={styles.daySelect_dayOfTheWeek}>
+            <span>СУББОТА</span>
           </div>
         </div>
       </div>

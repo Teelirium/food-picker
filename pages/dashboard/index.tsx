@@ -1,10 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
-import { Session } from "next-auth";
+import { Session, unstable_getServerSession } from "next-auth";
 import Parent from "pages-content/parent/components";
-import { getSession, useSession } from "next-auth/react";
+import { options } from "pages/api/auth/[...nextauth]";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession({ ctx });
+  const session = await unstable_getServerSession(ctx.req, ctx.res, options);
+
   if (!session) {
     return {
       redirect: {
@@ -31,18 +32,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Index: NextPage<{ session: Session }> = ({ session }) => {
-  return (
-    <>
-      {
-        session.user.role === "PARENT" ?
-        <Parent/> : null
-      }
-
-      {
-
-      }
-    </>
-  );
+  return <>{session.user.role === "PARENT" ? <Parent /> : null}</>;
 };
 
 export default Index;
