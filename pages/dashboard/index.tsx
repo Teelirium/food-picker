@@ -14,6 +14,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+
+  if (session.user.role == "WORKER") {
+    return {
+      redirect: {
+        destination: "/addDish",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
       session,
