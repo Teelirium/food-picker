@@ -1,33 +1,30 @@
+import axios from "axios";
 import { makeAutoObservable } from "mobx";
 import { Parent } from "types/Parent";
 
 class ParentStore {
   parent: Parent | null;
-  selectedChildIndex: number;
+  childIndex: number;
 
   constructor() {
     this.parent = null;
-    this.selectedChildIndex = 0;
+    this.childIndex = 0;
     makeAutoObservable(this);
   }
 
-  fetchParent() {
-    this.parent = {
-      id: 12,
-      username: "hi",
-      name: "Редискова",
-      surname: "Светлана",
-      middleName: "Сергеевна",
-      children: [],
-    };
+  fetchParent(id: number) {
+    axios.get(`/api/parents/${id}?children=true`)
+    .then(resp => resp.data)
+    .then(p => this.parent = p)
+    .catch(console.log)
   }
 
-  get selectedChild() {
-    return this.parent?.children[this.selectedChildIndex];
+  get currentChild() {
+    return this.parent?.children[this.childIndex];
   }
 
-  selectChild(index: number) {
-    this.selectedChildIndex = index;
+  setChild(index: number) {
+    this.childIndex = index;
   }
 }
 
