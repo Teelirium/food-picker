@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
 import type { NextApiHandler } from "next";
-import { UserFormData, UserData } from "../../../types/UserData";
+import { UserFormData, UserData } from "types/UserData";
 
 const prisma = new PrismaClient();
 

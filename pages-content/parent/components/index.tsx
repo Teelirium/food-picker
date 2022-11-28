@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import parentStore from "../../../stores/parentStore";
+import parentStore from "stores/ParentStore";
 import styles from "../../../styles/parent.module.css";
 import Modal from "./modal";
 
@@ -24,7 +24,7 @@ const Parent = () => {
             onClick={() => setModalOpen(!isModalOpen)}
           ></div>
           <div className={styles.daySelect_childName}>
-            {parentStore.selectedChild}
+            {parentStore.selectedChild?.name}
           </div>
         </div>
         <div className={styles.daySelect_daysContainer}>
