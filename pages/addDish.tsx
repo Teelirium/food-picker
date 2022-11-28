@@ -8,6 +8,13 @@ import { Dish, DishType } from "types/Dish";
 const AddDish: NextPage = () => {
   const dishTypes: DishType[] = ["PRIMARY", "SIDE", "SECONDARY", "DRINK", "EXTRA"];
   const { register, handleSubmit } = useForm<Dish>();
+  const ruTypesNames = new Map([
+    ["PRIMARY", "Первое"],
+    ["SECONDARY", "Второе"],
+    ["SIDE", "Гарнир"],
+    ["DRINK", "Напиток"],
+    ["EXTRA", "Дополнительное"]
+  ]);
 
   const onSubmit = handleSubmit(data => {
     axios.post('/api/dishes/', {dish: data})
@@ -72,8 +79,8 @@ const AddDish: NextPage = () => {
         <label>
           Тип блюда
           <select {...register('type')}>
-            {dishTypes.map(role => (
-              <option key={role} value={role}>{role}</option>
+            {dishTypes.map(type => (
+              <option key={type} value={type}>{ruTypesNames.get(type)}</option>
             ))}
           </select>
         </label>
