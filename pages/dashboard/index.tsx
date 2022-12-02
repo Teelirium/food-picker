@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
-import Parent from "pages-content/parent/components";
+import Parent from "components/ParentPage";
 import { options } from "pages/api/auth/[...nextauth]";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

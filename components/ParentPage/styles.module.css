@@ -1,4 +1,4 @@
-@import './fonts/fonts.css';
+@import 'styles/fonts/fonts.css';
 
 .daySelect_container {
     display: flex;
@@ -23,7 +23,7 @@
 }
 
 .daySelect_menuButton {
-    background-image: url(../public/img/menuButton.png);
+    background-image: url('~/public/img/menuButton.png');
     background-repeat: no-repeat;
     width: 100px;
     height: 90px;

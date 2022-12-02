@@ -1,5 +1,5 @@
 import parentStore from "stores/ParentStore";
-import styles from "../../../styles/parent.module.css";
+import styles from "../styles.module.css";
 import getFullName from "utils/getFullName";
 import { signOut } from "next-auth/react";
 

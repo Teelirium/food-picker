@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import parentStore from "stores/ParentStore";
-import styles from "styles/parent.module.css";
-import Modal from "./modal";
+import styles from "./styles.module.css";
+import Modal from "./Modal";
 import { useSession } from "next-auth/react";
 import getFullName from "utils/getFullName";
 import Link from "next/link";
