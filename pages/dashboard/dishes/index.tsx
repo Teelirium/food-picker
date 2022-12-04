@@ -4,7 +4,10 @@ import { getServerSideSession } from "utils/getServerSession";
 import isParentOf from "utils/isParentOf";
 import verifyRole from "utils/verifyRole";
 import styles from "styles/dishes.module.scss";
-import DashboardLayout from "components/DashboardLayout";
+import DashboardLayout from "components/Dashboard/Layout";
+import Link from "next/link";
+import dishTypeMap from "utils/dishTypeMap";
+import DashboardHeader from "components/Dashboard/Header";
 
 const prisma = new PrismaClient();
 
@@ -38,20 +41,29 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   return {
     props: {
       dishes,
+      type: type as DishType,
     },
   };
 };
 
 type Props = {
   dishes: Dish[];
+  type: DishType;
 };
 
-const Dishes: NextPage<Props> = ({ dishes }) => {
+const Dishes: NextPage<Props> = ({ dishes, type }) => {
   return (
     <DashboardLayout>
-      {dishes.map((d) => (
-        <span key={d.id}>{d.name}</span>
-      ))}
+      <DashboardHeader>
+        <h1>{dishTypeMap[type].toUpperCase()}</h1>
+      </DashboardHeader>
+      <main className={styles.body}>
+        {dishes.map((d) => (
+          <Link href={""} key={d.id}>
+            <span>{d.name}</span>
+          </Link>
+        ))}
+      </main>
     </DashboardLayout>
   );
 };

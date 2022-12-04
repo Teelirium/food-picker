@@ -15,7 +15,8 @@ import editIcon from "public/svg/edit.svg";
 import deleteIcon from "public/svg/delete.svg";
 import Image from "next/image";
 import classNames from "classnames";
-import DashboardLayout from "components/DashboardLayout";
+import DashboardLayout from "components/Dashboard/Layout";
+import DashboardHeader from "components/Dashboard/Header";
 
 type Props = {
   studentId: number;
@@ -74,13 +75,10 @@ const StudentChoice: NextPage<Props> = (props) => {
 
   return (
     <DashboardLayout>
-      <header className={styles.header}>
-        <Link href='javascript:history.back()'>
-          <span>&lt;</span>
-        </Link>
+      <DashboardHeader>
         <h1>{dayMap[day].toUpperCase()}</h1>
         <button className={styles.saveBtn}>Сохранить</button>
-      </header>
+      </DashboardHeader>
       {!!preferences ? (
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => (
