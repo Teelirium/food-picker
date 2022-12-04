@@ -15,6 +15,7 @@ import editIcon from "public/svg/edit.svg";
 import deleteIcon from "public/svg/delete.svg";
 import Image from "next/image";
 import classNames from "classnames";
+import DashboardLayout from "components/DashboardLayout";
 
 type Props = {
   studentId: number;
@@ -72,65 +73,63 @@ const StudentChoice: NextPage<Props> = (props) => {
   }, [preferences]);
 
   return (
-    <div className={styles.bg}>
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <Link href='javascript:history.back()'>
-            <span>&lt;</span>
-          </Link>
-          <h1>{dayMap[day].toUpperCase()}</h1>
-          <button className={styles.saveBtn}>Сохранить</button>
-        </header>
-        {!!preferences ? (
-          <main className={styles.body}>
-            {Object.entries(dishTypeMap).map(([k, v]) => (
-              <div key={k} className={styles.dishSection}>
-                <span>{v}</span>
-                <div className={styles.dishContainer}>
-                  {dishes.has(k as DishType) ? (
-                    <>
-                      <DishCardSmall dish={dishes.get(k as DishType)} />
-                      <div className={styles.btnGroup}>
+    <DashboardLayout>
+      <header className={styles.header}>
+        <Link href='javascript:history.back()'>
+          <span>&lt;</span>
+        </Link>
+        <h1>{dayMap[day].toUpperCase()}</h1>
+        <button className={styles.saveBtn}>Сохранить</button>
+      </header>
+      {!!preferences ? (
+        <main className={styles.body}>
+          {Object.entries(dishTypeMap).map(([k, v]) => (
+            <div key={k} className={styles.dishSection}>
+              <span>{v}</span>
+              <div className={styles.dishContainer}>
+                {dishes.has(k as DishType) ? (
+                  <>
+                    <DishCardSmall dish={dishes.get(k as DishType)} />
+                    <div className={styles.btnGroup}>
+                      <button
+                        className={classNames(
+                          styles.deleteBtn,
+                          styles.actionBtn
+                        )}
+                      >
+                        <Image src={deleteIcon} alt='delete' />
+                        Удалить
+                      </button>
+                      <Link
+                        href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
+                      >
                         <button
                           className={classNames(
-                            styles.deleteBtn,
+                            styles.editBtn,
                             styles.actionBtn
                           )}
                         >
-                          <Image src={deleteIcon} alt='delete' />
-                          Удалить
+                          <Image src={editIcon} alt='edit' />
+                          Изменить
                         </button>
-                        <Link
-                          href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                        >
-                          <button
-                            className={classNames(
-                              styles.editBtn,
-                              styles.actionBtn
-                            )}
-                          >
-                            <Image src={editIcon} alt='edit' />
-                            Изменить
-                          </button>
-                        </Link>
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                    >
-                      + Добавить Блюдо
-                    </Link>
-                  )}
-                </div>
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
+                  >
+                    + Добавить Блюдо
+                  </Link>
+                )}
               </div>
-            ))}
-          </main>
-        ) : (
-          "Loading..."
-        )}
-      </div>
-    </div>
+            </div>
+          ))}
+        </main>
+      ) : (
+        "Loading..."
+      )}
+    </DashboardLayout>
   );
 };
 

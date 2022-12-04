@@ -25,6 +25,7 @@ a {
 :root {
   --dark-bg-color: #181818;
 }
+
 /*
 @media (prefers-color-scheme: dark) {
   html {

@@ -3,6 +3,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import isParentOf from "utils/isParentOf";
 import verifyRole from "utils/verifyRole";
+import styles from "styles/dishes.module.scss";
+import DashboardLayout from "components/DashboardLayout";
 
 const prisma = new PrismaClient();
 
@@ -46,11 +48,11 @@ type Props = {
 
 const Dishes: NextPage<Props> = ({ dishes }) => {
   return (
-    <div>
+    <DashboardLayout>
       {dishes.map((d) => (
         <span key={d.id}>{d.name}</span>
       ))}
-    </div>
+    </DashboardLayout>
   );
 };
 
