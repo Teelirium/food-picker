@@ -11,6 +11,10 @@ import dishTypeMap from "utils/dishTypeMap";
 import Link from "next/link";
 import { Dish, DishType } from "@prisma/client";
 import DishCardSmall from "components/DishCardSmall";
+import editIcon from "public/svg/edit.svg";
+import deleteIcon from "public/svg/delete.svg";
+import Image from "next/image";
+import classNames from "classnames";
 
 type Props = {
   studentId: number;
@@ -86,6 +90,26 @@ const StudentChoice: NextPage<Props> = (props) => {
                   {dishes.has(k as DishType) ? (
                     <>
                       <DishCardSmall dish={dishes.get(k as DishType)} />
+                      <div className={styles.btnGroup}>
+                        <button
+                          className={classNames(
+                            styles.deleteBtn,
+                            styles.actionBtn
+                          )}
+                        >
+                          <Image src={deleteIcon} alt='delete' />
+                          Удалить
+                        </button>
+                        <button
+                          className={classNames(
+                            styles.editBtn,
+                            styles.actionBtn
+                          )}
+                        >
+                          <Image src={editIcon} alt='edit' />
+                          Изменить
+                        </button>
+                      </div>
                     </>
                   ) : (
                     "+ Добавить Блюдо"
