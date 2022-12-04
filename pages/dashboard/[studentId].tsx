@@ -100,19 +100,27 @@ const StudentChoice: NextPage<Props> = (props) => {
                           <Image src={deleteIcon} alt='delete' />
                           Удалить
                         </button>
-                        <button
-                          className={classNames(
-                            styles.editBtn,
-                            styles.actionBtn
-                          )}
+                        <Link
+                          href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
                         >
-                          <Image src={editIcon} alt='edit' />
-                          Изменить
-                        </button>
+                          <button
+                            className={classNames(
+                              styles.editBtn,
+                              styles.actionBtn
+                            )}
+                          >
+                            <Image src={editIcon} alt='edit' />
+                            Изменить
+                          </button>
+                        </Link>
                       </div>
                     </>
                   ) : (
-                    "+ Добавить Блюдо"
+                    <Link
+                      href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
+                    >
+                      + Добавить Блюдо
+                    </Link>
                   )}
                 </div>
               </div>
