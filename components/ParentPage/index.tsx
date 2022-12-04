@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { useSession } from "next-auth/react";
 import getFullName from "utils/getFullName";
 import Link from "next/link";
+import dayMap from "utils/dayMap";
 
 const Parent = () => {
   const session = useSession();
@@ -37,28 +38,16 @@ const Parent = () => {
           </div>
         </div>
         <div className={styles.daySelect_daysContainer}>
-          <Link href={`/dashboard/${parentStore.currentChild?.id}?day=${0}`}>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>ПОНЕДЕЛЬНИК</span>
-            </div>
-          </Link>
-          <Link href={`/dashboard/${parentStore.currentChild?.id}?day=${1}`}>
-            <div className={styles.daySelect_dayOfTheWeek}>
-              <span>ВТОРНИК</span>
-            </div>
-          </Link>
-          <div className={styles.daySelect_dayOfTheWeek}>
-            <span>СРЕДА</span>
-          </div>
-          <div className={styles.daySelect_dayOfTheWeek}>
-            <span>ЧЕТВЕРГ</span>
-          </div>
-          <div className={styles.daySelect_dayOfTheWeek}>
-            <span>ПЯТНИЦА</span>
-          </div>
-          <div className={styles.daySelect_dayOfTheWeek}>
-            <span>СУББОТА</span>
-          </div>
+          {dayMap.slice(0, 5).map((day, i) => (
+            <Link
+              href={`/dashboard/${parentStore.currentChild?.id}?day=${i}`}
+              key={i}
+            >
+              <div className={styles.daySelect_dayOfTheWeek}>
+                <span>{day.toUpperCase()}</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
       <Modal isModalOpen={isModalOpen} />
