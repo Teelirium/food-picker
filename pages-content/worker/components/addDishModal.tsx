@@ -1,11 +1,10 @@
 import axios from "axios";
-import { NextPage } from "next";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { DishFormData, DishType } from "types/Dish";
 
 
-const AddDish: NextPage = () => {
+const AddDishModal = () => {
   const { register, handleSubmit } = useForm<DishFormData>();
   const dishTypes: DishType[] = ["PRIMARY", "SIDE", "SECONDARY", "DRINK", "EXTRA"];
   const ruTypesNames = new Map([
@@ -24,9 +23,6 @@ const AddDish: NextPage = () => {
 
   return (
     <div className='bg-slate-300 h-screen w-screen'>
-      <Head>
-        <title>Добавление блюда</title>
-      </Head>
       <form className="flex flex-col" onSubmit={onSubmit}>
         <label>
           Название
@@ -90,4 +86,4 @@ const AddDish: NextPage = () => {
   );
 };
 
-export default AddDish;
+export default AddDishModal;
