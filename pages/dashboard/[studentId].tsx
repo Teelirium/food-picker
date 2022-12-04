@@ -1,7 +1,7 @@
 import { Preference } from "types/Preference";
 import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import isValidDay from "utils/isValidDay";
 import dayMap from "utils/dayMap";
 import { getServerSideSession } from "utils/getServerSession";
@@ -9,6 +9,8 @@ import verifyRole from "utils/verifyRole";
 import styles from "styles/studentChoice.module.scss";
 import dishTypeMap from "utils/dishTypeMap";
 import Link from "next/link";
+import { Dish, DishType } from "@prisma/client";
+import DishCardSmall from "components/DishCardSmall";
 
 type Props = {
   studentId: number;
@@ -45,14 +47,25 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
 const StudentChoice: NextPage<Props> = (props) => {
   const { studentId, day } = props;
-  const [prefs, setPrefs] = useState<Preference[] | null>(null);
+  const [preferences, setPreferences] = useState<Preference[] | null>(null);
   useEffect(() => {
     axios
       .get(`/api/preferences?studentId=${studentId}&day=${day}`)
       .then((p) => p.data)
-      .then((data) => setPrefs(data))
+      .then((data) => setPreferences(data))
       .catch(alert);
   }, [studentId, day]);
+  const dishes = useMemo(() => {
+    const result = new Map<DishType, Dish>();
+    if (!preferences) {
+      return result;
+    }
+
+    for (let pref of preferences) {
+      result.set(pref.Dish.type, pref.Dish);
+    }
+    return result;
+  }, [preferences]);
 
   return (
     <div className={styles.bg}>
@@ -64,14 +77,19 @@ const StudentChoice: NextPage<Props> = (props) => {
           <h1>{dayMap[day].toUpperCase()}</h1>
           <button className={styles.saveBtn}>Сохранить</button>
         </header>
-        {!!prefs ? (
+        {!!preferences ? (
           <main className={styles.body}>
             {Object.entries(dishTypeMap).map(([k, v]) => (
               <div key={k} className={styles.dishSection}>
                 <span>{v}</span>
                 <div className={styles.dishContainer}>
-                  {prefs.find((p) => p.Dish.type === k)?.Dish.name ||
-                    "+ Добавить Блюдо"}
+                  {dishes.has(k as DishType) ? (
+                    <>
+                      <DishCardSmall dish={dishes.get(k as DishType)} />
+                    </>
+                  ) : (
+                    "+ Добавить Блюдо"
+                  )}
                 </div>
               </div>
             ))}
