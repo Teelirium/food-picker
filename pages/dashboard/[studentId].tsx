@@ -6,6 +6,9 @@ import isValidDay from "utils/isValidDay";
 import dayMap from "utils/dayMap";
 import { getServerSideSession } from "utils/getServerSession";
 import verifyRole from "utils/verifyRole";
+import styles from "styles/studentChoice.module.scss";
+import dishTypeMap from "utils/dishTypeMap";
+import Link from "next/link";
 
 type Props = {
   studentId: number;
@@ -52,14 +55,24 @@ const StudentChoice: NextPage<Props> = (props) => {
   }, [studentId, day]);
 
   return (
-    <div className='bg-black w-screen h-screen text-white'>
-      <h1>{dayMap[day]}</h1>
-      <div className='p-3 border-white border'>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <Link href='javascript:history.back()'>
+          <span>&lt;</span>
+        </Link>
+        <h1>{dayMap[day].toUpperCase()}</h1>
+        <button className={styles.saveBtn}>Сохранить</button>
+      </header>
+      <div>
         {prefs?.map((p) => (
-          <span key={p.id}>
-            {p.Dish.type}
-            <div>{p.Dish.name}</div>
-          </span>
+          <div key={p.id}>
+            {dishTypeMap[p.Dish.type]}
+            <div className='p-3 border-white border'>
+              <span>
+                {p.Dish.name} {p.Dish.price}
+              </span>
+            </div>
+          </div>
         ))}
       </div>
     </div>
