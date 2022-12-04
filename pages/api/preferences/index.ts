@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { options } from "pages/api/auth/[...nextauth]";
 import { Preference } from "types/Preference";
 import { getServerSideSession } from "utils/getServerSession";
+import isParentOf from "utils/isParentOf";
 import isValidDay from "utils/isValidDay";
 import verifyRole from "utils/verifyRole";
 
@@ -18,20 +17,11 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send("Invalid day");
 
   const session = await getServerSideSession({ req, res });
-  if (!session) return res.status(403).send("1");
+  if (!session) return res.status(401).send("");
 
   const allowed = verifyRole(session, ["ADMIN", "PARENT"]);
-  if (!allowed) return res.status(403).send("2");
-
-  if (session.user.role === "PARENT") {
-    const parentStudents = await prisma.parentStudent.count({
-      where: {
-        studentId: +studentId,
-        parentId: +session.user.id,
-      },
-    });
-    if (parentStudents === 0) return res.status(403).send("3");
-  }
+  const isParent = await isParentOf(session, +studentId);
+  if (!allowed || !isParent) return res.status(403).send("");
 
   switch (req.method) {
     case "GET": {
