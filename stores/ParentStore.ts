@@ -1,5 +1,5 @@
 import axios from "axios";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Parent } from "types/Parent";
 
 class ParentStore {
@@ -13,10 +13,11 @@ class ParentStore {
   }
 
   fetchParent(id: number) {
-    axios.get(`/api/parents/${id}?children=true`)
-    .then(resp => resp.data)
-    .then(p => this.parent = p)
-    .catch(console.log)
+    axios
+      .get(`/api/parents/${id}?children=true`)
+      .then((resp) => resp.data)
+      .then((p) => runInAction(() => (this.parent = p)))
+      .catch(console.log);
   }
 
   get currentChild() {

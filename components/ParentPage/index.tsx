@@ -24,8 +24,8 @@ const Parent = () => {
 
   return (
     <>
-      <div className={styles.daySelect_container}>
-        <div className={styles.daySelect_header}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <div
             className={styles.daySelect_menuButton}
             onClick={() => setModalOpen(!isModalOpen)}
@@ -61,7 +61,6 @@ const Parent = () => {
           </div>
         </div>
       </div>
-
       <Modal isModalOpen={isModalOpen} />
     </>
   );
