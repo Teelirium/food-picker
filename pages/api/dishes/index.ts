@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { DishFormData } from "types/Dish";
-import verifyRoleServerSide from "utils/verifyRoleServerSide";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 
 const prisma = new PrismaClient();
 
@@ -31,10 +32,8 @@ const prisma = new PrismaClient();
  *    summary: Удаляет все блюда
  */
 const handler: NextApiHandler = async (req, res) => {
-  const isWorkerOrAdmin = await verifyRoleServerSide(req, res, [
-    "WORKER",
-    "ADMIN",
-  ]);
+  const session = await getServerSideSession({ req, res });
+  const isWorkerOrAdmin = !!session && verifyRole(session, ["WORKER", "ADMIN"]);
 
   switch (req.method) {
     case "GET":

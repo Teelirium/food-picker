@@ -3,8 +3,9 @@ import { NextApiHandler } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { options } from "pages/api/auth/[...nextauth]";
 import { Preference } from "types/Preference";
+import { getServerSideSession } from "utils/getServerSession";
 import isValidDay from "utils/isValidDay";
-import verifyRoleServerSide from "utils/verifyRoleServerSide";
+import verifyRole from "utils/verifyRole";
 
 const prisma = new PrismaClient();
 
@@ -16,10 +17,10 @@ const handler: NextApiHandler = async (req, res) => {
   if (typeof day === "number" && !isValidDay(day))
     return res.status(400).send("Invalid day");
 
-  const session = await unstable_getServerSession(req, res, options);
+  const session = await getServerSideSession({ req, res });
   if (!session) return res.status(403).send("1");
 
-  const allowed = await verifyRoleServerSide(req, res, ["ADMIN", "PARENT"]);
+  const allowed = verifyRole(session, ["ADMIN", "PARENT"]);
   if (!allowed) return res.status(403).send("2");
 
   if (session.user.role === "PARENT") {

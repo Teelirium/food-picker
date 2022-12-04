@@ -4,6 +4,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import isValidDay from "utils/isValidDay";
 import dayMap from "utils/dayMap";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 
 type Props = {
   studentId: number;
@@ -13,8 +15,15 @@ type Props = {
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const studentId = ctx.query.studentId ? +ctx.query.studentId : undefined;
   const day = ctx.query.day ? +ctx.query.day : undefined;
+  const session = await getServerSideSession(ctx);
 
-  if (studentId === undefined || day === undefined || !isValidDay(day)) {
+  if (
+    studentId === undefined ||
+    day === undefined ||
+    !isValidDay(day) ||
+    !session ||
+    !verifyRole(session, ["PARENT", "ADMIN"])
+  ) {
     return {
       redirect: {
         destination: "/dashboard",
