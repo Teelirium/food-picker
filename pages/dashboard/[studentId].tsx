@@ -53,7 +53,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
 const StudentChoice: NextPage<Props> = (props) => {
   const { studentId, day } = props;
+
   const [preferences, setPreferences] = useState<Preference[] | null>(null);
+
   useEffect(() => {
     axios
       .get(`/api/preferences?studentId=${studentId}&day=${day}`)
@@ -61,17 +63,29 @@ const StudentChoice: NextPage<Props> = (props) => {
       .then((data) => setPreferences(data))
       .catch(alert);
   }, [studentId, day]);
+
   const dishes = useMemo(() => {
-    const result = new Map<DishType, Dish>();
+    const result = new Map<DishType, { dish: Dish; prefId: number }>();
     if (!preferences) {
       return result;
     }
 
     for (let pref of preferences) {
-      result.set(pref.Dish.type, pref.Dish);
+      result.set(pref.Dish.type, { dish: pref.Dish, prefId: pref.id });
     }
     return result;
   }, [preferences]);
+
+  const handleDelete = (preferenceId: number) => {
+    axios
+      .delete(`/api/preferences/${preferenceId}`)
+      .then(() => {
+        if (!!preferences) {
+          setPreferences(preferences.filter((p) => p.id !== preferenceId));
+        }
+      })
+      .catch(alert);
+  };
 
   return (
     <DashboardLayout>
@@ -87,13 +101,19 @@ const StudentChoice: NextPage<Props> = (props) => {
               <div className={styles.dishContainer}>
                 {dishes.has(k as DishType) ? (
                   <>
-                    <DishCardSmall dish={dishes.get(k as DishType)} />
+                    <DishCardSmall dish={dishes.get(k as DishType)?.dish} />
                     <div className={styles.btnGroup}>
                       <button
                         className={classNames(
                           styles.deleteBtn,
                           styles.actionBtn
                         )}
+                        onClick={() => {
+                          const dish = dishes.get(k as DishType);
+                          if (!!dish) {
+                            handleDelete(dish.prefId);
+                          }
+                        }}
                       >
                         <Image src={deleteIcon} alt='delete' />
                         Удалить
