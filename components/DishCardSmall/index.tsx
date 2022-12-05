@@ -1,5 +1,4 @@
 import { Dish } from "@prisma/client";
-import Image from "next/image";
 import React from "react";
 import styles from "./styles.module.scss";
 
@@ -7,9 +6,8 @@ type Props = {
   dish: Dish | undefined;
 };
 
-const DishCardSmall: React.FC<Props> = ({ dish }) => {
+const DishCardSmall: React.FC<Props> = React.forwardRef(({ dish }, ref) => {
   if (!dish) return null;
-
   return (
     <div className={styles.container}>
       <div className={styles.image}>
@@ -21,6 +19,7 @@ const DishCardSmall: React.FC<Props> = ({ dish }) => {
       </div>
     </div>
   );
-};
+});
+DishCardSmall.displayName;
 
 export default DishCardSmall;

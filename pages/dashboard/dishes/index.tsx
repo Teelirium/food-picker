@@ -8,6 +8,8 @@ import DashboardLayout from "components/Dashboard/Layout";
 import Link from "next/link";
 import dishTypeMap from "utils/dishTypeMap";
 import DashboardHeader from "components/Dashboard/Header";
+import DishCardSmall from "components/DishCardSmall";
+import isValidDay from "utils/isValidDay";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +23,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     !type ||
     studentId === undefined ||
     day === undefined ||
+    !isValidDay(day) ||
     !session ||
     !verifyRole(session, ["PARENT", "ADMIN"]) ||
     (!(await isParentOf(session, +studentId)) && session.user.role === "PARENT")
@@ -42,6 +45,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     props: {
       dishes,
       type: type as DishType,
+      studentId,
+      day,
     },
   };
 };
@@ -49,18 +54,27 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 type Props = {
   dishes: Dish[];
   type: DishType;
+  studentId: number;
+  day: number;
 };
 
-const Dishes: NextPage<Props> = ({ dishes, type }) => {
+const Dishes: NextPage<Props> = ({ dishes, type, studentId, day }) => {
   return (
     <DashboardLayout>
       <DashboardHeader>
         <h1>{dishTypeMap[type].toUpperCase()}</h1>
       </DashboardHeader>
       <main className={styles.body}>
-        {dishes.map((d) => (
-          <Link href={""} key={d.id}>
-            <span>{d.name}</span>
+        {dishes.map((dish) => (
+          <Link
+            key={dish.id}
+            href={`/dashboard/dishes/${dish.id}?studentId=${studentId}&day=${day}`}
+            passHref
+            legacyBehavior
+          >
+            <a>
+              <DishCardSmall dish={dish} />
+            </a>
           </Link>
         ))}
       </main>
