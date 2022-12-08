@@ -1,11 +1,16 @@
 import { useState } from "react";
 import styles from "pages-content/worker/styles/leftSideNavibar.module.css";
 import { signOut } from "next-auth/react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
     const [isLogoutVisible, setLogoutVisible] = useState(true);
-    
+    const router = useRouter();
+
+    const logOut = () => {
+        signOut();
+        
+    }
 
     return (
         <>
@@ -21,7 +26,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                     </label>
                 </div>
                 <div className={isLogoutVisible ? styles.logoutBtn : styles.hide}
-                     onClick={() => signOut()}>
+                     onClick={() => logOut()}>
                         Выйти из аккаунта
                 </div>
 
@@ -29,7 +34,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                     <div className={activePage === 1 ? 
                         styles.navElement + ' ' + styles.activeNavElement : 
                         styles.navElement}
-                        onClick={() => Router.push("dishes")}>
+                        onClick={() => router.push("dishes")}>
                             <img src={activePage === 1 ?
                                 '/img/activeDishes.png' :
                                 "/img/dishes.png"} 
@@ -42,7 +47,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                     <div className={activePage === 2 ? 
                         styles.navElement + ' ' + styles.activeNavElement : 
                         styles.navElement}
-                        onClick={() => Router.push("orders")}>
+                        onClick={() => router.push("orders")}>
                             <img src={activePage === 2 ?
                                 '/img/activeOrders.png' :
                                 "/img/orders.png"}   
@@ -55,7 +60,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                     <div className={activePage === 3 ? 
                         styles.navElement + ' ' + styles.activeNavElement : 
                         styles.navElement}
-                        onClick={() => Router.push("standard_menu")}>
+                        onClick={() => router.push("standard_menu")}>
                             <img src={activePage === 3 ?
                                 '/img/standardMenu.png' :
                                 "/img/standardMenu.png"} 

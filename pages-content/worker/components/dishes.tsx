@@ -1,11 +1,23 @@
 import { useState } from "react";
+import { Dish, DishType } from "@prisma/client";
 import styles from "../styles/dishes.module.css"
 import AddDishModal from "pages-content/worker/components/addDishModal";
 
-const Dishes = () => {
+const Dishes = (props: {dishes: Dish[]}) => {
+    const dishesList = props.dishes.filter((dish) => dish.type == dishType);
+
     const [mealTime, setMealTime] = useState("Breakfast");
     const [dishType, setDishType] = useState("PRIMARY");
+    const [currentDishesList, setDishesList] = useState(dishesList);
     const [isModalOpen, setModalOpen] = useState(false);
+
+    const selectDishType = (type: DishType) => {
+        setDishType(type);
+
+        const filteredDishesList = props.dishes.filter((dish) => dish.type == dishType);
+        setDishesList(filteredDishesList);
+    };
+    
 
 
     return (
@@ -46,31 +58,31 @@ const Dishes = () => {
                             <div className={dishType === "PRIMARY" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => setDishType("PRIMARY")}>
+                                onClick={() => selectDishType("PRIMARY")}>
                                 <span>Первое блюдо</span>
                             </div>
                             <div className={dishType === "SECONDARY" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => setDishType("SECONDARY")}>
+                                onClick={() => selectDishType("SECONDARY")}>
                                 <span>Горячее</span>
                             </div>
                             <div className={dishType === "SIDE" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => setDishType("SIDE")}>
+                                onClick={() => selectDishType("SIDE")}>
                                 <span>Гарнир</span>
                             </div>
                             <div className={dishType === "DRINK" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => setDishType("DRINK")}>
+                                onClick={() => selectDishType("DRINK")}>
                                 <span>Напиток</span>
                             </div>
                             <div className={dishType === "EXTRA" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => setDishType("EXTRA")}>
+                                onClick={() => selectDishType("EXTRA")}>
                                 <span>Дополнительно</span>
                             </div>
                         </div>
@@ -80,10 +92,11 @@ const Dishes = () => {
                             <span>Добавить блюдо</span>
                         </div>
                     </div>
-                </div>
+                </div> 
+                {JSON.stringify(currentDishesList)}
             </div>
-
-            { isModalOpen ? <AddDishModal /> : null }
+                
+            { isModalOpen ? <AddDishModal dishType={dishType} setModalOpen={setModalOpen}/> : null }
         </>
     )
 }

@@ -13,7 +13,7 @@
 .content {
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     height: inherit;
     flex-basis: 1300px;
     background: #181818;

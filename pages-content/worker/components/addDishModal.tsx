@@ -1,19 +1,17 @@
 import axios from "axios";
-import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { DishFormData, DishType } from "types/Dish";
+import styles from "../styles/addDishModal.module.css";
 
 
-const AddDishModal = () => {
+const AddDishModal = (props: {dishType: string, setModalOpen: Function}) => {
   const { register, handleSubmit } = useForm<DishFormData>();
-  const dishTypes: DishType[] = ["PRIMARY", "SIDE", "SECONDARY", "DRINK", "EXTRA"];
-  const ruTypesNames = new Map([
-    ["PRIMARY", "Первое"],
-    ["SECONDARY", "Второе"],
-    ["SIDE", "Гарнир"],
-    ["DRINK", "Напиток"],
-    ["EXTRA", "Дополнительное"]
-  ]);
+  const closeModalHandler = () => {
+    props.setModalOpen(false);
+  }
+
+
+
 
   const onSubmit = handleSubmit(data => {
     axios.post('/api/dishes/', {dish: data})
@@ -22,65 +20,86 @@ const AddDishModal = () => {
   })
 
   return (
-    <div className='bg-slate-300 h-screen w-screen'>
-      <form className="flex flex-col" onSubmit={onSubmit}>
+    <div className={styles.container}>
+      <form className={styles.form} onSubmit={onSubmit}>
+        <div className={styles.closeBtn}
+          onClick={() => closeModalHandler()}>
+          <img src="/img/close.png" alt="close" width={20} height={20}/>
+        </div>
+          <label>
+            <span style={{marginRight: "15px"}}>Ссылка на изображение</span>
+            <div className={styles.inputBorder}>
+              <input type={"text"} className={styles.formInput} size={35} {...register("imgURL")} />
+            </div>
+          </label>
         <label>
-          Название
-          <input type={"text"} {...register("name")} />
+          <span style={{marginRight: "15px"}}>Название блюда:</span>
+          <div className={styles.inputBorder}>
+            <input type={"text"} className={styles.formInput} size={48} {...register("name")} />
+          </div>
         </label>
         <label>
-          Ссылка на изображение
-          <input type={"text"} {...register("imgURL")} />
+          <span style={{marginRight: "173px"}}>Вес:</span>
+          <div className={styles.inputBorder}>
+            <input type={"number"} className={styles.formInput} {...register('weightGrams', {
+              valueAsNumber: true})} />
+          </div>
+          <span> г.</span>
+        </label>
+          <label>
+            <span style={{marginRight: "86px"}}>Стоимость:</span>
+            <div className={styles.inputBorder}>
+              <input type={"number"} className={styles.formInput} {...register("price", {
+                valueAsNumber: true})} />
+            </div>  
+            <span> ₽</span>
+          </label>
+          <span>Энергетическая ценность</span>
+          <label>
+          <span  style={{marginRight: "31px"}}>(калорийность:)</span>
+          <div className={styles.inputBorder}>
+            <input type={"number"} className={styles.formInput} {...register('calories', {
+              valueAsNumber: true})} />
+          </div> 
+        </label>
+          <label>
+            <span style={{marginRight: "148px"}}>Белки:</span>
+            <div className={styles.inputBorder}>
+              <input type={"number"} className={styles.formInput} {...register('proteins', {
+                valueAsNumber: true})} />
+            </div>
+            <span> г.</span>
         </label>
         <label>
-          Вес в грамммах
-          <input type={"number"} {...register('weightGrams', {
-            valueAsNumber: true,
-            })} />
+          <span style={{marginRight: "148px"}}>Жиры:</span>
+          <div className={styles.inputBorder}>
+            <input type={"number"} className={styles.formInput} {...register('fats', {
+              valueAsNumber: true})} />
+          </div>
+          <span> г.</span>
         </label>
         <label>
-          Состав
-          <input type={"text"} {...register('ingredients')} />
+          <span style={{marginRight: "107px"}}>Углеводы:</span>
+          <div className={styles.inputBorder}>
+            <input type={"number"} className={styles.formInput} {...register('carbs', {
+              valueAsNumber: true})} />
+          </div>  
+          <span> г.</span>
         </label>
         <label>
-          Цена
-          <input type={"number"} {...register("price", {
-            valueAsNumber: true,
-            })} />
+          <span style={{marginRight: "19px"}}>Состав:</span>
+          <div className={styles.inputBorder}>
+            <textarea className={styles.formInput + ' ' + styles.ingredientsInput} {...register('ingredients')} />
+          </div>
         </label>
-        <label>
-          Калории
-          <input type={"number"} {...register('calories', {
-            valueAsNumber: true,
-            })} />
+        
+        <input className={styles.hiddenTypeInput} type={"text"} value={props.dishType} {...register('type')} />
+        <label className={styles.formBtns}>
+          <div className={styles.cancelBtn}
+            onClick={() => closeModalHandler()}>Отмена</div>
+          
         </label>
-        <label>
-          Жиры
-          <input type={"number"} {...register('fats', {
-            valueAsNumber: true,
-            })} />
-        </label>
-        <label>
-          Белки
-          <input type={"number"} {...register('proteins', {
-            valueAsNumber: true,
-            })} />
-        </label>
-        <label>
-          Углеводы
-          <input type={"number"} {...register('carbs', {
-            valueAsNumber: true,
-            })} />
-        </label>
-        <label>
-          Тип блюда
-          <select {...register('type')}>
-            {dishTypes.map(type => (
-              <option key={type} value={type}>{ruTypesNames.get(type)}</option>
-            ))}
-          </select>
-        </label>
-        <button className='bg-orange-300'>Добавить блюдо</button>
+        <button className={styles.submitBtn}>Сохранить</button>
       </form>
     </div>
   );

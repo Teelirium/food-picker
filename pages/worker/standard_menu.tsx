@@ -1,7 +1,27 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
+import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
 import styles from "pages-content/worker/styles/dishes.module.css";
 import LeftSideNavibar from "pages-content/worker/components/leftSideNavibar";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const session = await getServerSideSession(ctx);
+  
+    if (!(session?.user.role === "WORKER")) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+  
+    return {
+      props: {
+        session
+      }
+    };
+  }
 
 const StandardMenu: NextPage = () => {
     return (
