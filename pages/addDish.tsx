@@ -2,12 +2,12 @@ import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
-import { Dish, DishType } from "types/Dish";
+import { DishFormData, DishType } from "types/Dish";
 
 
 const AddDish: NextPage = () => {
   const dishTypes: DishType[] = ["PRIMARY", "SIDE", "SECONDARY", "DRINK", "EXTRA"];
-  const { register, handleSubmit } = useForm<Dish>();
+  const { register, handleSubmit } = useForm<DishFormData>();
   const ruTypesNames = new Map([
     ["PRIMARY", "Первое"],
     ["SECONDARY", "Второе"],

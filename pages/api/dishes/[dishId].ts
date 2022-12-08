@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { PartialDish } from "types/Dish";
-import verifyRoleServerSide from "utils/verifyRoleServerSide";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 
 const prisma = new PrismaClient();
 
@@ -34,15 +35,12 @@ const prisma = new PrismaClient();
  */
 const handler: NextApiHandler = async (req, res) => {
   const { dishId } = req.query;
-
   if (!dishId) {
     return res.status(404).send("");
   }
 
-  const isWorkerOrAdmin = await verifyRoleServerSide(req, res, [
-    "WORKER",
-    "ADMIN",
-  ]);
+  const session = await getServerSideSession({ req, res });
+  const isWorkerOrAdmin = !!session && verifyRole(session, ["WORKER", "ADMIN"]);
 
   switch (req.method) {
     case "GET":

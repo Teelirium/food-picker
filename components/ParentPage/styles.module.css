@@ -12,10 +12,6 @@
     background-color: #181818;
 }
 
-.daySelect_innerContainer {
-
-}
-
 .header {
     display: flex;
     width: 100%;
@@ -104,6 +100,7 @@
 }
 
 .modal_header {
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
