@@ -1,9 +1,10 @@
+import DashboardLayout from "components/Dashboard/Layout";
 import { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import styles from "../styles/login.module.css";
+import styles from "../styles/login.module.scss";
 import { signInErrors } from "../utils/nextAuthErrors";
 
 type LoginFormData = {
@@ -42,7 +43,7 @@ const Login: NextPage = () => {
         <title>Вход</title>
         <meta charSet='utf-8' />
       </Head>
-      <div className={styles.container}>
+      <DashboardLayout>
         <div className={styles.schoolName}>
           <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
         </div>
@@ -85,7 +86,7 @@ const Login: NextPage = () => {
 
           <button className={styles.logInButton}>Войти</button>
         </form>
-      </div>
+      </DashboardLayout>
     </>
   );
 };

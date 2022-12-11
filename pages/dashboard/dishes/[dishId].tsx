@@ -74,7 +74,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
 
   const handleChoose = () => {
     axios.post(`/api/preferences?studentId=${studentId}&day=${day}`, {dishId})
-    .then(() => {router.push(`/dashboard/${studentId}?day=${day}`)})
+    .then(() => {router.replace(`/dashboard/${studentId}?day=${day}`)})
     .catch(alert);
   }
 

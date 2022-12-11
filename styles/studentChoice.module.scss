@@ -13,25 +13,6 @@
   gap: 2.5rem;
 }
 
-.dishSection {
-  width: 100%;
-  & > span {
-    margin-left: 3rem;
-  }
-}
-
-.dishContainer {
-  border: white 1px solid;
-  border-radius: 3rem;
-  padding: 4rem 1.8rem;
-  min-height: 26rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-}
-
 .btnGroup {
   width: 100%;
   display: flex;

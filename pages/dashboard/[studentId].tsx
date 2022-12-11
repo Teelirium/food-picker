@@ -17,6 +17,7 @@ import Image from "next/image";
 import classNames from "classnames";
 import DashboardLayout from "components/Dashboard/Layout";
 import DashboardHeader from "components/Dashboard/Header";
+import PreferenceSection from "components/PreferenceSection";
 
 type Props = {
   studentId: number;
@@ -95,57 +96,54 @@ const StudentChoice: NextPage<Props> = (props) => {
       </DashboardHeader>
       {!!preferences ? (
         <main className={styles.body}>
-          {Object.entries(dishTypeMap).map(([k, v]) => (
-            <div key={k} className={styles.dishSection}>
-              <span>{v}</span>
-              <div className={styles.dishContainer}>
-                {dishes.has(k as DishType) ? (
-                  <>
-                    <DishCardSmall dish={dishes.get(k as DishType)?.dish} />
-                    <div className={styles.btnGroup}>
+          {Object.entries(dishTypeMap).map(([k, v]) => {
+            if (dishes.has(k as DishType))
+              return (
+                <PreferenceSection title={v} key={k}>
+                  <DishCardSmall dish={dishes.get(k as DishType)?.dish} />
+                  <div className={styles.btnGroup}>
+                    <button
+                      className={classNames(styles.deleteBtn, styles.actionBtn)}
+                      onClick={() => {
+                        const dish = dishes.get(k as DishType);
+                        if (!!dish) {
+                          handleDelete(dish.prefId);
+                        }
+                      }}
+                    >
+                      <Image src={deleteIcon} alt='delete' />
+                      Удалить
+                    </button>
+                    <Link
+                      href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
+                    >
                       <button
-                        className={classNames(
-                          styles.deleteBtn,
-                          styles.actionBtn
-                        )}
-                        onClick={() => {
-                          const dish = dishes.get(k as DishType);
-                          if (!!dish) {
-                            handleDelete(dish.prefId);
-                          }
-                        }}
+                        className={classNames(styles.editBtn, styles.actionBtn)}
                       >
-                        <Image src={deleteIcon} alt='delete' />
-                        Удалить
+                        <Image src={editIcon} alt='edit' />
+                        Изменить
                       </button>
-                      <Link
-                        href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                      >
-                        <button
-                          className={classNames(
-                            styles.editBtn,
-                            styles.actionBtn
-                          )}
-                        >
-                          <Image src={editIcon} alt='edit' />
-                          Изменить
-                        </button>
-                      </Link>
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                  >
+                    </Link>
+                  </div>
+                </PreferenceSection>
+              );
+            return (
+              <Link
+                key={k}
+                href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
+                legacyBehavior
+              >
+                <a>
+                  <PreferenceSection title={v}>
                     + Добавить Блюдо
-                  </Link>
-                )}
-              </div>
-            </div>
-          ))}
+                  </PreferenceSection>
+                </a>
+              </Link>
+            );
+          })}
         </main>
       ) : (
-        "Loading..."
+        "Загрузка..."
       )}
     </DashboardLayout>
   );

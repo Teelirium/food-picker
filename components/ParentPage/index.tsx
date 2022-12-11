@@ -39,7 +39,7 @@ const Parent = () => {
       {!!parentStore.parent ? (
         <>
           <div className={styles.header}>
-            <Link href={`?student=${parentStore.childIndex}`} shallow={true}>
+            <Link href={`?student=${parentStore.childIndex}`} shallow replace>
               <div className={styles.menuButton}>
                 <Image src={menuIcon} alt={"menu"} width={30} height={30}/>
               </div>
