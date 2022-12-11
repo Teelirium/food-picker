@@ -3,16 +3,15 @@ import { Dish, DishType, PrismaClient } from "@prisma/client";
 import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
-import styles from "pages-content/worker/styles/dishes.module.css";
-import LeftSideNavibar from "pages-content/worker/components/leftSideNavibar";
-import Dishes from "pages-content/worker/components/dishes";
+import styles from "styles/worker.module.css";
+import LeftSideNavibar from "components/worker/leftSideNavibar";
+import Dishes from "components/worker/dishes";
 import { PropTypes } from "mobx-react";
 
 const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
-  const type = ctx.query.type;
 
   if (!(session?.user.role === "WORKER")) {
     return {

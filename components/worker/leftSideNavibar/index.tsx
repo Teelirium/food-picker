@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "pages-content/worker/styles/leftSideNavibar.module.css";
+import styles from "./styles.module.css";
 import { signOut } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 

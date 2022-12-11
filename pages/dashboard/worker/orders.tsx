@@ -1,8 +1,8 @@
 import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
-import styles from "pages-content/worker/styles/dishes.module.css";
-import LeftSideNavibar from "pages-content/worker/components/leftSideNavibar";
+import styles from "styles/worker.module.css";
+import LeftSideNavibar from "components/worker/leftSideNavibar";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getServerSideSession(ctx);
@@ -23,16 +23,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-const StandardMenu: NextPage = () => {
+const Orders: NextPage = () => {
     return (
         <>
         <Head>
             <title>
-                Стандартное питание
+                Заказы
             </title>
         </Head>
         <div className={styles.container}>
-            <LeftSideNavibar activePage={3}/>
+            <LeftSideNavibar activePage={2}/>
         </div>
 
         
@@ -40,4 +40,4 @@ const StandardMenu: NextPage = () => {
     );
 };
 
-export default StandardMenu;
+export default Orders;

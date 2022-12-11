@@ -1,25 +1,46 @@
 import { useState } from "react";
 import { Dish, DishType } from "@prisma/client";
-import styles from "../styles/dishes.module.css"
-import AddDishModal from "pages-content/worker/components/addDishModal";
+import styles from "./styles.module.css"
+import AddDishModal from "./dishModal";
+import DishCard from "components/worker/dishes/dishCard";
 
 const Dishes = (props: {dishes: Dish[]}) => {
-    const dishesList = props.dishes.filter((dish) => dish.type == dishType);
-
     const [mealTime, setMealTime] = useState("Breakfast");
     const [dishType, setDishType] = useState("PRIMARY");
+    const dishesList =  props.dishes.filter((dish) => dish.type == dishType);
     const [currentDishesList, setDishesList] = useState(dishesList);
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalState, setModalState] = useState({
+        isOpen: false,
+        method: "POST",
+        currentDish: {}
+    });
 
     const selectDishType = (type: DishType) => {
         setDishType(type);
-
         const filteredDishesList = props.dishes.filter((dish) => dish.type == dishType);
         setDishesList(filteredDishesList);
     };
+
+    const setModalOpenForPost = () => {
+        setModalState({
+            isOpen: !(modalState.isOpen),
+            method: "POST",
+            currentDish: {}
+        })
+    };
     
+    const setModalOpenForUpdate = (dish: Dish) => {
+        setModalState({
+            isOpen: !(modalState.isOpen),
+            method: "UPDATE",
+            currentDish: dish
+        });
+    }
 
-
+    const dishesComponents = currentDishesList.map((dish) => {
+        return <DishCard key={dish.id} dish={dish} updateDish={setModalOpenForUpdate}/>
+    })
+    
     return (
         <>
             <div className={styles.content}>
@@ -87,16 +108,22 @@ const Dishes = (props: {dishes: Dish[]}) => {
                             </div>
                         </div>
                         <div className={styles.addDishBtn}
-                            onClick={() => setModalOpen(true)}>
+                            onClick={() => setModalOpenForPost()}>
                             <img src="/img/plus.png" alt="plus" />
                             <span>Добавить блюдо</span>
                         </div>
                     </div>
-                </div> 
-                {JSON.stringify(currentDishesList)}
+                    
+                    
+
+                    <div className={styles.dishesContainer}>
+                        {dishesComponents}
+                    </div>
+                    {/* {JSON.stringify(currentDishesList)}  */}
+                </div>            
             </div>
                 
-            { isModalOpen ? <AddDishModal dishType={dishType} setModalOpen={setModalOpen}/> : null }
+            { modalState.isOpen ? <AddDishModal dishType={dishType} setModalOpen={setModalOpenForPost} method={modalState.method} dish={modalState.currentDish}/> : null }
         </>
     )
 }

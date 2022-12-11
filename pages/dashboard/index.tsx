@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (session.user.role === "WORKER") {
     return {
       redirect: {
-        destination: "/worker/dishes",
+        destination: "/dashboard/worker/dishes",
         permanent: false,
       },
     };
