@@ -1,7 +1,7 @@
 @import "styles/fonts/fonts.css";
 
 .active {
-  position: absolute;
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +9,10 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+  * {
+    z-index: 2;
+  }
 }
 
 .inactive {
@@ -17,8 +21,8 @@
 }
 
 .container {
-  max-width: 60%;
-  max-height: 60%;
+  width: 70%;
+  max-height: max-content;
   background: linear-gradient(to right, #3e1f47, #144552);
   border-radius: 30px;
 }
@@ -29,26 +33,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 70px;
   background: white;
   border-radius: 30px 30px 0 0;
+  padding: 1.2rem;
 
   * {
+    text-align: center;
     font-family: "Century Gothic";
     font-size: 1.8rem;
     color: linear-gradient(to right, #3e1f47, #144552);
     font-weight: 600;
   }
-}
-
-.body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-  height: 100%;
-  width: 100%;
-  padding: 1.6rem;
 }
 
 .subHeader {
@@ -61,7 +56,24 @@
   padding: 1rem;
 }
 
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  height: 100%;
+  width: 100%;
+  padding: 1.6rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  max-height: 25rem;
+  overflow-y: scroll;
+}
+
 .childname {
+  padding: 1.2rem;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -88,7 +100,7 @@
 
 .logOutBtn {
   width: 100%;
-  height: 40px;
+  padding: 0.8rem;
   border-radius: 30px;
   background: white;
   color: black;

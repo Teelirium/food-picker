@@ -3,6 +3,7 @@ import { Session, unstable_getServerSession } from "next-auth";
 import Parent from "components/ParentPage";
 import { getServerSideSession } from "utils/getServerSession";
 import verifyRole from "utils/verifyRole";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
@@ -27,13 +28,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      session,
     },
   };
 };
 
-const Index: NextPage<{ session: Session }> = ({ session }) => {
-  return <>{session.user.role === "PARENT" ? <Parent /> : null}</>;
+const Index: NextPage = () => {
+  const {data} = useSession();
+  return <>{!!data && data.user.role === "PARENT" ? <Parent /> : null}</>;
 };
 
 export default Index;

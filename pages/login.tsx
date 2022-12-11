@@ -17,15 +17,23 @@ const Login: NextPage = () => {
   const router = useRouter();
 
   const onSubmit = handleSubmit((data: LoginFormData) => {
-    signIn("credentials", { redirect: false, ...data })
-    .then((resp) => {
-      if (resp?.ok) {
-        return router.push("/dashboard");
-      }
-      if (resp?.error) {
-        alert(signInErrors[resp?.error]);
-      }
-    });
+    signIn("credentials", {
+      callbackUrl: '/dashboard?student=0',
+      ...data,
+    })
+      .then((resp) => {
+        // alert(JSON.stringify(resp));
+        // if (!resp) {
+        //   alert(JSON.stringify(resp));
+        //   return;
+        // }
+        // if (resp.error) {
+        //   alert(signInErrors[resp.error] || resp.error);
+        //   return;
+        // }
+        // return router.push("/dashboard?student=0");
+      })
+      .catch(() => alert('Неверное имя пользователя или пароль'));
   });
 
   return (
@@ -35,28 +43,41 @@ const Login: NextPage = () => {
         <meta charSet='utf-8' />
       </Head>
       <div className={styles.container}>
-      <div className={styles.schoolName}>
-        <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
-      </div>
+        <div className={styles.schoolName}>
+          <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
+        </div>
         <form className={styles.form} onSubmit={onSubmit}>
-
           <label className={styles.label}>
             <p>Логин</p>
             <div className={styles.inputBorder}>
-              <input type={"text"} {...register("username")} placeholder="Логин" required />
+              <input
+                type={"text"}
+                {...register("username")}
+                placeholder='Логин'
+                required
+              />
             </div>
           </label>
 
           <label className={styles.label}>
-          <p>Пароль</p>
-          <div className={styles.inputBorder}>
-            <input type={"password"} {...register("password")} placeholder="Пароль" required />
-          </div>
+            <p>Пароль</p>
+            <div className={styles.inputBorder}>
+              <input
+                type={"password"}
+                {...register("password")}
+                placeholder='Пароль'
+                required
+              />
+            </div>
           </label>
 
           <label className={styles.labelRememberMe}>
             <label className={styles.checkboxLabel}>
-              <input className={styles.checkbox} type={"checkbox"} {...register("rememberMe")} />
+              <input
+                className={styles.checkbox}
+                type={"checkbox"}
+                {...register("rememberMe")}
+              />
               <span className={styles.customCheckbox}></span>
             </label>
             <p>Запомнить меня</p>

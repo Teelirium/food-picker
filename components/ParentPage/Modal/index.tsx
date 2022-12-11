@@ -4,9 +4,13 @@ import getFullName from "utils/getFullName";
 import { signOut } from "next-auth/react";
 import ReactDOM from "react-dom";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Modal = ({ isOpen }: { isOpen: boolean }) => {
   const router = useRouter();
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
 
   if (!parentStore.parent) {
     return null;
@@ -35,12 +39,12 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Добро пожаловать,</span>
+          {/* <span>Добро пожаловать,</span> */}
           <h2>{getFullName(parentStore.parent)}</h2>
         </div>
         <h3 className={styles.subHeader}>Выбор еды для:</h3>
         <div className={styles.body}>
-          {childList}
+          <div className={styles.list}>{childList}</div>
           <button className={styles.logOutBtn} onClick={() => signOut()}>
             Выйти из аккаунта
           </button>

@@ -52,14 +52,16 @@ export const options: NextAuthOptions = {
         password: { label: "Пароль", type: "password" },
       },
       async authorize(credentials, req) {
+        const error = Promise.reject(new Error('Invalid credentials'));
+
         if (!credentials) {
-          return null;
+          return error;
         }
 
         const { username, password } = credentials;
         const user = await findUser(username);
         if (!user) {
-          return null;
+          return error;
         }
 
         const isCorrectPassword = await compare(password, user.password);
@@ -71,7 +73,7 @@ export const options: NextAuthOptions = {
           return data;
         }
         
-        return null;
+        return error;
       },
     }),
   ],
