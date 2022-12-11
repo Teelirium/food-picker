@@ -40,6 +40,7 @@ async function findUser(username: string): Promise<dbUserData | null> {
 export const options: NextAuthOptions = {
   pages: {
     signIn: "/login",
+    //error: '/login'
   },
   session: {
     strategy: "jwt",
@@ -52,16 +53,14 @@ export const options: NextAuthOptions = {
         password: { label: "Пароль", type: "password" },
       },
       async authorize(credentials, req) {
-        const error = Promise.reject(new Error('Invalid credentials'));
-
         if (!credentials) {
-          return error;
+          return Promise.reject(new Error('Invalid credentials'));
         }
 
         const { username, password } = credentials;
         const user = await findUser(username);
         if (!user) {
-          return error;
+          return Promise.reject(new Error('Invalid username'));
         }
 
         const isCorrectPassword = await compare(password, user.password);
@@ -73,7 +72,7 @@ export const options: NextAuthOptions = {
           return data;
         }
         
-        return error;
+        return Promise.reject(new Error('Invalid password'));
       },
     }),
   ],
