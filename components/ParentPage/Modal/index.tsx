@@ -1,14 +1,18 @@
 import parentStore from "stores/ParentStore";
-import styles from "../styles.module.css";
+import styles from "./styles.module.scss";
 import getFullName from "utils/getFullName";
 import { signOut } from "next-auth/react";
+import ReactDOM from "react-dom";
+import { useRouter } from "next/router";
 
-const Modal = ({ isModalOpen }: { isModalOpen: boolean }) => {
+const Modal = ({ isOpen }: { isOpen: boolean }) => {
+  const router = useRouter();
+
   if (!parentStore.parent) {
     return null;
   }
 
-  const childs = parentStore.parent.children.map((child, index) => (
+  const childList = parentStore.parent.children.map((child, index) => (
     <div
       key={child.id}
       onClick={() => {
@@ -16,29 +20,34 @@ const Modal = ({ isModalOpen }: { isModalOpen: boolean }) => {
       }}
       className={
         parentStore.childIndex == index
-          ? styles.modal_activeChildname
-          : styles.modal_childname
+          ? styles.activeChildname
+          : styles.childname
       }
     >
       <span>{getFullName(child)}</span>
     </div>
   ));
 
-  return (
-    <div className={isModalOpen ? styles.activeModal : styles.inactiveModal}>
-      <div className={styles.modal_window}>
-        <div className={styles.modal_header}>
-          <span>{getFullName(parentStore.parent)}</span>
+  return ReactDOM.createPortal(
+    <div
+      className={isOpen ? styles.active : styles.inactive}
+      onClick={() => router.push("", undefined, { shallow: true })}
+    >
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <span>Добро пожаловать,</span>
+          <h2>{getFullName(parentStore.parent)}</h2>
         </div>
-        <div className={styles.modal_body}>
-          <span className={styles.modal_chooseFoodSpan}>Выбор еды для :</span>
-          {childs}
-          <button className={styles.modal_logOutBtn} onClick={() => signOut()}>
+        <h3 className={styles.subHeader}>Выбор еды для:</h3>
+        <div className={styles.body}>
+          {childList}
+          <button className={styles.logOutBtn} onClick={() => signOut()}>
             Выйти из аккаунта
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.querySelector("#__next") as HTMLElement
   );
 };
 
