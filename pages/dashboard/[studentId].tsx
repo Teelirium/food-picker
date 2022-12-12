@@ -77,6 +77,15 @@ const StudentChoice: NextPage<Props> = (props) => {
     return result;
   }, [preferences]);
 
+  const totalCost: number = useMemo(() => {
+    if (!preferences || preferences.length === 0) {
+      return 0;
+    }
+    return preferences
+      .map((pref) => pref.Dish.price)
+      .reduce((total, cur) => total + cur, 0);
+  }, [preferences]);
+
   const handleDelete = (preferenceId: number) => {
     axios
       .delete(`/api/preferences/${preferenceId}`)
@@ -92,7 +101,7 @@ const StudentChoice: NextPage<Props> = (props) => {
     <DashboardLayout>
       <DashboardHeader backUrl='/dashboard'>
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <button className={styles.saveBtn}>Сохранить</button>
+        <button className={styles.saveBtn}>{totalCost} руб.</button>
       </DashboardHeader>
       {!!preferences ? (
         <main className={styles.body}>
