@@ -183,8 +183,8 @@
     flex-wrap: wrap;
     overflow: hidden;
     overflow-y: auto;
-    justify-content: space-around;
-    margin: -20px -25px;
+    justify-content: center;
+    align-items: flex-start;
     height: calc(100vh - 130px);
 }
 

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import Router from 'next/router';
 import { Dish, DishType } from "@prisma/client";
 import styles from "./styles.module.css"
 import AddDishModal from "./dishModal";
@@ -7,26 +8,22 @@ import DishCard from "components/worker/dishes/dishCard";
 const Dishes = (props: {dishes: Dish[]}) => {
     const [mealTime, setMealTime] = useState("Breakfast");
     const [dishType, setDishType] = useState("PRIMARY");
-    const dishesList =  props.dishes.filter((dish) => dish.type == dishType);
-    const [currentDishesList, setDishesList] = useState(dishesList);
-    const [modalState, setModalState] = useState({
+    const [modalState, setModalState] = useState<{isOpen: boolean, method: string, currentDish: Dish | undefined}>({
         isOpen: false,
         method: "POST",
-        currentDish: {}
+        currentDish: undefined
     });
 
-    const selectDishType = (type: DishType) => {
-        setDishType(type);
-        const filteredDishesList = props.dishes.filter((dish) => dish.type == dishType);
-        setDishesList(filteredDishesList);
-    };
+    const dishes = useMemo(() => {
+        return props.dishes.filter((dish) => dish.type == dishType);
+    }, [dishType])
 
     const setModalOpenForPost = () => {
         setModalState({
             isOpen: !(modalState.isOpen),
             method: "POST",
-            currentDish: {}
-        })
+            currentDish: undefined
+        });
     };
     
     const setModalOpenForUpdate = (dish: Dish) => {
@@ -37,7 +34,7 @@ const Dishes = (props: {dishes: Dish[]}) => {
         });
     }
 
-    const dishesComponents = currentDishesList.map((dish) => {
+    const dishesComponents = dishes.map((dish) => {
         return <DishCard key={dish.id} dish={dish} updateDish={setModalOpenForUpdate}/>
     })
     
@@ -79,31 +76,31 @@ const Dishes = (props: {dishes: Dish[]}) => {
                             <div className={dishType === "PRIMARY" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => selectDishType("PRIMARY")}>
+                                onClick={() => setDishType("PRIMARY")}>
                                 <span>Первое блюдо</span>
                             </div>
                             <div className={dishType === "SECONDARY" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => selectDishType("SECONDARY")}>
+                                onClick={() => setDishType("SECONDARY")}>
                                 <span>Горячее</span>
                             </div>
                             <div className={dishType === "SIDE" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => selectDishType("SIDE")}>
+                                onClick={() => setDishType("SIDE")}>
                                 <span>Гарнир</span>
                             </div>
                             <div className={dishType === "DRINK" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => selectDishType("DRINK")}>
+                                onClick={() => setDishType("DRINK")}>
                                 <span>Напиток</span>
                             </div>
                             <div className={dishType === "EXTRA" ?
                                 styles.activeDishType :
                                 styles.dishType}
-                                onClick={() => selectDishType("EXTRA")}>
+                                onClick={() => setDishType("EXTRA")}>
                                 <span>Дополнительно</span>
                             </div>
                         </div>
@@ -119,11 +116,11 @@ const Dishes = (props: {dishes: Dish[]}) => {
                     <div className={styles.dishesContainer}>
                         {dishesComponents}
                     </div>
-                    {/* {JSON.stringify(currentDishesList)}  */}
                 </div>            
             </div>
                 
-            { modalState.isOpen ? <AddDishModal dishType={dishType} setModalOpen={setModalOpenForPost} method={modalState.method} dish={modalState.currentDish}/> : null }
+            { modalState.isOpen ? <AddDishModal dishType={dishType} setModalOpen={setModalOpenForPost} method={modalState.method}
+                dish={modalState.currentDish}/> : null }
         </>
     )
 }

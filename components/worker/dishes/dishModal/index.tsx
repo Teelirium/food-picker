@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Dish } from "@prisma/client";
+import { Dish, DishType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { DishFormData} from "types/Dish";
 import styles from "./styles.module.css";
+import Router from "next/router";
 
 type Props = {
   dishType: string;
@@ -14,23 +15,54 @@ type Props = {
 
 const AddDishModal: React.FC<Props> = ({ dishType, setModalOpen, method, dish }) => {
   const { register, handleSubmit } = useForm<DishFormData>();
-  console.log(method === "POST")
-
-  const onSubmit = () => {
+  const onSubmit = handleSubmit(data => {
     switch (method) {
-      case "POST":
-        handleSubmit(data => {
-          axios.post('/api/dishes/', {dish: data})
-          .then(resp => console.log("Блюдо добавлено!"))
-          .catch(console.log);
-        });
+      case "POST": {
+        axios.post('/api/dishes/', {dish: data})
+        .then(resp => {console.log("Блюдо добавлено!"); Router.reload()})
+        .catch(console.log);
+        setModalOpen();
         break;
+      }
+
+      case "UPDATE": {
+        axios.patch(`/api/dishes/${dish?.id}`, {partialDish: data})
+        .then(resp => {console.log("Блюдо изменено!"); Router.reload()})
+        .catch(console.log)
+        setModalOpen();
+        break;
+      }
+    }
+  });
+
+  const headerDishType = (dishType: string) => {
+    switch (dishType) {
+      case "PRIMARY": 
+        return "перового блюда";
+      case "SECONDARY": 
+        return "горячего";
+      case "SIDE": 
+        return "гарнирна";
+      case "DRINK": 
+        return "напитка";
+      case "EXTRA": 
+        return "дополнительного";
     }
   }
+
+  const onDelete = (dishId: number | undefined) => {
+    axios.delete(`/api/dishes/${dishId}`)
+        .then(resp => {console.log("Блюдо удален!"); Router.reload()})
+        .catch(console.log)
+        setModalOpen();
+  };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={onSubmit}>
+        <div className={styles.header}>
+          {method === "POST" ? `Добавление ${headerDishType(dishType)}` : `Редактирование ${headerDishType(dishType)}`}
+        </div>
         <div className={styles.closeBtn}
           onClick={() => setModalOpen()}>
           <img src="/img/close.png" alt="close" width={20} height={20}/>
@@ -103,12 +135,16 @@ const AddDishModal: React.FC<Props> = ({ dishType, setModalOpen, method, dish })
         </label>
         
         <input className={styles.hiddenTypeInput} type={"text"} defaultValue={dishType} {...register('type')} />
-        <label className={styles.formBtns}>
+        <div className={styles.formBtns}>
           <div className={styles.cancelBtn}
             onClick={() => setModalOpen()}>Отмена</div>
-          
-        </label>
-        <button className={styles.submitBtn}>Сохранить</button>
+            { method === "UPDATE" ? <div className={styles.removeBtn}
+              onClick={() => onDelete(dish?.id)}>
+              Удалить
+              </div> : null }
+            <button className={styles.submitBtn}>Сохранить</button>
+        </div>
+        
       </form>
     </div>
   );

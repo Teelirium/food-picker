@@ -22,6 +22,20 @@
     border-radius: 20px;
 }
 
+.header {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-family: 'Century Gothic';
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    cursor: default;
+    user-select: none;
+}
+
 .closeBtn {
     display: flex;
     align-items: center;
@@ -94,7 +108,8 @@
     align-self: center;
     align-items: center;
     justify-content: space-between;
-    width: 328px;
+    width: 400px;
+    margin-bottom: 15px;
 }
 
 .submitBtn {
@@ -108,6 +123,24 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
+}
+
+.removeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    background: linear-gradient(90deg, #272640 0%, #3E1F47 100%);
+    box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.35);
+    width: 117px;
+    height: 50px;
+    font-family: 'Century Gothic';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 30px;
 }
 
 .cancelBtn {
