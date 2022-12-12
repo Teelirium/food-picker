@@ -1,23 +1,23 @@
-import { Preference } from "types/Preference";
+import { Dish, DishType, Preference } from "@prisma/client";
 import axios from "axios";
-import { GetServerSideProps, NextPage } from "next";
-import { useEffect, useMemo, useState } from "react";
-import isValidDay from "utils/isValidDay";
-import dayMap from "utils/dayMap";
-import { getServerSideSession } from "utils/getServerSession";
-import verifyRole from "utils/verifyRole";
-import styles from "styles/studentChoice.module.scss";
-import dishTypeMap from "utils/dishTypeMap";
-import Link from "next/link";
-import { Dish, DishType } from "@prisma/client";
-import DishCardSmall from "components/DishCardSmall";
-import editIcon from "public/svg/edit.svg";
-import deleteIcon from "public/svg/delete.svg";
-import Image from "next/image";
 import classNames from "classnames";
-import DashboardLayout from "components/Dashboard/Layout";
 import DashboardHeader from "components/Dashboard/Header";
+import DashboardLayout from "components/Dashboard/Layout";
+import DishCardSmall from "components/DishCardSmall";
 import PreferenceSection from "components/PreferenceSection";
+import { GetServerSideProps, NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import deleteIcon from "public/svg/delete.svg";
+import editIcon from "public/svg/edit.svg";
+import { useEffect, useMemo, useState } from "react";
+import styles from "styles/studentChoice.module.scss";
+import { PreferenceWithDish } from "types/Preference";
+import dayMap from "utils/dayMap";
+import dishTypeMap from "utils/dishTypeMap";
+import { getServerSideSession } from "utils/getServerSession";
+import isValidDay from "utils/isValidDay";
+import verifyRole from "utils/verifyRole";
 
 type Props = {
   studentId: number;
@@ -55,7 +55,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 const StudentChoice: NextPage<Props> = (props) => {
   const { studentId, day } = props;
 
-  const [preferences, setPreferences] = useState<Preference[] | null>(null);
+  const [preferences, setPreferences] = useState<PreferenceWithDish[] | null>(
+    null
+  );
 
   useEffect(() => {
     axios
@@ -111,7 +113,7 @@ const StudentChoice: NextPage<Props> = (props) => {
               return (
                 <PreferenceSection title={v} key={k}>
                   <Link href={`/dashboard/dishes/${dish.id}`} legacyBehavior>
-                    <a style={{width: '100%'}}>
+                    <a style={{ width: "100%" }}>
                       <DishCardSmall dish={dish} />
                     </a>
                   </Link>

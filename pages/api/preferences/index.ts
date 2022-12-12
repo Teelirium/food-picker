@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { Preference, PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { Preference } from "types/Preference";
 import { getServerSideSession } from "utils/getServerSession";
 import isParentOf from "utils/isParentOf";
 import isValidDay from "utils/isValidDay";
@@ -25,7 +24,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   switch (req.method) {
     case "GET": {
-      const prefs: Preference[] = await prisma.preference.findMany({
+      const prefs = await prisma.preference.findMany({
         where:
           typeof day === "number"
             ? {
