@@ -59,8 +59,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     props: {
       dish,
       dishId,
-      day: day || null,
-      studentId: studentId || null,
+      day: day === undefined ? null : day,
+      studentId: studentId === undefined ? null : studentId,
     },
   };
 };
@@ -109,7 +109,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <h1>{dish.name}</h1>
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
-        {!studentId && !day ? (
+        {day !== null && studentId !== null ? (
           <button className={styles.chooseBtn} onClick={handleChoose}>
             Выбрать блюдо
           </button>

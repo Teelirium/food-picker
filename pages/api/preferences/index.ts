@@ -39,7 +39,7 @@ const handler: NextApiHandler = async (req, res) => {
           Dish: true,
         },
       });
-      return res.send(prefs);
+      return res.send(prefs.filter(p => p.Dish !== null));
     }
     case "POST": {
       const { dishId } = req.body;
