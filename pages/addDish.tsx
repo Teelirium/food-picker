@@ -4,7 +4,6 @@ import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { DishFormData, DishType } from "types/Dish";
 
-
 const AddDish: NextPage = () => {
   const dishTypes: DishType[] = ["PRIMARY", "SIDE", "SECONDARY", "DRINK", "EXTRA"];
   const { register, handleSubmit } = useForm<DishFormData>();

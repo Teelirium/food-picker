@@ -1,11 +1,44 @@
 import DashboardLayout from "components/Dashboard/Layout";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 import styles from "../styles/login.module.scss";
-import { signInErrors } from "../utils/nextAuthErrors";
+import { signInErrors } from "utils/nextAuthErrors";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerSideSession(ctx);
+  if (!session) {
+    return {
+      props: {},
+    };
+  }
+
+  if (verifyRole(session, ['PARENT'])) {
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false
+      }
+    }
+  }
+
+  if (verifyRole(session, ['WORKER', 'ADMIN'])) {
+    return {
+      redirect: {
+        destination: '/addDish',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {},
+  };
+};
 
 type LoginFormData = {
   username: string;
@@ -19,7 +52,7 @@ const Login: NextPage = () => {
 
   const onSubmit = handleSubmit((data: LoginFormData) => {
     signIn("credentials", {
-      callbackUrl: '/dashboard?student=0',
+      // callbackUrl: "/dashboard?student=0",
       ...data,
     })
       .then((resp) => {
@@ -34,7 +67,7 @@ const Login: NextPage = () => {
         // }
         // return router.push("/dashboard?student=0");
       })
-      .catch(() => alert('Неверное имя пользователя или пароль'));
+      .catch(() => alert("Неверное имя пользователя или пароль"));
   });
 
   return (

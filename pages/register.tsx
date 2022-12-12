@@ -1,25 +1,45 @@
 import axios from "axios";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 import { UserFormData, UserRole } from "../types/UserData";
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerSideSession(ctx);
+
+  if (!session || !verifyRole(session, ["ADMIN"])) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
+
 const Register: NextPage = () => {
-  const roles: UserRole[] = ['PARENT', 'TEACHER', 'WORKER', 'ADMIN'];
+  const roles: UserRole[] = ["PARENT", "TEACHER", "WORKER", "ADMIN"];
   const { register, handleSubmit } = useForm<UserFormData>();
 
-  const onSubmit = handleSubmit(data => {
-    axios.post('/api/auth/register', {user: data})
-    .then(resp => console.log("Пользователь зарегистрирован"))
-    .catch(console.log);
-  })
+  const onSubmit = handleSubmit((data) => {
+    axios
+      .post("/api/auth/register", { user: data })
+      .then((resp) => console.log("Пользователь зарегистрирован"))
+      .catch(console.log);
+  });
 
   return (
     <div className='bg-slate-300 h-screen w-screen'>
       <Head>
         <title>Регистрация пользователя</title>
       </Head>
-      <form className="flex flex-col" onSubmit={onSubmit}>
+      <form className='flex flex-col' onSubmit={onSubmit}>
         <label>
           Фамилия
           <input type={"text"} {...register("surname")} required />
@@ -34,17 +54,19 @@ const Register: NextPage = () => {
         </label>
         <label>
           Логин
-          <input type={"text"} {...register('username')} required />
+          <input type={"text"} {...register("username")} required />
         </label>
         <label>
           Пароль
-          <input type={"text"} {...register('password')} required />
+          <input type={"text"} {...register("password")} required />
         </label>
         <label>
           Роль
-          <select {...register('role')}>
-            {roles.map(role => (
-              <option key={role} value={role}>{role}</option>
+          <select {...register("role")}>
+            {roles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
             ))}
           </select>
         </label>

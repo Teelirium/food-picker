@@ -1,14 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import Parent from "components/ParentPage";
+import ParentPage from "components/ParentPage";
 import { getServerSideSession } from "utils/getServerSession";
 import verifyRole from "utils/verifyRole";
-import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
-
-  if (!session) {
+  if (!session || !verifyRole(session, ["PARENT"])) {
     return {
       redirect: {
         destination: "/login",
@@ -17,24 +14,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  if (verifyRole(session, ["WORKER"])) {
-    return {
-      redirect: {
-        destination: "/addDish",
-        permanent: false,
-      },
-    };
-  }
-
   return {
-    props: {
-    },
+    props: {},
   };
 };
 
 const Index: NextPage = () => {
-  const {data} = useSession();
-  return <>{!!data && data.user.role === "PARENT" ? <Parent /> : null}</>;
+  return <ParentPage />;
 };
 
 export default Index;
