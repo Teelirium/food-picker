@@ -109,7 +109,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <h1>{dish.name}</h1>
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
-        {!!studentId && !!day ? (
+        {!studentId && !day ? (
           <button className={styles.chooseBtn} onClick={handleChoose}>
             Выбрать блюдо
           </button>
