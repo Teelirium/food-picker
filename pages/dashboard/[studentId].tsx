@@ -90,7 +90,7 @@ const StudentChoice: NextPage<Props> = (props) => {
 
   return (
     <DashboardLayout>
-      <DashboardHeader>
+      <DashboardHeader backUrl='/dashboard'>
         <h1>{dayMap[day].toUpperCase()}</h1>
         <button className={styles.saveBtn}>Сохранить</button>
       </DashboardHeader>

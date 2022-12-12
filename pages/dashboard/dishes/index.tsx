@@ -61,7 +61,7 @@ type Props = {
 const Dishes: NextPage<Props> = ({ dishes, type, studentId, day }) => {
   return (
     <DashboardLayout>
-      <DashboardHeader>
+      <DashboardHeader backUrl={`/dashboard/${studentId}?day=${day}`}>
         <h1>{dishTypeMap[type].toUpperCase()}</h1>
       </DashboardHeader>
       <main className={styles.body}>

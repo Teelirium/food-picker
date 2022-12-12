@@ -73,10 +73,15 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
   const router = useRouter();
 
   const handleChoose = () => {
-    axios.post(`/api/preferences?studentId=${studentId}&day=${day}`, {dishId})
-    .then(() => {router.replace(`/dashboard/${studentId}?day=${day}`)})
-    .catch(alert);
-  }
+    axios
+      .post(`/api/preferences?studentId=${studentId}&day=${day}`, { dishId })
+      .then(() => {
+        router.replace(`/dashboard`).then(() => {
+          router.push(`/dashboard/${studentId}?day=${day}`);
+        });
+      })
+      .catch(alert);
+  };
 
   return (
     <DashboardLayout>
@@ -84,7 +89,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         className={styles.header}
         style={{ backgroundImage: `url(${dish.imgURL})` }}
       >
-        <Link href={"javascript:history.back()"}>
+        <Link href={`/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`}>
           <span className={styles.backBtn}>
             <b>&lt;</b>
           </span>
@@ -95,7 +100,9 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <h1>{dish.name}</h1>
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
-        <button className={styles.chooseBtn} onClick={handleChoose}>Выбрать блюдо</button>
+        <button className={styles.chooseBtn} onClick={handleChoose}>
+          Выбрать блюдо
+        </button>
         <div>Состав: {dish.ingredients}</div>
       </main>
     </DashboardLayout>

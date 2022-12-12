@@ -41,7 +41,7 @@ const Parent = () => {
           <div className={styles.header}>
             <Link href={`?student=${parentStore.childIndex}`} shallow replace>
               <div className={styles.menuButton}>
-                <Image src={menuIcon} alt={"menu"} width={30} height={30}/>
+                <Image src={menuIcon} alt={"menu"} width={30} height={30} />
               </div>
             </Link>
             <div className={styles.daySelect_childName}>
@@ -64,7 +64,7 @@ const Parent = () => {
           </div>
         </>
       ) : (
-        <div>Loading...</div>
+        <div>Загрузка...</div>
       )}
       <Modal isOpen={student !== undefined} />
     </DashboardLayout>
