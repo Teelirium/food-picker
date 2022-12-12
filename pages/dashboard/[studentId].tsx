@@ -106,10 +106,15 @@ const StudentChoice: NextPage<Props> = (props) => {
       {!!preferences ? (
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => {
-            if (dishes.has(k as DishType))
+            const dish = dishes.get(k as DishType)?.dish;
+            if (dish !== undefined)
               return (
                 <PreferenceSection title={v} key={k}>
-                  <DishCardSmall dish={dishes.get(k as DishType)?.dish} />
+                  <Link href={`/dashboard/dishes/${dish.id}`} legacyBehavior>
+                    <a style={{width: '100%'}}>
+                      <DishCardSmall dish={dish} />
+                    </a>
+                  </Link>
                   <div className={styles.btnGroup}>
                     <button
                       className={classNames(styles.deleteBtn, styles.actionBtn)}

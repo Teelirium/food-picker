@@ -17,26 +17,29 @@ const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const query = z.object({
-    day: z.preprocess(
-      (day) => Number(z.string().parse(day)),
-      z.number().min(0).max(6)
-    ),
     dishId: z.preprocess(
       (id) => Number(z.string().parse(id)),
       z.number().min(0)
     ),
-    studentId: z.preprocess(
-      (id) => Number(z.string().parse(id)),
-      z.number().min(0)
-    ),
+    day: z
+      .preprocess(
+        (day) => Number(z.string().parse(day)),
+        z.number().min(0).max(6)
+      )
+      .optional(),
+    studentId: z
+      .preprocess((id) => Number(z.string().parse(id)), z.number().min(0))
+      .optional(),
   });
-  const { day, dishId, studentId } = query.parse(ctx.query);
+  const { dishId, day, studentId } = query.parse(ctx.query);
   const session = await getServerSideSession(ctx);
 
   if (
     !session ||
     !verifyRole(session, ["PARENT", "ADMIN"]) ||
-    (!(await isParentOf(session, +studentId)) && session.user.role === "PARENT")
+    (studentId !== undefined &&
+      !(await isParentOf(session, studentId)) &&
+      session.user.role === "PARENT")
   ) {
     return {
       redirect: {
@@ -55,18 +58,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   return {
     props: {
       dish,
-      day,
-      studentId,
       dishId,
+      day: day || null,
+      studentId: studentId || null,
     },
   };
 };
 
 type Props = {
   dish: Dish;
-  day: number;
-  studentId: number;
   dishId: number;
+  day: number | null;
+  studentId: number | null;
 };
 
 const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
@@ -89,7 +92,13 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         className={styles.header}
         style={{ backgroundImage: `url(${dish.imgURL})` }}
       >
-        <Link href={`/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`}>
+        <Link
+          href={
+            !!studentId
+              ? `/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`
+              : "javascript:history.back()"
+          }
+        >
           <span className={styles.backBtn}>
             <b>&lt;</b>
           </span>
@@ -100,9 +109,11 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <h1>{dish.name}</h1>
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
-        <button className={styles.chooseBtn} onClick={handleChoose}>
-          Выбрать блюдо
-        </button>
+        {!!studentId && !!day ? (
+          <button className={styles.chooseBtn} onClick={handleChoose}>
+            Выбрать блюдо
+          </button>
+        ) : null}
         <div>Состав: {dish.ingredients}</div>
       </main>
     </DashboardLayout>
