@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = []
 }
 
 datasource db {
@@ -39,12 +39,13 @@ model Worker {
 }
 
 model Grade {
-  id        Int       @id @default(autoincrement())
-  letter    String    @db.Char(1)
-  number    Int
-  students  Student[]
-  teacher   Teacher   @relation(fields: [teacherId], references: [id])
-  teacherId Int       @unique
+  id         Int       @id @default(autoincrement())
+  letter     String    @db.Char(1)
+  number     Int
+  breakIndex Int       @default(0)
+  students   Student[]
+  teacher    Teacher   @relation(fields: [teacherId], references: [id])
+  teacherId  Int       @unique
 }
 
 model Student {
@@ -100,7 +101,7 @@ model Preference {
   id        Int     @id @default(autoincrement())
   isDefault Boolean @default(false)
   dayOfWeek Int
-  Dish      Dish    @relation(fields: [dishId], references: [id])
+  Dish      Dish?   @relation(fields: [dishId], references: [id])
   dishId    Int
   Student   Student @relation(fields: [studentId], references: [id])
   studentId Int

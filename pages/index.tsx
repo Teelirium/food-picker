@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
 
 const Home: NextPage = () => {
   return (
-    <></>
+    <h1>Hi</h1>
   )
 }
 

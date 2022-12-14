@@ -1,5 +1,3 @@
-import { Prisma } from "@prisma/client";
+import { Dish, Preference } from "@prisma/client";
 
-export type Preference = Prisma.PreferenceGetPayload<{}> & {
-  Dish: Prisma.DishGetPayload<{}>
-}
+export type PreferenceWithDish = Preference & { Dish: Dish };

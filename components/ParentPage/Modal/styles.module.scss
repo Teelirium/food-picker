@@ -1,0 +1,110 @@
+@import "styles/fonts/fonts.css";
+
+.active {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+  * {
+    z-index: 2;
+  }
+}
+
+.inactive {
+  opacity: 0;
+  display: none;
+}
+
+.container {
+  width: 70%;
+  max-height: max-content;
+  background: linear-gradient(to right, #3e1f47, #144552);
+  border-radius: 30px;
+}
+
+.header {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 30px 30px 0 0;
+  padding: 1.2rem;
+
+  * {
+    text-align: center;
+    font-family: "Century Gothic";
+    font-size: 1.8rem;
+    color: linear-gradient(to right, #3e1f47, #144552);
+    font-weight: 600;
+  }
+}
+
+.subHeader {
+  font-family: "Century Gothic";
+  font-size: 18px;
+  color: white;
+  background-color: var(--dark-bg-color);
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  height: 100%;
+  width: 100%;
+  padding: 1.6rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  max-height: 25rem;
+  overflow-y: scroll;
+}
+
+.childname {
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.activeChildname {
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid white;
+  border-radius: 30px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.childname span,
+.activeChildname span {
+  font-family: "Century Gothic";
+  font-size: 20px;
+  color: white;
+  user-select: none;
+}
+
+.logOutBtn {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 30px;
+  background: white;
+  color: black;
+  font-family: "Century Gothic";
+  font-size: 18px;
+  user-select: none;
+}

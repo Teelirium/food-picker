@@ -1,10 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { Preference, PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { options } from "pages/api/auth/[...nextauth]";
-import { Preference } from "types/Preference";
+import { getServerSideSession } from "utils/getServerSession";
+import isParentOf from "utils/isParentOf";
 import isValidDay from "utils/isValidDay";
-import verifyRoleServerSide from "utils/verifyRoleServerSide";
+import verifyRole from "utils/verifyRole";
 
 const prisma = new PrismaClient();
 
@@ -16,25 +15,16 @@ const handler: NextApiHandler = async (req, res) => {
   if (typeof day === "number" && !isValidDay(day))
     return res.status(400).send("Invalid day");
 
-  const session = await unstable_getServerSession(req, res, options);
-  if (!session) return res.status(403).send("1");
+  const session = await getServerSideSession({ req, res });
+  if (!session) return res.status(401).send("");
 
-  const allowed = await verifyRoleServerSide(req, res, ["ADMIN", "PARENT"]);
-  if (!allowed) return res.status(403).send("2");
-
-  if (session.user.role === "PARENT") {
-    const parentStudents = await prisma.parentStudent.count({
-      where: {
-        studentId: +studentId,
-        parentId: +session.user.id,
-      },
-    });
-    if (parentStudents === 0) return res.status(403).send("3");
-  }
+  const allowed = verifyRole(session, ["ADMIN", "PARENT"]);
+  const isParent = await isParentOf(session, +studentId);
+  if (!allowed || !isParent) return res.status(403).send("");
 
   switch (req.method) {
     case "GET": {
-      const prefs: Preference[] = await prisma.preference.findMany({
+      const prefs = await prisma.preference.findMany({
         where:
           typeof day === "number"
             ? {
@@ -48,7 +38,7 @@ const handler: NextApiHandler = async (req, res) => {
           Dish: true,
         },
       });
-      return res.send(prefs);
+      return res.send(prefs.filter(p => p.Dish !== null));
     }
     case "POST": {
       const { dishId } = req.body;

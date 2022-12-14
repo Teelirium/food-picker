@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { SessionData, dbUserData } from "../../../types/UserData";
+import { SessionData, dbUserData } from "types/UserData";
 
 const prisma = new PrismaClient();
 
@@ -40,6 +40,7 @@ async function findUser(username: string): Promise<dbUserData | null> {
 export const options: NextAuthOptions = {
   pages: {
     signIn: "/login",
+    //error: '/login'
   },
   session: {
     strategy: "jwt",
@@ -53,13 +54,13 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         if (!credentials) {
-          return null;
+          return Promise.reject(new Error('Invalid credentials'));
         }
 
         const { username, password } = credentials;
         const user = await findUser(username);
         if (!user) {
-          return null;
+          return Promise.reject(new Error('Invalid username'));
         }
 
         const isCorrectPassword = await compare(password, user.password);
@@ -71,7 +72,7 @@ export const options: NextAuthOptions = {
           return data;
         }
         
-        return null;
+        return Promise.reject(new Error('Invalid password'));
       },
     }),
   ],

@@ -1,12 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import Parent from "pages-content/parent/components";
-import { options } from "pages/api/auth/[...nextauth]";
+import ParentPage from "components/ParentPage";
+import { getServerSideSession } from "utils/getServerSession";
+import verifyRole from "utils/verifyRole";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, options);
-
-  if (!session) {
+  const session = await getServerSideSession(ctx);
+  if (!session || !verifyRole(session, ["PARENT"])) {
     return {
       redirect: {
         destination: "/login",
@@ -25,14 +24,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   return {
-    props: {
-      session,
-    },
+    props: {},
   };
 };
 
-const Index: NextPage<{ session: Session }> = ({ session }) => {
-  return <>{session.user.role === "PARENT" ? <Parent /> : null}</>;
+const Index: NextPage = () => {
+  return <ParentPage />;
 };
 
 export default Index;
