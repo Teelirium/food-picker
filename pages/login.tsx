@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {
       redirect: {
-        destination: '/addDish',
+        destination: '/dashboard/worker/dishes',
         permanent: false
       }
     }
