@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 
 const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
-    const [isLogoutVisible, setLogoutVisible] = useState(true);
+    const [isLogoutVisible, setLogoutVisible] = useState(false);
     const router = useRouter();
 
     const logOut = () => {
