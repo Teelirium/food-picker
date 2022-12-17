@@ -1,24 +1,37 @@
-import { Dish, Grade } from "@prisma/client";
+import { Dish, Grade, Prisma } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import prisma from "utils/prismaClient";
+import dayOfWeekSchema from "utils/schemas/dayOfWeekSchema";
 import verifyRole from "utils/verifyRole";
-import { number, z } from "zod";
+import { z } from "zod";
 
-// const paramSchema = z.object({
-//   day: z.p
-// })
+const paramSchema = z.object({
+  day: dayOfWeekSchema.optional(),
+});
 
-export type GetResponse = Grade & {
+export type GetResponse = Prisma.GradeGetPayload<{}> & {
   dishes: (Dish & { _count: { preferences: number } })[];
 };
 
+/**
+ * @swagger
+ * /api/grades/total-orders:
+ *  get:
+ *    summary: Получает список классов с количеством заказанных блюд в каждом
+ *    parameters:
+ *    - in: query
+ *      name: day
+ *      description: День по которому фильтровать заказы
+ */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
 
   if (!session) return res.status(401).send("");
   if (!verifyRole(session, ["ADMIN", "TEACHER", "WORKER"]))
     return res.status(403).send("");
+
+  const { day } = paramSchema.parse(req.query);
 
   switch (req.method) {
     case "GET": {
@@ -31,7 +44,7 @@ const handler: NextApiHandler = async (req, res) => {
               select: {
                 preferences: {
                   where: {
-                    dayOfWeek: undefined,
+                    dayOfWeek: day,
                     Student: {
                       gradeId: grade.id,
                     },

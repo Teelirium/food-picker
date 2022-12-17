@@ -1,30 +1,12 @@
 import {
   GetServerSideProps,
   GetStaticProps,
-  InferGetStaticPropsType
+  InferGetStaticPropsType,
 } from "next";
 //@ts-ignore
 import { createSwaggerSpec } from "next-swagger-doc";
 import dynamic from "next/dynamic";
 import "swagger-ui-react/swagger-ui.css";
-import { getServerSideSession } from "utils/getServerSession";
-import verifyRole from "utils/verifyRole";
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
-  if (!session || !verifyRole(session, ["ADMIN"])) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
 
 const SwaggerUI = dynamic<{
   spec: any;
