@@ -1,44 +1,41 @@
-import { Preference, PrismaClient } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import isParentOf from "utils/isParentOf";
-import isValidDay from "utils/isValidDay";
+import prisma from "utils/prismaClient";
+import dayOfWeekSchema from "utils/schemas/dayOfWeekSchema";
+import idSchema from "utils/schemas/idSchema";
 import verifyRole from "utils/verifyRole";
+import { z } from "zod";
 
-const prisma = new PrismaClient();
+const querySchema = z.object({
+  day: dayOfWeekSchema.optional(),
+  studentId: idSchema
+});
 
 const handler: NextApiHandler = async (req, res) => {
-  const { studentId } = req.query;
-  if (!studentId) return res.status(404).send("");
-
-  const day = req.query.day ? +req.query.day : undefined;
-  if (typeof day === "number" && !isValidDay(day))
-    return res.status(400).send("Invalid day");
-
+  const { day, studentId } = querySchema.parse(req.query);
   const session = await getServerSideSession({ req, res });
   if (!session) return res.status(401).send("");
 
-  const allowed = verifyRole(session, ["ADMIN", "PARENT"]);
   const isParent = await isParentOf(session, +studentId);
-  if (!allowed || !isParent) return res.status(403).send("");
+  if (
+    !verifyRole(session, ["ADMIN"]) &&
+    !(isParent && verifyRole(session, ["PARENT"]))
+  )
+    return res.status(403).send("");
 
   switch (req.method) {
     case "GET": {
       const prefs = await prisma.preference.findMany({
-        where:
-          typeof day === "number"
-            ? {
-                studentId: +studentId,
-                dayOfWeek: day,
-              }
-            : {
-                studentId: +studentId,
-              },
+        where: {
+          studentId: +studentId,
+          dayOfWeek: day,
+        },
         include: {
           Dish: true,
         },
       });
-      return res.send(prefs.filter(p => p.Dish !== null));
+      return res.send(prefs.filter((p) => p.Dish !== null));
     }
     case "POST": {
       const { dishId } = req.body;
