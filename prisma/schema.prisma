@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = []
+  previewFeatures = ["filteredRelationCount"]
 }
 
 datasource db {
@@ -98,13 +98,13 @@ enum DishType {
 }
 
 model Preference {
-  id        Int     @id @default(autoincrement())
-  isDefault Boolean @default(false)
+  id        Int      @id @default(autoincrement())
+  isDefault Boolean  @default(false)
   dayOfWeek Int
-  Dish      Dish?   @relation(fields: [dishId], references: [id])
-  dishId    Int
-  Student   Student @relation(fields: [studentId], references: [id])
-  studentId Int
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
 }
 
 model Order {
