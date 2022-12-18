@@ -98,12 +98,12 @@ enum DishType {
 }
 
 model Preference {
-  id        Int     @id @default(autoincrement())
-  isDefault Boolean @default(false)
+  id        Int      @id @default(autoincrement())
+  isDefault Boolean  @default(false)
   dayOfWeek Int
-  Dish      Dish?   @relation(fields: [dishId], references: [id])
+  Dish      Dish?    @relation(fields: [dishId], references: [id])
   dishId    Int
-  Student   Student @relation(fields: [studentId], references: [id])
+  Student   Student? @relation(fields: [studentId], references: [id])
   studentId Int
 }
 
