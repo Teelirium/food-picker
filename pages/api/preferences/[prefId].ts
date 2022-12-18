@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
       id: +prefId,
     },
   });
-  if (!preference) return res.status(404).send("");
+  if (!preference || preference.studentId === null) return res.status(404).send("");
 
   const session = await getServerSideSession({ req, res });
   if (!session) return res.status(401).send("");
