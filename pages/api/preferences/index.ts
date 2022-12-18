@@ -9,26 +9,29 @@ import { z } from "zod";
 
 const querySchema = z.object({
   day: dayOfWeekSchema.optional(),
-  studentId: idSchema
+  studentId: idSchema,
+});
+
+const bodySchema = z.object({
+  isDefault: z.literal(true).optional(),
+  dishId: idSchema,
 });
 
 const handler: NextApiHandler = async (req, res) => {
   const { day, studentId } = querySchema.parse(req.query);
+
   const session = await getServerSideSession({ req, res });
   if (!session) return res.status(401).send("");
 
-  const isParent = await isParentOf(session, +studentId);
-  if (
-    !verifyRole(session, ["ADMIN"]) &&
-    !(isParent && verifyRole(session, ["PARENT"]))
-  )
+  const isParent = await isParentOf(session, studentId);
+  if (!verifyRole(session, ["ADMIN", "WORKER"]) && !isParent)
     return res.status(403).send("");
 
   switch (req.method) {
     case "GET": {
       const prefs = await prisma.preference.findMany({
         where: {
-          studentId: +studentId,
+          studentId: studentId,
           dayOfWeek: day,
         },
         include: {
@@ -38,9 +41,14 @@ const handler: NextApiHandler = async (req, res) => {
       return res.send(prefs.filter((p) => p.Dish !== null));
     }
     case "POST": {
-      const { dishId } = req.body;
-      if (typeof day !== "number" || typeof dishId !== "number")
-        return res.status(400).send("");
+      const { dishId, isDefault } = bodySchema.parse(req.body);
+
+      if (day === undefined) {
+        return res.status(400).send("День не указан");
+      }
+      if (isDefault && verifyRole(session, ["ADMIN", "WORKER"])) {
+        return res.status(403).send("");
+      }
 
       const dishType = await prisma.dish.findUnique({
         where: {
@@ -54,7 +62,8 @@ const handler: NextApiHandler = async (req, res) => {
 
       const existingPref = await prisma.preference.findFirst({
         where: {
-          studentId: +studentId,
+          isDefault: isDefault,
+          studentId: isDefault ? undefined : studentId,
           dayOfWeek: day,
           Dish: {
             type: dishType.type,
@@ -77,7 +86,8 @@ const handler: NextApiHandler = async (req, res) => {
           })
         : await prisma.preference.create({
             data: {
-              studentId: +studentId,
+              isDefault: !!isDefault,
+              studentId: isDefault ? undefined : studentId,
               dayOfWeek: day,
               dishId,
             },
@@ -89,5 +99,7 @@ const handler: NextApiHandler = async (req, res) => {
       return res.status(405).send("Method not allowed");
   }
 };
+
+//async function addToDefaultMenu(res: NextApiResponse, dishId: number) {}
 
 export default handler;
