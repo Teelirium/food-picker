@@ -102,9 +102,9 @@ model Preference {
   isDefault Boolean  @default(false)
   dayOfWeek Int
   Dish      Dish?    @relation(fields: [dishId], references: [id])
-  dishId    Int
+  dishId    Int?
   Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int
+  studentId Int?
 }
 
 model Order {
