@@ -10,8 +10,10 @@ const paramSchema = z.object({
   day: dayOfWeekSchema.optional(),
 });
 
-export type GetResponse = Prisma.GradeGetPayload<{}> & {
-  dishes: (Dish & { _count: { preferences: number } })[];
+export type GetResponse = Grade & {
+  dishes: (Prisma.DishGetPayload<{
+    select: { id: true; name: true; weightGrams: true };
+  }> & { _count: { preferences: number } })[];
 };
 
 /**
@@ -39,7 +41,10 @@ const handler: NextApiHandler = async (req, res) => {
       const result: GetResponse[] = [];
       for (let grade of grades) {
         const dishes = await prisma.dish.findMany({
-          include: {
+          select: {
+            id: true,
+            name: true,
+            weightGrams: true,
             _count: {
               select: {
                 preferences: {
