@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Dish, DishType } from "@prisma/client";
 import styles from "./styles.module.css";
-import AddDishModal from "./dishModal";
-import DishCard from "components/worker/dishes/dishCard";
+import AddDishModal from "./DishModal";
+import DishCard from "components/Worker/Dishes/DishCard";
 
 const Dishes = (props: { dishes: Dish[] }) => {
   const [mealTime, setMealTime] = useState("Breakfast");

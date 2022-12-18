@@ -2,7 +2,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
 import styles from "styles/worker.module.css";
-import LeftSideNavibar from "components/worker/leftSideNavibar";
+import LeftSideNavibar from "components/Worker/LeftSideNavibar";
+import Orders from "components/Worker/Orders";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getServerSideSession(ctx);
@@ -23,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-const Orders: NextPage = () => {
+const OrdersPage: NextPage = () => {
     return (
         <>
         <Head>
@@ -33,6 +34,7 @@ const Orders: NextPage = () => {
         </Head>
         <div className={styles.container}>
             <LeftSideNavibar activePage={2}/>
+            <Orders />
         </div>
 
         
@@ -40,4 +42,4 @@ const Orders: NextPage = () => {
     );
 };
 
-export default Orders;
+export default OrdersPage;
