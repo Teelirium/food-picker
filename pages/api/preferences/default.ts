@@ -9,6 +9,14 @@ const bodySchema = z.object({
   dishId: idSchema,
 });
 
+/**
+ * @swagger
+ * /api/preferences/default:
+ *  get:
+ *    summary: Получает список стандартного питания
+ *  post:
+ *    summary: Добавляет блюдо в стандартное меню
+ */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
   if (!session) {
