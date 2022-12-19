@@ -4,6 +4,9 @@ import Head from "next/head";
 import styles from "styles/worker.module.css";
 import LeftSideNavibar from "components/Worker/LeftSideNavibar";
 import Orders from "components/Worker/Orders";
+import axios from "axios";
+import { GetResponse } from "pages/api/grades/total-orders";
+import { useEffect, useMemo, useState } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getServerSideSession(ctx);
@@ -24,9 +27,21 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+
 const OrdersPage: NextPage = () => {
+    const [weekDay, setWeekDay] = useState(1);
+    const [orders, setOrders] = useState<GetResponse[]>();
+
+    useEffect(() => {
+        axios
+        .get(`/api/grades/total-orders?day=${weekDay}`)
+        .then((response) => setOrders(response.data))
+        .catch((err) => console.error(err.message));
+    }, [weekDay]);
+    
+
     return (
-        <>
+      <>
         <Head>
             <title>
                 Заказы
@@ -34,10 +49,8 @@ const OrdersPage: NextPage = () => {
         </Head>
         <div className={styles.container}>
             <LeftSideNavibar activePage={2}/>
-            <Orders />
+            <Orders orders={orders} weekDay={weekDay} setWeekDay={setWeekDay}/>
         </div>
-
-        
     </>
     );
 };

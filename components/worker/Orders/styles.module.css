@@ -1,6 +1,7 @@
 @import 'styles/fonts/fonts.css';
 
 .content {
+    position: relative;
     justify-content: center;
     height: inherit;
     flex-basis: 1300px;
@@ -95,6 +96,7 @@
 
 .breakContainer { 
     position: absolute;
+    top: 100px;
     width: 90px;
     display: flex;
     flex-direction: column;

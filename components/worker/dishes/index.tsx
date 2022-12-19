@@ -11,7 +11,7 @@ const Dishes = (props: { dishes: Dish[] }) => {
     isOpen: boolean;
     method: string;
     currentDish: Dish | undefined;
-  }>({
+  }> ({
     isOpen: false,
     method: "POST",
     currentDish: undefined,
