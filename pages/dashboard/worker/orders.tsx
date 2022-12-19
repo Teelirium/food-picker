@@ -2,8 +2,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
 import styles from "styles/worker.module.css";
-import LeftSideNavibar from "components/Worker/LeftSideNavibar";
-import Orders from "components/Worker/Orders";
+import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
+import Orders from "components/WorkerPage/Orders";
 import axios from "axios";
 import { GetResponse } from "pages/api/grades/total-orders";
 import { useEffect, useMemo, useState } from "react";
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 
 const OrdersPage: NextPage = () => {
-    const [weekDay, setWeekDay] = useState(1);
+    const [weekDay, setWeekDay] = useState(0);
     const [orders, setOrders] = useState<GetResponse[]>();
 
     useEffect(() => {
