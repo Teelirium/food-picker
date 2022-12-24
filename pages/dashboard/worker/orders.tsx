@@ -59,7 +59,9 @@ const OrdersPage: NextPage = () => {
           orders={orders}
           weekDay={day}
           setWeekDay={(day: number) => {
-            router.replace(`?day=${day}`, undefined, { shallow: true });
+            router.replace({ pathname: "", query: { day, breakIndex } }, undefined, {
+              shallow: true,
+            });
           }}
         />
       </div>
