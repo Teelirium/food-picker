@@ -5,8 +5,6 @@ import isParentOf from "utils/isParentOf";
 import verifyRole from "utils/verifyRole";
 import styles from "styles/dishInfo.module.scss";
 import DashboardLayout from "components/Dashboard/Layout";
-import DishCardSmall from "components/DishCardSmall";
-import isValidDay from "utils/isValidDay";
 import { z } from "zod";
 import Link from "next/link";
 import dishTypeMap from "utils/dishTypeMap";
