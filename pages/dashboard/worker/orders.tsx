@@ -1,6 +1,7 @@
 import axios from "axios";
 import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
 import Orders from "components/WorkerPage/Orders";
+import Modal from "components/WorkerPage/DishAboutModal";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -15,6 +16,7 @@ import { z } from "zod";
 const querySchema = z.object({
   day: dayOfWeekSchema.default(0),
   breakIndex: z.coerce.number().min(0).max(7).default(0),
+  isOpen: z.coerce.boolean().default(false).optional(),
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -37,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const OrdersPage: NextPage = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<GetResponse[]>();
-  const { day, breakIndex } = useMemo(() => {
+  const { day, breakIndex, isOpen } = useMemo(() => {
     return querySchema.parse(router.query);
   }, [router.query]);
 
@@ -65,6 +67,7 @@ const OrdersPage: NextPage = () => {
           }}
         />
       </div>
+          <Modal isOpen={isOpen} />
     </>
   );
 };

@@ -19,7 +19,11 @@ const Orders: React.FC<Props> = (props) => {
   }, [breakIndex, props.orders]);
 
   const currentOrders = filteredOrders?.map((order) => {
-    return <OrderCard key={order.id} order={order} />;
+    return <OrderCard key={order.id}
+      order={order}
+      breakIndex={breakIndex}
+      weekDay={props.weekDay}
+      />;
   });
 
   return (
