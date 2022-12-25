@@ -17,8 +17,7 @@ const Orders = (props: Props) => {
     }, [breakIndex]);
 
     const currentOrders = filteredOrders?.map((order) => {
-        return (
-            
+        return ( 
             <OrderCard key={order.id} order={order} />
         );
     });
@@ -31,7 +30,7 @@ const Orders = (props: Props) => {
                         <div className={props.weekDay === 1 ? styles.activeWeekDay : styles.weekDay}
                             onClick={() => props.setWeekDay(1)}>
                             <span>Понедельник</span>
-                        </div>
+                         </div>
                         <div className={props.weekDay === 2 ? styles.activeWeekDay : styles.weekDay}
                             onClick={() => props.setWeekDay(2)}>
                             <span>Вторник</span>
