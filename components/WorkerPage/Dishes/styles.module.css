@@ -31,7 +31,6 @@
     display: flex;
     flex-direction: row;
     flex-basis: 270px;
-    min-width: 200px;
     justify-content: space-between;
 }
 
@@ -59,7 +58,6 @@
     flex-direction: row;
     background: #181818;
     flex-basis: 400px;
-    min-width: 250px;
     height: 25px;
     border: 2px solid #3D3D3D;
     border-radius: 30px;
@@ -71,7 +69,6 @@
     background: #181818;
     border: none;
     flex-basis: 300px;
-    min-width: 150px;
     padding: 0 0 0 7px;
     font-family: 'Raleway';
     font-weight: 500;
@@ -107,8 +104,8 @@
 .dishTypes {
     display: flex;
     flex-direction: row;
+    flex-basis: 600px;
     justify-content: space-around;
-    min-width: 575px;
 }
 
 .dishType {

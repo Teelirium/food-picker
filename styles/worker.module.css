@@ -1,9 +1,7 @@
 .container {
     display: flex;
     flex-direction: row;
-    width: 100vw;
-    min-width: 100%;
+    width: auto;
     height: 100vh;
-    min-width: 100%;
     background: linear-gradient(0deg, #1B3A4B 0%, #3E1F47 100%);
 }

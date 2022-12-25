@@ -4,8 +4,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
 import styles from "styles/worker.module.css";
-import LeftSideNavibar from "components/Worker/LeftSideNavibar";
-import Dishes from "components/Worker/Dishes";
+import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
+import Dishes from "components/WorkerPage/Dishes";
 
 const prisma = new PrismaClient();
 
