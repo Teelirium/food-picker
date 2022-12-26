@@ -1,8 +1,9 @@
 import dishStore from "stores/DishStore";
 import styles from "./styles.module.css";
 import { useRouter } from "next/router";
+import deleteEmptyParams from "utils/deleteEmptyParams";
 
-const Modal = ({ isOpen }: { isOpen: boolean | undefined }) => {
+const Modal = ({ isOpen }: { isOpen: boolean }) => {
   const router = useRouter();
   
   if (!dishStore.dish) {
@@ -14,15 +15,18 @@ const Modal = ({ isOpen }: { isOpen: boolean | undefined }) => {
       {JSON.stringify(dishStore.dish)}
       <div
         className={styles.close}
-        onClick={() =>
+        onClick={() => {
           router.replace(
-            { pathname: "", query: { ...router.query, isOpen: undefined } },
+            {
+              pathname: "",
+              query: deleteEmptyParams({ ...router.query, dish: undefined }),
+            },
             undefined,
             {
               shallow: true,
             }
-          )
-        }
+          );
+        }}
       >
         close
       </div>

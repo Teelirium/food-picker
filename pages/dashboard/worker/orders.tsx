@@ -12,11 +12,12 @@ import { getServerSideSession } from "utils/getServerSession";
 import dayOfWeekSchema from "utils/schemas/dayOfWeekSchema";
 import verifyRole from "utils/verifyRole";
 import { z } from "zod";
+import idSchema from "utils/schemas/idSchema";
 
 const querySchema = z.object({
   day: dayOfWeekSchema.default(0),
+  dish: idSchema.optional(),
   breakIndex: z.coerce.number().min(0).max(7).default(0),
-  isOpen: z.coerce.boolean().default(false).optional(),
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -39,9 +40,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const OrdersPage: NextPage = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<GetResponse[]>();
-  const { day, breakIndex, isOpen } = useMemo(() => {
-    return querySchema.parse(router.query);
-  }, [router.query]);
+  const { day, breakIndex, dish } = useMemo(
+    () => querySchema.parse(router.query),
+    [router.query]
+  );
 
   useEffect(() => {
     axios
@@ -59,7 +61,7 @@ const OrdersPage: NextPage = () => {
         <LeftSideNavibar activePage={2} />
         <Orders orders={orders} weekDay={day} />
       </div>
-        {isOpen ? <Modal isOpen={isOpen} /> : null}
+      {dish !== undefined ? <Modal isOpen={true} /> : null}
     </>
   );
 };
