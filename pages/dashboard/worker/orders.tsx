@@ -57,10 +57,7 @@ const OrdersPage: NextPage = () => {
       </Head>
       <div className={styles.container}>
         <LeftSideNavibar activePage={2} />
-        <Orders
-          orders={orders}
-          weekDay={day}
-        />
+        <Orders orders={orders} weekDay={day} />
       </div>
       <Modal isOpen={isOpen} />
     </>

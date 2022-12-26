@@ -3,11 +3,12 @@ import { getServerSideSession } from "utils/getServerSession";
 import Head from "next/head";
 import styles from "styles/worker.module.css";
 import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
+import verifyRole from "utils/verifyRole";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getServerSideSession(ctx);
   
-    if (!(session?.user.role === "WORKER")) {
+    if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
       return {
         redirect: {
           destination: "/login",
