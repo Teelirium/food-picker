@@ -60,14 +60,9 @@ const OrdersPage: NextPage = () => {
         <Orders
           orders={orders}
           weekDay={day}
-          setWeekDay={(day: number) => {
-            router.replace({ pathname: "", query: { day, breakIndex } }, undefined, {
-              shallow: true,
-            });
-          }}
         />
       </div>
-          <Modal isOpen={isOpen} />
+      <Modal isOpen={isOpen} />
     </>
   );
 };
