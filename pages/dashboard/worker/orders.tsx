@@ -67,7 +67,7 @@ const OrdersPage: NextPage = () => {
           }}
         />
       </div>
-          <Modal isOpen={isOpen} />
+        {isOpen ? <Modal isOpen={isOpen} /> : null}
     </>
   );
 };

@@ -3,10 +3,12 @@ import { Dish, DishType } from "@prisma/client";
 import styles from "./styles.module.css";
 import AddDishModal from "./DishModal";
 import DishCard from "components/WorkerPage/Dishes/DishCard";
+import dishTypeMap from "utils/dishTypeMap";
+import mealTimeMap from "utils/mealTimeMap";
 
 const Dishes = (props: { dishes: Dish[] }) => {
-  const [mealTime, setMealTime] = useState("Breakfast");
-  const [dishType, setDishType] = useState<DishType>("PRIMARY");
+  const [mealTime, setMealTime] = useState('Breakfast');
+  const [dishType, setDishType] = useState<DishType>('PRIMARY');
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     method: string;
@@ -49,36 +51,19 @@ const Dishes = (props: { dishes: Dish[] }) => {
         <div className={styles.contentInner}>
           <div className={styles.mealTimeContainer}>
             <div className={styles.mealTime}>
-              <span
-                className={
-                  mealTime === "Breakfast"
-                    ? styles.activeMealTimeElement
-                    : styles.mealTimeElement
-                }
-                onClick={() => setMealTime("Breakfast")}
-              >
-                Завтрак
-              </span>
-              <span
-                className={
-                  mealTime === "Lunch"
-                    ? styles.activeMealTimeElement
-                    : styles.mealTimeElement
-                }
-                onClick={() => setMealTime("Lunch")}
-              >
-                Обед
-              </span>
-              <span
-                className={
-                  mealTime === "Dinner"
-                    ? styles.activeMealTimeElement
-                    : styles.mealTimeElement
-                }
-                onClick={() => setMealTime("Dinner")}
-              >
-                Ужин
-              </span>
+              {Array.from(mealTimeMap.entries()).map((meal) => {
+                return (<span
+                  key={meal[0]}
+                  className={
+                    mealTime === meal[0]
+                      ? styles.activeMealTimeElement
+                      : styles.mealTimeElement
+                  }
+                  onClick={() => setMealTime(meal[0])}
+                  >
+                  {meal[1]}
+                  </span>
+              )})}
             </div>
             <form className={styles.search}>
               <button type='submit' className='search-btn'>
@@ -90,50 +75,20 @@ const Dishes = (props: { dishes: Dish[] }) => {
 
           <div className={styles.dishTypesContainer}>
             <div className={styles.dishTypes}>
-              <div
+            { Object.entries(dishTypeMap).map(([k, v]) => {
+              return (
+                <div
                 className={
-                  dishType === "PRIMARY"
+                  dishType == k
                     ? styles.activeDishType
                     : styles.dishType
                 }
-                onClick={() => setDishType("PRIMARY")}
-              >
-                <span>Первое блюдо</span>
-              </div>
-              <div
-                className={
-                  dishType === "SECONDARY"
-                    ? styles.activeDishType
-                    : styles.dishType
-                }
-                onClick={() => setDishType("SECONDARY")}
-              >
-                <span>Горячее</span>
-              </div>
-              <div
-                className={
-                  dishType === "SIDE" ? styles.activeDishType : styles.dishType
-                }
-                onClick={() => setDishType("SIDE")}
-              >
-                <span>Гарнир</span>
-              </div>
-              <div
-                className={
-                  dishType === "DRINK" ? styles.activeDishType : styles.dishType
-                }
-                onClick={() => setDishType("DRINK")}
-              >
-                <span>Напиток</span>
-              </div>
-              <div
-                className={
-                  dishType === "EXTRA" ? styles.activeDishType : styles.dishType
-                }
-                onClick={() => setDishType("EXTRA")}
-              >
-                <span>Дополнительно</span>
-              </div>
+                onClick={() => setDishType(k as DishType)}
+                >
+                  <span>{v}</span>
+                </div>
+              );
+            })}
             </div>
             <div
               className={styles.addDishBtn}

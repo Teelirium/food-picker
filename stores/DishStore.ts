@@ -18,11 +18,6 @@ class DishStore {
         .catch(console.log);
     }
 
-    setDish(dish: PartialDish) {
-        if (!dish) {
-            this.dish = null;
-        }
-    }
   }
   
   const parentStore = new DishStore();

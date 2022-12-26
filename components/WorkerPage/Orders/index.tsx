@@ -13,7 +13,7 @@ type Props = {
 
 const Orders: React.FC<Props> = (props) => {
   const [breakIndex, setBreakIndex] = useState(1);
-
+  
   const filteredOrders = useMemo(() => {
     return props.orders?.filter((order) => order.breakIndex == breakIndex - 1);
   }, [breakIndex, props.orders]);
@@ -25,6 +25,8 @@ const Orders: React.FC<Props> = (props) => {
       weekDay={props.weekDay}
       />;
   });
+
+  const breakIndexes = [1, 2, 3, 4, 5, 6, 7, 8]
 
   return (
     <div className={styles.content}>
@@ -59,54 +61,17 @@ const Orders: React.FC<Props> = (props) => {
       <div className={styles.breakContainer}>
         <span>Перемена</span>
         <div className={styles.breaks}>
-          <div
-            className={breakIndex === 1 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(1)}
-          >
-            <span>1</span>
-          </div>
-          <div
-            className={breakIndex === 2 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(2)}
-          >
-            <span>2</span>
-          </div>
-          <div
-            className={breakIndex === 3 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(3)}
-          >
-            <span>3</span>
-          </div>
-          <div
-            className={breakIndex === 4 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(4)}
-          >
-            <span>4</span>
-          </div>
-          <div
-            className={breakIndex === 5 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(5)}
-          >
-            <span>5</span>
-          </div>
-          <div
-            className={breakIndex === 6 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(6)}
-          >
-            <span>6</span>
-          </div>
-          <div
-            className={breakIndex === 7 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(7)}
-          >
-            <span>7</span>
-          </div>
-          <div
-            className={breakIndex === 8 ? styles.activeBreak : styles.break}
-            onClick={() => setBreakIndex(8)}
-          >
-            <span>8</span>
-          </div>
+          {breakIndexes.map((i) => {
+            return (
+              <div
+                key={i}
+                className={breakIndex === i ? styles.activeBreak : styles.break}
+                onClick={() => setBreakIndex(i)}
+              >
+                <span>{i}</span>
+              </div>
+          )
+          })}
         </div>
       </div>
     </div>

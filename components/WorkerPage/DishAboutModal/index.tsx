@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 const Modal = ({ isOpen }: { isOpen: boolean | undefined }) => {
     const router = useRouter();
+
     const dish = dishStore.dish;
   
     if (!dish) {

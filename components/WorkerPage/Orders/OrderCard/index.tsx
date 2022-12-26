@@ -11,7 +11,7 @@ type Props = {
   weekDay: number;
 };
 
-const OrderCard: React.FC<Props> = React.forwardRef(({ order, breakIndex, weekDay }, ref) => {
+const OrderCard: React.FC<Props> = ({ order, breakIndex, weekDay }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(false);
 
@@ -37,7 +37,6 @@ const OrderCard: React.FC<Props> = React.forwardRef(({ order, breakIndex, weekDa
       </tr>
     )
   });
-
 
   if (!order) return null;
   return (
@@ -73,7 +72,7 @@ const OrderCard: React.FC<Props> = React.forwardRef(({ order, breakIndex, weekDa
 
     </div>
   );
-});
+};
 OrderCard.displayName;
 
 export default OrderCard;
