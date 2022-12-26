@@ -57,15 +57,7 @@ const OrdersPage: NextPage = () => {
       </Head>
       <div className={styles.container}>
         <LeftSideNavibar activePage={2} />
-        <Orders
-          orders={orders}
-          weekDay={day}
-          setWeekDay={(day: number) => {
-            router.replace({ pathname: "", query: { day, breakIndex } }, undefined, {
-              shallow: true,
-            });
-          }}
-        />
+        <Orders orders={orders} weekDay={day} />
       </div>
         {isOpen ? <Modal isOpen={isOpen} /> : null}
     </>

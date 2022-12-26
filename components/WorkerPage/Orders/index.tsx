@@ -4,26 +4,23 @@ import styles from "./styles.module.css";
 import OrderCard from "./OrderCard";
 import dayMap from "utils/dayMap";
 import maxDay from "utils/maxDay";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 type Props = {
   orders: GetResponse[] | undefined;
   weekDay: number;
-  setWeekDay: Function;
 };
 
 const Orders: React.FC<Props> = (props) => {
   const [breakIndex, setBreakIndex] = useState(1);
-  
+  const router = useRouter();
   const filteredOrders = useMemo(() => {
     return props.orders?.filter((order) => order.breakIndex == breakIndex - 1);
   }, [breakIndex, props.orders]);
 
   const currentOrders = filteredOrders?.map((order) => {
-    return <OrderCard key={order.id}
-      order={order}
-      breakIndex={breakIndex}
-      weekDay={props.weekDay}
-      />;
+    return <OrderCard key={order.id} order={order} />;
   });
 
   const breakIndexes = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -34,15 +31,20 @@ const Orders: React.FC<Props> = (props) => {
         <div className={styles.weekDaysContainer}>
           <div className={styles.weekDays}>
             {dayMap.slice(0, maxDay).map((dayName, i) => (
-              <div
+              <Link
                 key={i}
-                className={
-                  props.weekDay === i ? styles.activeWeekDay : styles.weekDay
-                }
-                onClick={() => props.setWeekDay(i)}
+                href={{ pathname: "", query: { ...router.query, day: i } }}
+                shallow={true}
+                replace={true}
               >
-                <span>{dayName}</span>
-              </div>
+                <div
+                  className={
+                    props.weekDay === i ? styles.activeWeekDay : styles.weekDay
+                  }
+                >
+                  {dayName}
+                </div>
+              </Link>
             ))}
           </div>
           <div className={styles.excelBtn}>

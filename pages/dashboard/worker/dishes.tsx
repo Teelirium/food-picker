@@ -6,13 +6,14 @@ import Head from "next/head";
 import styles from "styles/worker.module.css";
 import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
 import Dishes from "components/WorkerPage/Dishes";
+import verifyRole from "utils/verifyRole";
 
 const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
-  if (!(session?.user.role === "WORKER")) {
+  if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
     return {
       redirect: {
         destination: "/login",
@@ -25,28 +26,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      dishes
-    }
+      dishes,
+    },
   };
-}
+};
 
 type Props = {
   dishes: Dish[];
 };
 
-const WorkerIndexPage: NextPage<Props> = ({dishes}) => {
-
+const WorkerIndexPage: NextPage<Props> = ({ dishes }) => {
   return (
     <>
-        <Head>
-          <title>
-              Блюда
-          </title>
-        </Head>
-        <div className={styles.container}>
-            <LeftSideNavibar activePage={1}/>
-            <Dishes dishes={dishes}/>
-        </div> 
+      <Head>
+        <title>Блюда</title>
+      </Head>
+      <div className={styles.container}>
+        <LeftSideNavibar activePage={1} />
+        <Dishes dishes={dishes} />
+      </div>
     </>
   );
 };
