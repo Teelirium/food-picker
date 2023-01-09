@@ -10,11 +10,13 @@ const paramSchema = z.object({
   day: dayOfWeekSchema.optional(),
 });
 
-export type GetResponse = Grade & {
-  dishes: (Prisma.DishGetPayload<{
-    select: { id: true; name: true; weightGrams: true };
-  }> & { _count: { preferences: number } })[];
+export type GradeInfo = Grade & {
+  dishes: DishWithOrders[];
 };
+
+type DishWithOrders = Prisma.DishGetPayload<{
+  select: { id: true; name: true; weightGrams: true; type: true };
+}> & { _count: { preferences: number } };
 
 /**
  * @swagger
@@ -37,14 +39,45 @@ const handler: NextApiHandler = async (req, res) => {
 
   switch (req.method) {
     case "GET": {
+      const defaultPrefs = await prisma.preference.findMany({
+        where: {
+          isDefault: true,
+        },
+        select: {
+          Dish: {
+            select: {
+              id: true,
+              name: true,
+              weightGrams: true,
+              type: true,
+            },
+          },
+        },
+      });
+      console.log(defaultPrefs)
       const grades = await prisma.grade.findMany({});
-      const result: GetResponse[] = [];
+      const result: GradeInfo[] = [];
       for (let grade of grades) {
+        const studentCount = await prisma.student.count({
+          where: {
+            gradeId: grade.id,
+          },
+        });
+
+        const defaultDishes = defaultPrefs.map((p) => {
+          if (p.Dish)
+            return {
+              ...p.Dish,
+              _count: { preferences: studentCount },
+            };
+        }) as DishWithOrders[];
+
         const dishes = await prisma.dish.findMany({
           select: {
             id: true,
             name: true,
             weightGrams: true,
+            type: true,
             _count: {
               select: {
                 preferences: {
@@ -59,9 +92,22 @@ const handler: NextApiHandler = async (req, res) => {
             },
           },
         });
+        const nonEmpty = dishes.filter((dish) => dish._count.preferences > 0);
+
+        for (let dish of nonEmpty) {
+          const index = defaultDishes.findIndex((d) => d.type === dish.type); //inefficient
+
+          if (index >= 0 && defaultDishes[index].id !== dish.id) {
+            defaultDishes[index]._count.preferences -= dish._count.preferences;
+          }
+        }
+
         const gradeWithDishes = {
           ...grade,
-          dishes: dishes.filter((dish) => dish._count.preferences > 0),
+          dishes: [
+            ...nonEmpty,
+            ...defaultDishes.filter((dish) => dish._count.preferences > 0),
+          ],
         };
         result.push(gradeWithDishes);
       }
