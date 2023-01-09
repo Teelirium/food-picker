@@ -35,10 +35,10 @@ const handler: NextApiHandler = async (req, res) => {
   if (!verifyRole(session, ["ADMIN", "TEACHER", "WORKER"]))
     return res.status(403).send("");
 
-  const { day } = paramSchema.parse(req.query);
-
   switch (req.method) {
     case "GET": {
+      const { day } = paramSchema.parse(req.query);
+
       const defaultPrefs = await prisma.preference.findMany({
         where: {
           isDefault: true,
@@ -54,7 +54,7 @@ const handler: NextApiHandler = async (req, res) => {
           },
         },
       });
-      console.log(defaultPrefs)
+
       const grades = await prisma.grade.findMany({});
       const result: GradeInfo[] = [];
       for (let grade of grades) {
@@ -64,13 +64,15 @@ const handler: NextApiHandler = async (req, res) => {
           },
         });
 
-        const defaultDishes = defaultPrefs.map((p) => {
-          if (p.Dish)
-            return {
-              ...p.Dish,
-              _count: { preferences: studentCount },
-            };
-        }) as DishWithOrders[];
+        const defaultDishes = defaultPrefs
+          .map((pref) => {
+            if (pref.Dish !== null)
+              return {
+                ...pref.Dish,
+                _count: { preferences: studentCount },
+              };
+          })
+          .filter((dish): dish is DishWithOrders => dish !== undefined);
 
         const dishes = await prisma.dish.findMany({
           select: {
@@ -113,6 +115,9 @@ const handler: NextApiHandler = async (req, res) => {
       }
 
       return res.json(result);
+    }
+    default: {
+      return res.status(405).send("");
     }
   }
 };
