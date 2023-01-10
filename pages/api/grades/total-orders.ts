@@ -74,17 +74,17 @@ async function getHandler(day?: number) {
 
     const defaultDishMap = new Map(
       defaultPrefs
-      .map((pref) => {
-        if (pref.Dish !== null)
-        return [
-          pref.Dish.type,
-          {
-            ...pref.Dish,
-            _count: { preferences: studentCount },
-          },
-        ];
-      })
-      .filter((el): el is [DishType, DishWithOrders] => el !== undefined)
+        .map((pref) => {
+          if (pref.Dish !== null)
+            return [
+              pref.Dish.type,
+              {
+                ...pref.Dish,
+                _count: { preferences: studentCount },
+              },
+            ];
+        })
+        .filter((el): el is [DishType, DishWithOrders] => el !== undefined)
     );
 
     const dishes = await prisma.dish.findMany({
@@ -108,7 +108,7 @@ async function getHandler(day?: number) {
       },
     });
     const nonEmpty = dishes.filter((dish) => dish._count.preferences > 0);
-    
+
     for (let dish of nonEmpty) {
       const existing = defaultDishMap.get(dish.type);
 
@@ -125,7 +125,7 @@ async function getHandler(day?: number) {
 
     const gradeWithDishes = {
       ...grade,
-      dishes: [...nonEmpty, ...Array.from(defaultDishMap.values())],
+      dishes: Array.from(defaultDishMap.values()).concat(nonEmpty),
     };
     result.push(gradeWithDishes);
   }
