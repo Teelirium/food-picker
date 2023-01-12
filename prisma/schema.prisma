@@ -58,6 +58,7 @@ model Student {
   gradeId       Int?
   preferences   Preference[]
   Orders        Order[]
+  AbsentStudent AbsentStudent[]
 }
 
 model ParentStudent {
@@ -115,4 +116,11 @@ model Order {
   dishId    Int
   Student   Student  @relation(fields: [studentId], references: [id])
   studentId Int
+}
+
+model AbsentStudent {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  date      DateTime
 }
