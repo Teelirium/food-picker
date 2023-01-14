@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { Dish, DishType } from "@prisma/client";
+import React from "react";
+import { Dish } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { DishFormData} from "types/Dish";
 import styles from "./styles.module.css";
