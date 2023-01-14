@@ -4,41 +4,37 @@ import Head from "next/head";
 import styles from "styles/worker.module.css";
 import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
 import verifyRole from "utils/verifyRole";
+import StandardMenu from "components/WorkerPage/StandardMenu";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const session = await getServerSideSession(ctx);
-  
-    if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      };
-    }
-  
+  const session = await getServerSideSession(ctx);
+
+  if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
     return {
-      props: {
-        session
-      }
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     };
   }
 
-const StandardMenu: NextPage = () => {
-    return (
-        <>
-        <Head>
-            <title>
-                Стандартное питание
-            </title>
-        </Head>
-        <div className={styles.container}>
-            <LeftSideNavibar activePage={3}/>
-        </div>
-
-        
-    </>
-    );
+  return {
+    props: {},
+  };
 };
 
-export default StandardMenu;
+const StandardMenuPage: NextPage = () => {
+  return (
+    <>
+      <Head>
+        <title>Стандартное питание</title>
+      </Head>
+      <div className={styles.container}>
+        <LeftSideNavibar activePage={3} />
+        <StandardMenu />
+      </div>
+    </>
+  );
+};
+
+export default StandardMenuPage;

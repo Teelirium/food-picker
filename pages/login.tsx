@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { getServerSideSession } from "utils/getServerSession";
 import verifyRole from "utils/verifyRole";
-import styles from "../styles/login.module.scss";
+import styles from "styles/login.module.scss";
 import { signInErrors } from "utils/nextAuthErrors";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

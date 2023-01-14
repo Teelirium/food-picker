@@ -18,16 +18,14 @@
   .schoolName {
     width: 100vw !important;
   }
-  .form {
-    height: 100vh;
-  }
 }
 
 .form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  width: 100%;
+  padding: 2rem;
 }
 
 .schoolName {
@@ -55,6 +53,7 @@
   font-family: "Century Gothic";
   font-size: 20px;
   user-select: none;
+  width: 100%;
 }
 
 .label p {
@@ -62,7 +61,7 @@
 }
 
 .label input {
-  width: 375px;
+  width: 100%;
   height: 50px;
   padding-left: 33px;
   background-color: #181818;

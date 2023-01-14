@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Orders: React.FC<Props> = (props) => {
-  const [breakIndex, setBreakIndex] = useState(1);
+  const [breakIndex, setBreakIndex] = useState(0);
   const router = useRouter();
   const filteredOrders = useMemo(() => {
     return props.orders?.filter((order) => order.breakIndex == breakIndex);
