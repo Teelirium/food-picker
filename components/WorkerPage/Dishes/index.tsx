@@ -7,13 +7,13 @@ import dishTypeMap from "utils/dishTypeMap";
 import mealTimeMap from "utils/mealTimeMap";
 
 const Dishes = (props: { dishes: Dish[] }) => {
-  const [mealTime, setMealTime] = useState('Breakfast');
-  const [dishType, setDishType] = useState<DishType>('PRIMARY');
+  const [mealTime, setMealTime] = useState("Breakfast");
+  const [dishType, setDishType] = useState<DishType>("PRIMARY");
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     method: string;
     currentDish: Dish | undefined;
-  }> ({
+  }>({
     isOpen: false,
     method: "POST",
     currentDish: undefined,
@@ -52,22 +52,24 @@ const Dishes = (props: { dishes: Dish[] }) => {
           <div className={styles.mealTimeContainer}>
             <div className={styles.mealTime}>
               {Array.from(mealTimeMap.entries()).map((meal) => {
-                return (<span
-                  key={meal[0]}
-                  className={
-                    mealTime === meal[0]
-                      ? styles.activeMealTimeElement
-                      : styles.mealTimeElement
-                  }
-                  onClick={() => setMealTime(meal[0])}
+                return (
+                  <span
+                    key={meal[0]}
+                    className={
+                      mealTime === meal[0]
+                        ? styles.activeMealTimeElement
+                        : styles.mealTimeElement
+                    }
+                    onClick={() => setMealTime(meal[0])}
                   >
-                  {meal[1]}
+                    {meal[1]}
                   </span>
-              )})}
+                );
+              })}
             </div>
             <form className={styles.search}>
               <button type='submit' className='search-btn'>
-                <img src='/img/search.png' alt="search"/>
+                <img src='/img/search.png' alt='search' />
               </button>
               <input type='text' placeholder='Поиск' />
             </form>
@@ -75,20 +77,19 @@ const Dishes = (props: { dishes: Dish[] }) => {
 
           <div className={styles.dishTypesContainer}>
             <div className={styles.dishTypes}>
-            { Object.entries(dishTypeMap).map(([k, v]) => {
-              return (
-                <div
-                className={
-                  dishType == k
-                    ? styles.activeDishType
-                    : styles.dishType
-                }
-                onClick={() => setDishType(k as DishType)}
-                >
-                  <span>{v}</span>
-                </div>
-              );
-            })}
+              {Object.entries(dishTypeMap).map(([k, v]) => {
+                return (
+                  <div
+                    key={k}
+                    className={
+                      dishType == k ? styles.activeDishType : styles.dishType
+                    }
+                    onClick={() => setDishType(k as DishType)}
+                  >
+                    <span>{v}</span>
+                  </div>
+                );
+              })}
             </div>
             <div
               className={styles.addDishBtn}
