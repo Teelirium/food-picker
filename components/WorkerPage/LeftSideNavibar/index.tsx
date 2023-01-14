@@ -67,8 +67,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                                 alt="standardMenu"
                                 width={25}
                                 height={25}
-                                className={styles.navElementImg}
-                                />
+                                className={styles.navElementImg} />
                                 <span>Стандартное питание</span>
                     </div>
                 </div>

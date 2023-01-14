@@ -35,7 +35,7 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
   return ReactDOM.createPortal(
     <div
       className={isOpen ? styles.active : styles.inactive}
-      onClick={() => router.push("", undefined, { shallow: true })}
+      onClick={() => router.push('', undefined, { shallow: true })}
     >
       <div className={styles.container}>
         <div className={styles.header}>
