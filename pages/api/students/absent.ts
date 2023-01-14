@@ -41,6 +41,8 @@ async function verify(session: Session, gradeId: number) {
  *    summary: Получает список отсутствующих учеников
  *  post:
  *    summary: Добавляет ученика в список отсутствующих
+ *  delete:
+ *    summary: Удаляет записи об остутствии ученика в некоторый день
  */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
