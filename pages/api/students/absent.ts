@@ -73,17 +73,19 @@ const handler: NextApiHandler = async (req, res) => {
           id: true,
         },
       });
-      await prisma.absentStudent.upsert({
-        where: {
-          id: existing?.id,
-        },
-        create: {
-          studentId,
-          date,
-        },
-        update: {},
-      });
-      return res.send("OK");
+      if (!existing) {
+        await prisma.absentStudent.create({
+          data: {
+            studentId,
+            date,
+          },
+        });
+        return res.status(201).send("OK");
+      }
+      return res.send("Entry already exists");
+    }
+    case "DELETE": {
+      break;
     }
     default: {
       return res.status(405).send("Method not allowed");
