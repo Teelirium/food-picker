@@ -16,14 +16,10 @@ const Orders: React.FC<Props> = (props) => {
   const [breakIndex, setBreakIndex] = useState(1);
   const router = useRouter();
   const filteredOrders = useMemo(() => {
-    return props.orders?.filter((order) => order.breakIndex == breakIndex - 1);
+    return props.orders?.filter((order) => order.breakIndex == breakIndex);
   }, [breakIndex, props.orders]);
 
-  const currentOrders = filteredOrders?.map((order) => {
-    return <OrderCard key={order.id} order={order} />;
-  });
-
-  const breakIndexes = [1, 2, 3, 4, 5, 6, 7, 8];
+  const breakIndexes = [0, 1, 2, 3, 4, 5, 6, 7];
 
   return (
     <div className={styles.content}>
@@ -58,7 +54,11 @@ const Orders: React.FC<Props> = (props) => {
             <span>Выгрузить в Excel</span>
           </div>
         </div>
-        <div className={styles.ordersContainer}>{currentOrders}</div>
+        <div className={styles.ordersContainer}>
+          {filteredOrders?.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))}
+        </div>
       </div>
       <div className={styles.breakContainer}>
         <span>Перемена</span>
@@ -70,7 +70,7 @@ const Orders: React.FC<Props> = (props) => {
                 className={breakIndex === i ? styles.activeBreak : styles.break}
                 onClick={() => setBreakIndex(i)}
               >
-                <span>{i}</span>
+                <span>{i + 1}</span>
               </div>
             );
           })}

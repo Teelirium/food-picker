@@ -62,7 +62,7 @@ async function getHandler(day?: number) {
       },
     },
   });
-
+  
   const grades = await prisma.grade.findMany({});
   const result = [];
   for (let grade of grades) {

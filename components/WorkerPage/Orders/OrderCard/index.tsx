@@ -25,7 +25,7 @@ const OrderCard: React.FC<Props> = ({ order }) => {
 
   const ordersTable = order.dishes.map((dish) => {
     return (
-      <tr key={dish.id} className={styles.dishRow}>
+      <tr key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
         <td width={"35%"}>{dish.name}</td>
         <td width={"15%"}>{dish._count.preferences}</td>
         <td width={"15%"}>{dish.weightGrams}</td>
