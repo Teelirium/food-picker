@@ -64,6 +64,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
     case "POST": {
       const { studentId } = bodySchema.parse(req.body);
+
       const existing = await prisma.absentStudent.findFirst({
         where: {
           studentId,
@@ -85,7 +86,15 @@ const handler: NextApiHandler = async (req, res) => {
       return res.send("Entry already exists");
     }
     case "DELETE": {
-      break;
+      const { studentId } = bodySchema.parse(req.body);
+
+      await prisma.absentStudent.deleteMany({
+        where: {
+          studentId,
+          date,
+        },
+      });
+      return res.send("OK");
     }
     default: {
       return res.status(405).send("Method not allowed");
