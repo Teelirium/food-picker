@@ -44,6 +44,7 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                                 className={styles.navElementImg} />
                                 <span>Блюда</span>
                     </div>
+
                     <div className={activePage === 2 ? 
                         styles.navElement + ' ' + styles.activeNavElement : 
                         styles.navElement}
@@ -57,12 +58,13 @@ const LeftSideNavibar = ({ activePage }: {activePage: Number}) => {
                                 className={styles.navElementImg} />
                                 <span>Заказы</span>
                     </div>
+                    
                     <div className={activePage === 3 ? 
                         styles.navElement + ' ' + styles.activeNavElement : 
                         styles.navElement}
-                        onClick={() => router.push("standard_menu")}>
+                        onClick={() => router.push("standard-menu")}>
                             <img src={activePage === 3 ?
-                                '/img/standardMenu.png' :
+                                '/img/activeStandardMenu.png' :
                                 "/img/standardMenu.png"} 
                                 alt="standardMenu"
                                 width={25}
