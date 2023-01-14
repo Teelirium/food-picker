@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-import { GetResponse } from "pages/api/grades/total-orders";
+import { GradeInfo } from "pages/api/grades/total-orders";
 import React, { useState } from "react";
 import dishStore from "stores/DishStore";
 import styles from "./styles.module.scss";
 
 type Props = {
-  order: GetResponse;
+  order: GradeInfo[number];
 };
 
 const OrderCard: React.FC<Props> = ({ order }) => {

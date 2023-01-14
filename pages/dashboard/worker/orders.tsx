@@ -5,7 +5,7 @@ import Modal from "components/WorkerPage/DishAboutModal";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { GetResponse } from "pages/api/grades/total-orders";
+import { GradeInfo } from "pages/api/grades/total-orders";
 import { useEffect, useMemo, useState } from "react";
 import styles from "styles/worker.module.css";
 import { getServerSideSession } from "utils/getServerSession";
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 const OrdersPage: NextPage = () => {
   const router = useRouter();
-  const [orders, setOrders] = useState<GetResponse[]>();
+  const [orders, setOrders] = useState<GradeInfo>();
   const { day, breakIndex, dish } = useMemo(
     () => querySchema.parse(router.query),
     [router.query]

@@ -1,4 +1,4 @@
-import { GetResponse } from "pages/api/grades/total-orders";
+import { GradeInfo } from "pages/api/grades/total-orders";
 import React, { useMemo, useState } from "react";
 import styles from "./styles.module.css";
 import OrderCard from "./OrderCard";
@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 type Props = {
-  orders: GetResponse[] | undefined;
+  orders: GradeInfo | undefined;
   weekDay: number;
 };
 
@@ -23,7 +23,7 @@ const Orders: React.FC<Props> = (props) => {
     return <OrderCard key={order.id} order={order} />;
   });
 
-  const breakIndexes = [1, 2, 3, 4, 5, 6, 7, 8]
+  const breakIndexes = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <div className={styles.content}>
@@ -72,7 +72,7 @@ const Orders: React.FC<Props> = (props) => {
               >
                 <span>{i}</span>
               </div>
-          )
+            );
           })}
         </div>
       </div>
