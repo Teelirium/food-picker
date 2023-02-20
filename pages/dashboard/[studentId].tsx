@@ -6,8 +6,10 @@ import DashboardLayout from "components/Dashboard/Layout";
 import DishCardSmall from "components/DishCardSmall";
 import PreferenceSection from "components/PreferenceSection";
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { Router, useRouter } from "next/router";
 import deleteIcon from "public/svg/delete.svg";
 import editIcon from "public/svg/edit.svg";
 import { useEffect, useMemo, useState } from "react";
@@ -52,8 +54,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-const StudentChoice: NextPage<Props> = (props) => {
-  const { studentId, day } = props;
+const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
+  const router = useRouter();
 
   const [preferences, setPreferences] = useState<PreferenceWithDish[] | null>(
     null
@@ -88,7 +90,7 @@ const StudentChoice: NextPage<Props> = (props) => {
       .reduce((total, cur) => total + cur, 0);
   }, [preferences]);
 
-  const handleDelete = (preferenceId: number) => {
+  function handleDelete(preferenceId: number) {
     axios
       .delete(`/api/preferences/${preferenceId}`)
       .then(() => {
@@ -111,12 +113,13 @@ const StudentChoice: NextPage<Props> = (props) => {
             const dish = dishes.get(k as DishType)?.dish;
             if (dish !== undefined)
               return (
-                <PreferenceSection title={v} key={k}>
-                  <Link href={`/dashboard/dishes/${dish.id}`} legacyBehavior>
-                    <a style={{ width: "100%" }}>
-                      <DishCardSmall dish={dish} />
-                    </a>
-                  </Link>
+                <PreferenceSection
+                  title={v}
+                  key={k}
+                  dish={dish}
+                  handleView={() => router.push(`/dashboard/dishes/${dish.id}`)}
+                  // handleDelete={}
+                >
                   <div className={styles.btnGroup}>
                     <button
                       className={classNames(styles.deleteBtn, styles.actionBtn)}
@@ -150,9 +153,7 @@ const StudentChoice: NextPage<Props> = (props) => {
                 legacyBehavior
               >
                 <a>
-                  <PreferenceSection title={v}>
-                    + Добавить Блюдо
-                  </PreferenceSection>
+                  <PreferenceSection title={v}></PreferenceSection>
                 </a>
               </Link>
             );
