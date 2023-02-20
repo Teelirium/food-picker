@@ -1,4 +1,4 @@
-export type UserRole = "PARENT" | "TEACHER" | "WORKER" | "ADMIN";
+export type UserRole = 'PARENT' | 'TEACHER' | 'WORKER' | 'ADMIN';
 
 export type FullName = {
   name: string;

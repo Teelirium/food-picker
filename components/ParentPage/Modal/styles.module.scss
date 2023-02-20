@@ -8,8 +8,9 @@
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgb(0 0 0 / 70%);
   z-index: 1;
+
   * {
     z-index: 2;
   }
@@ -39,7 +40,7 @@
 
   * {
     text-align: center;
-    font-family: "Century Gothic";
+    font-family: "Century Gothic", sans-serif;
     font-size: 1.8rem;
     color: linear-gradient(to right, #3e1f47, #144552);
     font-weight: 600;
@@ -47,7 +48,7 @@
 }
 
 .subHeader {
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 18px;
   color: white;
   background-color: var(--dark-bg-color);
@@ -60,8 +61,8 @@
   ::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
-  
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -82,7 +83,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
 }
 
 .activeChildname {
@@ -92,12 +93,12 @@
   cursor: pointer;
   border: 1px solid white;
   border-radius: 30px;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
 }
 
 .childname span,
 .activeChildname span {
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   color: white;
   user-select: none;
@@ -109,7 +110,7 @@
   border-radius: 30px;
   background: white;
   color: black;
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 18px;
   user-select: none;
 }

@@ -1,15 +1,17 @@
-import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
-import type { NextApiHandler } from "next";
-import { UserFormData, UserData } from "types/UserData";
+import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcryptjs';
+
+import { UserFormData, UserData } from 'types/UserData';
+
+import type { NextApiHandler } from 'next';
 
 const prisma = new PrismaClient();
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
-    case "POST":
+    case 'POST': {
       const { user } = req.body as { user: UserFormData };
-      console.log("Registering user: ", user);
+      console.log('Registering user: ', user);
       const password = await hash(user.password, 12);
 
       const data: UserData = {
@@ -18,18 +20,18 @@ const handler: NextApiHandler = async (req, res) => {
         middleName: user.middleName,
         username: user.username,
         password,
-      }
+      };
 
       switch (user.role) {
-        case "PARENT":
+        case 'PARENT':
           await prisma.parent.create({
-            data
+            data,
           });
           break;
-        case "TEACHER":
+        case 'TEACHER':
           await prisma.teacher.create({
-            data
-          })
+            data,
+          });
           break;
         case 'WORKER':
         case 'ADMIN':
@@ -37,16 +39,17 @@ const handler: NextApiHandler = async (req, res) => {
             data: {
               ...data,
               role: user.role,
-            }
-          })
+            },
+          });
           break;
         default:
-          return res.status(422).send("Invalid role");
+          return res.status(422).send('Invalid role');
       }
-      return res.send("OK");
+      return res.send('OK');
+    }
 
     default:
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
   }
 };
 

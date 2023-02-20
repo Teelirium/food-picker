@@ -1,11 +1,13 @@
-import dishStore from "stores/DishStore";
-import styles from "./styles.module.css";
-import { useRouter } from "next/router";
-import deleteEmptyParams from "utils/deleteEmptyParams";
+import { useRouter } from 'next/router';
+
+import dishStore from 'stores/DishStore';
+import deleteEmptyParams from 'utils/deleteEmptyParams';
+
+import styles from './styles.module.css';
 
 const Modal = ({ isOpen }: { isOpen: boolean }) => {
   const router = useRouter();
-  
+
   if (!dishStore.dish) {
     return null;
   }
@@ -18,13 +20,13 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
         onClick={() => {
           router.replace(
             {
-              pathname: "",
+              pathname: '',
               query: deleteEmptyParams({ ...router.query, dish: undefined }),
             },
             undefined,
             {
               shallow: true,
-            }
+            },
           );
         }}
       >

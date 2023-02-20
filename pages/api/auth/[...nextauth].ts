@@ -1,8 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { compare } from "bcryptjs";
-import NextAuth, { NextAuthOptions } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { SessionData, dbUserData } from "types/UserData";
+import { PrismaClient } from '@prisma/client';
+import { compare } from 'bcryptjs';
+import NextAuth, { NextAuthOptions } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+
+import { SessionData, dbUserData } from 'types/UserData';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ async function findUser(username: string): Promise<dbUserData | null> {
     },
   });
   if (parent) {
-    return { ...parent, role: "PARENT" };
+    return { ...parent, role: 'PARENT' };
   }
 
   const teacher = await prisma.teacher.findUnique({
@@ -22,7 +23,7 @@ async function findUser(username: string): Promise<dbUserData | null> {
     },
   });
   if (teacher) {
-    return { ...teacher, role: "TEACHER" };
+    return { ...teacher, role: 'TEACHER' };
   }
 
   const worker = await prisma.worker.findUnique({
@@ -39,20 +40,20 @@ async function findUser(username: string): Promise<dbUserData | null> {
 
 export const options: NextAuthOptions = {
   pages: {
-    signIn: "/login",
-    //error: '/login'
+    signIn: '/login',
+    // error: '/login'
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   providers: [
     Credentials({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        username: { label: "Логин", type: "text" },
-        password: { label: "Пароль", type: "password" },
+        username: { label: 'Логин', type: 'text' },
+        password: { label: 'Пароль', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials) {
           return Promise.reject(new Error('Invalid credentials'));
         }
@@ -71,24 +72,21 @@ export const options: NextAuthOptions = {
           };
           return data;
         }
-        
+
         return Promise.reject(new Error('Invalid password'));
       },
     }),
   ],
-  
+
   callbacks: {
-    jwt({ token, user, account, profile, isNewUser }) {
-      //console.log("JWT", token, "\n", "User", user);
-      if (user) {
-        token.user = user;
-      }
-      return token;
+    jwt({ token, user }) {
+      // console.log("JWT", token, "\n", "User", user);
+      if (!user) return token;
+      return { ...token, user };
     },
-    session({ session, token, user }) {
-      //console.log(session, token, user)
-      session.user = token.user as SessionData;
-      return session;
+    session({ session, token }) {
+      // console.log(session, token, user)
+      return { ...session, user: token.user as SessionData };
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

@@ -1,13 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import { Session } from "next-auth";
+import { PrismaClient } from '@prisma/client';
+import { Session } from 'next-auth';
 
 const prisma = new PrismaClient();
 
-export default async function isParentOf(
-  session: Session,
-  childId: number
-) {
-  if (session.user.role !== "PARENT") {
+export default async function isParentOf(session: Session, childId: number) {
+  if (session.user.role !== 'PARENT') {
     return false;
   }
 

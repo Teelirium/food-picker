@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiHandler } from "next";
-import { Parent } from "types/Parent";
-import exclude from "utils/exclude";
+import { PrismaClient } from '@prisma/client';
+import { NextApiHandler } from 'next';
+
+import { Parent } from 'types/Parent';
+import exclude from 'utils/exclude';
 
 const prisma = new PrismaClient();
 
@@ -30,22 +31,22 @@ const handler: NextApiHandler = async (req, res) => {
   const { parentId, children } = req.query;
 
   if (!parentId) {
-    return res.status(404).send("");
+    return res.status(404).send('');
   }
 
   switch (req.method) {
-    case "GET":
+    case 'GET': {
       const data = await prisma.parent.findUnique({
         where: {
           id: +parentId,
         },
       });
       if (!data) {
-        return res.status(404).send("");
+        return res.status(404).send('');
       }
 
-      const parent = exclude(data, ["password"]);
-      if (children === "true") {
+      const parent = exclude(data, ['password']);
+      if (children === 'true') {
         const parentStudents = await prisma.parentStudent.findMany({
           where: {
             parentId: +parentId,
@@ -60,9 +61,10 @@ const handler: NextApiHandler = async (req, res) => {
         return res.send(parentWithChildren);
       }
       return res.send(parent);
+    }
 
     default:
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
   }
 };
 
