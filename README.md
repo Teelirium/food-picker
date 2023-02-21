@@ -10,6 +10,7 @@
 
 ```sh
 # Просто проверить соблюдение правил
+npm run lint
 npm run lint:next
 npm run lint:es
 npm run lint:css

@@ -3,12 +3,10 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-/* eslint-disable no-unused-vars */
 type Props = {
   dish: Dish | undefined;
   updateDish: (dish: Dish) => void;
 };
-/* eslint-enble no-unused-vars */
 
 const DishCard: React.FC<Props> = ({ dish, updateDish }) => {
   if (!dish) return null;
