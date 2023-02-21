@@ -1,8 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiHandler } from "next";
-import { PartialDish } from "types/Dish";
-import { getServerSideSession } from "utils/getServerSession";
-import verifyRole from "utils/verifyRole";
+import { PrismaClient } from '@prisma/client';
+import { NextApiHandler } from 'next';
+
+import { PartialDish } from 'types/Dish';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
@@ -36,27 +37,28 @@ const prisma = new PrismaClient();
 const handler: NextApiHandler = async (req, res) => {
   const { dishId } = req.query;
   if (!dishId) {
-    return res.status(404).send("");
+    return res.status(404).send('');
   }
 
   const session = await getServerSideSession({ req, res });
-  const isWorkerOrAdmin = !!session && verifyRole(session, ["WORKER", "ADMIN"]);
+  const isWorkerOrAdmin = !!session && verifyRole(session, ['WORKER', 'ADMIN']);
 
   switch (req.method) {
-    case "GET":
+    case 'GET': {
       const dish = await prisma.dish.findUnique({
         where: {
           id: +dishId,
         },
       });
       if (!dish) {
-        return res.status(404).send("Dish not found");
+        return res.status(404).send('Dish not found');
       }
       return res.send(dish);
+    }
 
-    case "PATCH":
+    case 'PATCH': {
       if (!isWorkerOrAdmin) {
-        return res.status(403).send("");
+        return res.status(403).send('');
       }
 
       const { partialDish } = req.body as { partialDish: PartialDish };
@@ -70,10 +72,11 @@ const handler: NextApiHandler = async (req, res) => {
         console.error(err);
         return res.status(500).send(err);
       }
+    }
 
-    case "DELETE":
+    case 'DELETE':
       if (!isWorkerOrAdmin) {
-        return res.status(403).send("");
+        return res.status(403).send('');
       }
       try {
         await prisma.dish.delete({
@@ -81,14 +84,14 @@ const handler: NextApiHandler = async (req, res) => {
             id: +dishId,
           },
         });
-        return res.send("OK");
+        return res.send('OK');
       } catch (err) {
         console.error(err);
         return res.status(500).send(err);
       }
 
     default:
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
   }
 };
 

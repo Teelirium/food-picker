@@ -1,18 +1,16 @@
-import { NextApiHandler } from "next";
-import { Session } from "next-auth";
-import { getServerSideSession } from "utils/getServerSession";
-import prisma from "utils/prismaClient";
-import idSchema from "utils/schemas/idSchema";
-import stripTimeFromDate from "utils/stripTimeFromDate";
-import verifyRole from "utils/verifyRole";
-import { z } from "zod";
+import { NextApiHandler } from 'next';
+import { Session } from 'next-auth';
+import { z } from 'zod';
+
+import { getServerSideSession } from 'utils/getServerSession';
+import prisma from 'utils/prismaClient';
+import idSchema from 'utils/schemas/idSchema';
+import stripTimeFromDate from 'utils/stripTimeFromDate';
+import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
   gradeId: idSchema,
-  date: z.preprocess(
-    (val) => stripTimeFromDate(z.coerce.date().parse(val)),
-    z.date()
-  ),
+  date: z.preprocess((val) => stripTimeFromDate(z.coerce.date().parse(val)), z.date()),
 });
 
 const bodySchema = z.object({
@@ -22,7 +20,7 @@ const bodySchema = z.object({
 export type AbsentStudents = Awaited<ReturnType<typeof handleGet>>;
 
 async function verify(session: Session, gradeId: number) {
-  if (verifyRole(session, ["ADMIN"])) {
+  if (verifyRole(session, ['ADMIN'])) {
     return true;
   }
   const count = await prisma.grade.count({
@@ -47,24 +45,21 @@ async function verify(session: Session, gradeId: number) {
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
   if (!session) {
-    return res.status(401).send("");
+    return res.status(401).send('');
   }
 
   const { gradeId, date } = paramSchema.parse(req.query);
   // console.log(gradeId, date, getTodayDate())
-  if (
-    !verifyRole(session, ["ADMIN", "TEACHER"]) ||
-    !(await verify(session, gradeId))
-  ) {
-    return res.status(403).send("");
+  if (!verifyRole(session, ['ADMIN', 'TEACHER']) || !(await verify(session, gradeId))) {
+    return res.status(403).send('');
   }
 
   switch (req.method) {
-    case "GET": {
+    case 'GET': {
       const students = await handleGet(date, gradeId);
       return res.json(students);
     }
-    case "POST": {
+    case 'POST': {
       const { studentId } = bodySchema.parse(req.body);
 
       const existing = await prisma.absentStudent.findFirst({
@@ -83,11 +78,11 @@ const handler: NextApiHandler = async (req, res) => {
             date,
           },
         });
-        return res.status(201).send("OK");
+        return res.status(201).send('OK');
       }
-      return res.send("Entry already exists");
+      return res.send('Entry already exists');
     }
-    case "DELETE": {
+    case 'DELETE': {
       const { studentId } = bodySchema.parse(req.body);
 
       await prisma.absentStudent.deleteMany({
@@ -96,10 +91,10 @@ const handler: NextApiHandler = async (req, res) => {
           date,
         },
       });
-      return res.send("OK");
+      return res.send('OK');
     }
     default: {
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
     }
   }
 };

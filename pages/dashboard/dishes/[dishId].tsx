@@ -1,47 +1,39 @@
-import { Dish, DishType, PrismaClient } from "@prisma/client";
-import { GetServerSideProps, NextPage } from "next";
-import { getServerSideSession } from "utils/getServerSession";
-import isParentOf from "utils/isParentOf";
-import verifyRole from "utils/verifyRole";
-import styles from "styles/dishInfo.module.scss";
-import DashboardLayout from "components/Dashboard/Layout";
-import { z } from "zod";
-import Link from "next/link";
-import dishTypeMap from "utils/dishTypeMap";
-import axios from "axios";
-import { useRouter } from "next/router";
+/* eslint-disable no-script-url */
+import { Dish, PrismaClient } from '@prisma/client';
+import axios from 'axios';
+import { GetServerSideProps, NextPage } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { z } from 'zod';
+
+import DashboardLayout from 'components/Dashboard/Layout';
+import styles from 'styles/dishInfo.module.scss';
+import dishTypeMap from 'utils/dishTypeMap';
+import { getServerSideSession } from 'utils/getServerSession';
+import isParentOf from 'utils/isParentOf';
+import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const query = z.object({
-    dishId: z.preprocess(
-      (id) => Number(z.string().parse(id)),
-      z.number().min(0)
-    ),
-    day: z
-      .preprocess(
-        (day) => Number(z.string().parse(day)),
-        z.number().min(0).max(6)
-      )
-      .optional(),
-    studentId: z
-      .preprocess((id) => Number(z.string().parse(id)), z.number().min(0))
-      .optional(),
+    dishId: z.preprocess((id) => Number(z.string().parse(id)), z.number().min(0)),
+    day: z.preprocess((day) => Number(z.string().parse(day)), z.number().min(0).max(6)).optional(),
+    studentId: z.preprocess((id) => Number(z.string().parse(id)), z.number().min(0)).optional(),
   });
   const { dishId, day, studentId } = query.parse(ctx.query);
   const session = await getServerSideSession(ctx);
 
   if (
     !session ||
-    !verifyRole(session, ["PARENT", "ADMIN"]) ||
+    !verifyRole(session, ['PARENT', 'ADMIN']) ||
     (studentId !== undefined &&
       !(await isParentOf(session, studentId)) &&
-      session.user.role === "PARENT")
+      session.user.role === 'PARENT')
   ) {
     return {
       redirect: {
-        destination: "/dashboard",
+        destination: '/dashboard',
         permanent: false,
       },
     };
@@ -77,7 +69,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
     axios
       .post(`/api/preferences?studentId=${studentId}&day=${day}`, { dishId })
       .then(() => {
-        router.replace(`/dashboard`).then(() => {
+        router.replace('/dashboard').then(() => {
           router.push(`/dashboard/${studentId}?day=${day}`);
         });
       })
@@ -86,15 +78,12 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
 
   return (
     <DashboardLayout>
-      <header
-        className={styles.header}
-        style={{ backgroundImage: `url(${dish.imgURL})` }}
-      >
+      <header className={styles.header} style={{ backgroundImage: `url(${dish.imgURL})` }}>
         <Link
           href={
-            !!studentId
+            studentId
               ? `/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`
-              : "javascript:history.back()"
+              : 'javascript:history.back()'
           }
         >
           <span className={styles.backBtn}>
@@ -108,7 +97,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
         {day !== null && studentId !== null ? (
-          <button className={styles.chooseBtn} onClick={handleChoose}>
+          <button className={styles.chooseBtn} onClick={handleChoose} type="button">
             Выбрать блюдо
           </button>
         ) : null}

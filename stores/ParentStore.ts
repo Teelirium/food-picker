@@ -1,9 +1,11 @@
-import axios from "axios";
-import { makeAutoObservable, runInAction } from "mobx";
-import { Parent } from "types/Parent";
+import axios from 'axios';
+import { makeAutoObservable, runInAction } from 'mobx';
+
+import { Parent } from 'types/Parent';
 
 class ParentStore {
   parent: Parent | null;
+
   childIndex: number;
 
   constructor() {
@@ -16,7 +18,11 @@ class ParentStore {
     axios
       .get(`/api/parents/${id}?children=true`)
       .then((resp) => resp.data)
-      .then((p) => runInAction(() => (this.parent = p)))
+      .then((p) =>
+        runInAction(() => {
+          this.parent = p;
+        }),
+      )
       .catch(console.log);
   }
 
