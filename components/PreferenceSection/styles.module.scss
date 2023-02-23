@@ -23,3 +23,18 @@
   display: flex;
   justify-content: space-between;
 }
+
+.actionBtn {
+  font-size: 1.6rem;
+  padding: 1.2rem 1.6rem 1.2rem 1.6rem;
+  border-radius: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  &[data-action='edit'] {
+    background: linear-gradient(270deg, #272640 0%, #144552 100%);
+  }
+  &[data-action='delete'] {
+    background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
+  }
+}

@@ -1,25 +1,19 @@
-import { Dish, DishType, Preference } from "@prisma/client";
-import axios from "axios";
-import classNames from "classnames";
-import DashboardHeader from "components/Dashboard/Header";
-import DashboardLayout from "components/Dashboard/Layout";
-import DishCardSmall from "components/DishCardSmall";
-import PreferenceSection from "components/PreferenceSection";
-import { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { Router, useRouter } from "next/router";
-import deleteIcon from "public/svg/delete.svg";
-import editIcon from "public/svg/edit.svg";
-import { useEffect, useMemo, useState } from "react";
-import styles from "styles/studentChoice.module.scss";
-import { PreferenceWithDish } from "types/Preference";
-import dayMap from "utils/dayMap";
-import dishTypeMap from "utils/dishTypeMap";
-import { getServerSideSession } from "utils/getServerSession";
-import isValidDay from "utils/isValidDay";
-import verifyRole from "utils/verifyRole";
+import { Dish, DishType } from '@prisma/client';
+import axios from 'axios';
+import DashboardHeader from 'components/Dashboard/Header';
+import DashboardLayout from 'components/Dashboard/Layout';
+import PreferenceSection from 'components/PreferenceSection';
+import { GetServerSideProps, NextPage } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import styles from 'styles/studentChoice.module.scss';
+import { PreferenceWithDish } from 'types/Preference';
+import dayMap from 'utils/dayMap';
+import dishTypeMap from 'utils/dishTypeMap';
+import { getServerSideSession } from 'utils/getServerSession';
+import isValidDay from 'utils/isValidDay';
+import verifyRole from 'utils/verifyRole';
 
 type Props = {
   studentId: number;
@@ -36,11 +30,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     day === undefined ||
     !isValidDay(day) ||
     !session ||
-    !verifyRole(session, ["PARENT", "ADMIN"])
+    !verifyRole(session, ['PARENT', 'ADMIN'])
   ) {
     return {
       redirect: {
-        destination: "/dashboard",
+        destination: '/dashboard',
         permanent: false,
       },
     };
@@ -56,10 +50,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
 const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
   const router = useRouter();
-
-  const [preferences, setPreferences] = useState<PreferenceWithDish[] | null>(
-    null
-  );
+  const [preferences, setPreferences] = useState<PreferenceWithDish[] | null>(null);
 
   useEffect(() => {
     axios
@@ -85,21 +76,22 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
     if (!preferences || preferences.length === 0) {
       return 0;
     }
-    return preferences
-      .map((pref) => pref.Dish.price)
-      .reduce((total, cur) => total + cur, 0);
+    return preferences.map((pref) => pref.Dish.price).reduce((total, cur) => total + cur, 0);
   }, [preferences]);
 
-  function handleDelete(preferenceId: number) {
-    axios
-      .delete(`/api/preferences/${preferenceId}`)
-      .then(() => {
-        if (!!preferences) {
-          setPreferences(preferences.filter((p) => p.id !== preferenceId));
-        }
-      })
-      .catch(alert);
-  };
+  function handleDelete(key: DishType) {
+    const dish = dishes.get(key);
+    if (!!dish) {
+      axios
+        .delete(`/api/preferences/${dish.prefId}`)
+        .then(() => {
+          if (!!preferences) {
+            setPreferences(preferences.filter((p) => p.id !== dish.prefId));
+          }
+        })
+        .catch(alert);
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -111,41 +103,20 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => {
             const dish = dishes.get(k as DishType)?.dish;
-            if (dish !== undefined)
+            if (!!dish) {
               return (
                 <PreferenceSection
-                  title={v}
                   key={k}
+                  title={v}
                   dish={dish}
                   handleView={() => router.push(`/dashboard/dishes/${dish.id}`)}
-                  // handleDelete={}
-                >
-                  <div className={styles.btnGroup}>
-                    <button
-                      className={classNames(styles.deleteBtn, styles.actionBtn)}
-                      onClick={() => {
-                        const dish = dishes.get(k as DishType);
-                        if (!!dish) {
-                          handleDelete(dish.prefId);
-                        }
-                      }}
-                    >
-                      <Image src={deleteIcon} alt='delete' />
-                      Удалить
-                    </button>
-                    <Link
-                      href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                    >
-                      <button
-                        className={classNames(styles.editBtn, styles.actionBtn)}
-                      >
-                        <Image src={editIcon} alt='edit' />
-                        Изменить
-                      </button>
-                    </Link>
-                  </div>
-                </PreferenceSection>
+                  handleDelete={() => handleDelete(k as DishType)}
+                  handleEdit={() =>
+                    router.push(`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`)
+                  }
+                />
               );
+            }
             return (
               <Link
                 key={k}
@@ -160,7 +131,7 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
           })}
         </main>
       ) : (
-        "Загрузка..."
+        'Загрузка...'
       )}
     </DashboardLayout>
   );
