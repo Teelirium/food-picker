@@ -6,7 +6,7 @@
   justify-content: center;
   flex-direction: column;
   height: inherit;
-  background: var(--bg-color-dark);
+  background: var(--dark-bg-color);
   border-radius: 45px;
   margin-right: 30px;
 }

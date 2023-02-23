@@ -38,3 +38,12 @@
     background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
   }
 }
+
+.label {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 10rem;
+  padding: 0.7rem 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

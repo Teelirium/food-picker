@@ -4,6 +4,7 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import PreferenceSection from 'components/PreferenceSection';
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -95,6 +96,9 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
 
   return (
     <DashboardLayout>
+      <Head>
+        <title>Выбор блюд на день</title>
+      </Head>
       <DashboardHeader backUrl='/dashboard'>
         <h1>{dayMap[day].toUpperCase()}</h1>
         <button className={styles.saveBtn}>{totalCost} руб.</button>
@@ -118,15 +122,13 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
               );
             }
             return (
-              <Link
+              <PreferenceSection
                 key={k}
-                href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                legacyBehavior
-              >
-                <a>
-                  <PreferenceSection title={v}></PreferenceSection>
-                </a>
-              </Link>
+                title={v}
+                handleAdd={() =>
+                  router.push(`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`)
+                }
+              />
             );
           })}
         </main>
