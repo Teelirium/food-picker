@@ -1,18 +1,12 @@
-import type { GetServerSideProps, NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next';
 
-export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
-  return {
-    redirect: {
-      destination: '/login',
-      permanent: true
-    }
-  }
-}
+export const getServerSideProps: GetServerSideProps = async () => ({
+  redirect: {
+    destination: '/login',
+    permanent: true,
+  },
+});
 
-const Home: NextPage = () => {
-  return (
-    <h1>Hi</h1>
-  )
-}
+const Home: NextPage = () => <h1>Hi</h1>;
 
-export default Home
+export default Home;

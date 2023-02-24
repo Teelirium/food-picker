@@ -13,10 +13,14 @@
   background-color: #181818;
 }
 
-/*Smartphones*/
+/* Smartphones */
 @media (max-width: 767px) {
   .schoolName {
     width: 100vw !important;
+  }
+
+  .form {
+    height: 100vh;
   }
 }
 
@@ -40,7 +44,7 @@
 
 .schoolTitle {
   color: #fff;
-  font-family: "Century Gothic Bold";
+  font-family: "Century Gothic Bold", sans-serif;
   font-size: 40px;
   user-select: none;
 }
@@ -50,7 +54,7 @@
   display: flex;
   flex-direction: column;
   color: #fff;
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   user-select: none;
   width: 100%;
@@ -81,7 +85,7 @@
   margin: 0 0 50px 13px;
   display: flex;
   color: #fff;
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 18px;
   align-self: flex-start;
   user-select: none;
@@ -137,6 +141,6 @@
   background: linear-gradient(to right, #3e1f47, #144552);
   border-radius: 25px;
   color: #fff;
-  font-family: "Century Gothic";
+  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
 }

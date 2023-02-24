@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiHandler } from "next";
+import { PrismaClient } from '@prisma/client';
+import { NextApiHandler } from 'next';
 
 const prisma = new PrismaClient();
 
@@ -14,12 +14,13 @@ const prisma = new PrismaClient();
  */
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
-    case "GET":
+    case 'GET': {
       const parent = await prisma.parent.findMany({});
       return res.send(parent);
+    }
 
     default:
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
   }
 };
 

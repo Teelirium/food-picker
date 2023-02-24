@@ -1,15 +1,17 @@
-import parentStore from "stores/ParentStore";
-import styles from "./styles.module.scss";
-import getFullName from "utils/getFullName";
-import { signOut } from "next-auth/react";
-import ReactDOM from "react-dom";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
+import { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+
+import parentStore from 'stores/ParentStore';
+import getFullName from 'utils/getFullName';
+
+import styles from './styles.module.scss';
 
 const Modal = ({ isOpen }: { isOpen: boolean }) => {
   const router = useRouter();
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    document.body.style.overflow = isOpen ? 'hidden' : 'auto';
   }, [isOpen]);
 
   if (!parentStore.parent) {
@@ -22,11 +24,7 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
       onClick={() => {
         parentStore.setChild(index);
       }}
-      className={
-        parentStore.childIndex == index
-          ? styles.activeChildname
-          : styles.childname
-      }
+      className={parentStore.childIndex === index ? styles.activeChildname : styles.childname}
     >
       <span>{getFullName(child)}</span>
     </div>
@@ -45,13 +43,13 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
         <h3 className={styles.subHeader}>Выбор еды для:</h3>
         <div className={styles.body}>
           <div className={styles.list}>{childList}</div>
-          <button className={styles.logOutBtn} onClick={() => signOut()}>
+          <button className={styles.logOutBtn} onClick={() => signOut()} type="button">
             Выйти из аккаунта
           </button>
         </div>
       </div>
     </div>,
-    document.querySelector("#__next") as HTMLElement
+    document.querySelector('#__next') as HTMLElement,
   );
 };
 

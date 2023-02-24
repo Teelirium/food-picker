@@ -67,7 +67,8 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
       return result;
     }
 
-    for (let pref of preferences) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const pref of preferences) {
       result.set(pref.Dish.type, { dish: pref.Dish, prefId: pref.id });
     }
     return result;
@@ -99,11 +100,13 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
       <Head>
         <title>Выбор блюд на день</title>
       </Head>
-      <DashboardHeader backUrl='/dashboard'>
+      <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <button className={styles.saveBtn}>{totalCost} руб.</button>
+        <button className={styles.saveBtn} type="button">
+          {totalCost} руб.
+        </button>
       </DashboardHeader>
-      {!!preferences ? (
+      {preferences ? (
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => {
             const dish = dishes.get(k as DishType)?.dish;

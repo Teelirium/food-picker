@@ -1,10 +1,11 @@
-import { Dish, DishType, Grade, Prisma } from "@prisma/client";
-import { NextApiHandler } from "next";
-import { getServerSideSession } from "utils/getServerSession";
-import prisma from "utils/prismaClient";
-import dayOfWeekSchema from "utils/schemas/dayOfWeekSchema";
-import verifyRole from "utils/verifyRole";
-import { z } from "zod";
+import { DishType, Prisma } from '@prisma/client';
+import { NextApiHandler } from 'next';
+import { z } from 'zod';
+
+import { getServerSideSession } from 'utils/getServerSession';
+import prisma from 'utils/prismaClient';
+import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
+import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
   day: dayOfWeekSchema.optional(),
@@ -29,17 +30,16 @@ type DishWithOrders = Prisma.DishGetPayload<{
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
 
-  if (!session) return res.status(401).send("");
-  if (!verifyRole(session, ["ADMIN", "TEACHER", "WORKER"]))
-    return res.status(403).send("");
+  if (!session) return res.status(401).send('');
+  if (!verifyRole(session, ['ADMIN', 'TEACHER', 'WORKER'])) return res.status(403).send('');
 
   switch (req.method) {
-    case "GET": {
+    case 'GET': {
       const { day } = paramSchema.parse(req.query);
       return res.json(await handleGet(day));
     }
     default: {
-      return res.status(405).send("");
+      return res.status(405).send('');
     }
   }
 };
@@ -62,10 +62,12 @@ async function handleGet(day?: number) {
       },
     },
   });
-  
+
   const grades = await prisma.grade.findMany({});
   const result = [];
-  for (let grade of grades) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const grade of grades) {
+    // eslint-disable-next-line no-await-in-loop
     const studentCount = await prisma.student.count({
       where: {
         gradeId: grade.id,
@@ -75,18 +77,19 @@ async function handleGet(day?: number) {
     const defaultDishMap = new Map(
       defaultPrefs
         .map((pref) => {
-          if (pref.Dish !== null)
-            return [
-              pref.Dish.type,
-              {
-                ...pref.Dish,
-                _count: { preferences: studentCount },
-              },
-            ];
+          if (pref.Dish === null) return;
+          return [
+            pref.Dish.type,
+            {
+              ...pref.Dish,
+              _count: { preferences: studentCount },
+            },
+          ];
         })
-        .filter((el): el is [DishType, DishWithOrders] => el !== undefined)
+        .filter((el): el is [DishType, DishWithOrders] => el !== undefined),
     );
 
+    // eslint-disable-next-line no-await-in-loop
     const dishes = await prisma.dish.findMany({
       select: {
         id: true,
@@ -109,7 +112,8 @@ async function handleGet(day?: number) {
     });
     const nonEmpty = dishes.filter((dish) => dish._count.preferences > 0);
 
-    for (let dish of nonEmpty) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const dish of nonEmpty) {
       const existing = defaultDishMap.get(dish.type);
 
       if (!!existing && existing.id !== dish.id) {

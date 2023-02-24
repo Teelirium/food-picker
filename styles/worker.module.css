@@ -1,8 +1,8 @@
 .container {
-    display: grid;
-    grid-template-columns: 1fr 6fr;
-    width: auto;
-    height: 100vh;
-    overflow-y: hidden;
-    background: linear-gradient(0deg, #1B3A4B 0%, #3E1F47 100%);
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+  width: auto;
+  height: 100vh;
+  overflow-y: hidden;
+  background: linear-gradient(0deg, #1b3a4b 0%, #3e1f47 100%);
 }

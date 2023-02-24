@@ -1,13 +1,13 @@
-import DashboardLayout from "components/Dashboard/Layout";
-import { GetServerSideProps, NextPage } from "next";
-import { signIn, useSession } from "next-auth/react";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import { getServerSideSession } from "utils/getServerSession";
-import verifyRole from "utils/verifyRole";
-import styles from "styles/login.module.scss";
-import { signInErrors } from "utils/nextAuthErrors";
+import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+
+import DashboardLayout from 'components/Dashboard/Layout';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
+
+import styles from '../styles/login.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
@@ -21,18 +21,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       redirect: {
         destination: '/dashboard',
-        permanent: false
-      }
-    }
+        permanent: false,
+      },
+    };
   }
 
   if (verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {
       redirect: {
         destination: '/dashboard/worker/dishes',
-        permanent: false
-      }
-    }
+        permanent: false,
+      },
+    };
   }
 
   return {
@@ -48,33 +48,34 @@ type LoginFormData = {
 
 const Login: NextPage = () => {
   const { register, handleSubmit } = useForm<LoginFormData>();
-  const router = useRouter();
+  // const router = useRouter();
 
   const onSubmit = handleSubmit((data: LoginFormData) => {
-    signIn("credentials", {
+    signIn('credentials', {
       // callbackUrl: "/dashboard?student=0",
       ...data,
     })
-      .then((resp) => {
-        // alert(JSON.stringify(resp));
-        // if (!resp) {
-        //   alert(JSON.stringify(resp));
-        //   return;
-        // }
-        // if (resp.error) {
-        //   alert(signInErrors[resp.error] || resp.error);
-        //   return;
-        // }
-        // return router.push("/dashboard?student=0");
-      })
-      .catch(() => alert("Неверное имя пользователя или пароль"));
+      // .then((resp) => {
+      //   alert(JSON.stringify(resp));
+      //   if (!resp) {
+      //     alert(JSON.stringify(resp));
+      //     return;
+      //   }
+      //   if (resp.error) {
+      //     alert(signInErrors[resp.error] || resp.error);
+      //     return;
+      //   }
+      //   return router.push("/dashboard?student=0");
+      // })
+      // eslint-disable-next-line no-alert
+      .catch(() => alert('Неверное имя пользователя или пароль'));
   });
 
   return (
     <>
       <Head>
         <title>Вход</title>
-        <meta charSet='utf-8' />
+        <meta charSet="utf-8" />
       </Head>
       <DashboardLayout>
         <div className={styles.schoolName}>
@@ -84,40 +85,28 @@ const Login: NextPage = () => {
           <label className={styles.label}>
             <p>Логин</p>
             <div className={styles.inputBorder}>
-              <input
-                type={"text"}
-                {...register("username")}
-                placeholder='Логин'
-                required
-              />
+              <input type="text" {...register('username')} placeholder="Логин" required />
             </div>
           </label>
 
           <label className={styles.label}>
             <p>Пароль</p>
             <div className={styles.inputBorder}>
-              <input
-                type={"password"}
-                {...register("password")}
-                placeholder='Пароль'
-                required
-              />
+              <input type="password" {...register('password')} placeholder="Пароль" required />
             </div>
           </label>
 
           <label className={styles.labelRememberMe}>
             <label className={styles.checkboxLabel}>
-              <input
-                className={styles.checkbox}
-                type={"checkbox"}
-                {...register("rememberMe")}
-              />
-              <span className={styles.customCheckbox}></span>
+              <input className={styles.checkbox} type="checkbox" {...register('rememberMe')} />
+              <span className={styles.customCheckbox} />
             </label>
             <p>Запомнить меня</p>
           </label>
 
-          <button className={styles.logInButton}>Войти</button>
+          <button className={styles.logInButton} type="submit">
+            Войти
+          </button>
         </form>
       </DashboardLayout>
     </>

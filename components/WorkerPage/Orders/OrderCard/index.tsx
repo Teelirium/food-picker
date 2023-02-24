@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
-import { GradeInfo } from "pages/api/grades/total-orders";
-import React, { useState } from "react";
-import dishStore from "stores/DishStore";
-import styles from "./styles.module.scss";
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { GradeInfo } from 'pages/api/grades/total-orders';
+import dishStore from 'stores/DishStore';
+import styles from './styles.module.scss';
 
 type Props = {
   order: GradeInfo[number];
@@ -13,7 +13,6 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   const [isOpen, setOpen] = useState(false);
 
   const openModal = (id: number) => {
-    dishStore.fetchDish(id);
     router.replace(
       { pathname: "", query: { ...router.query, dish: id } },
       undefined,
@@ -25,16 +24,16 @@ const OrderCard: React.FC<Props> = ({ order }) => {
 
   const ordersTable = order.dishes.map((dish) => {
     return (
-      <tr key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
-        <td width={"35%"}>{dish.name}</td>
-        <td width={"15%"}>{dish._count.preferences}</td>
-        <td width={"15%"}>{dish.weightGrams}</td>
-        <td width={"35%"} className={styles.aboutCell}>
-          <div className={styles.aboutBtn}>
-            <span onClick={() => openModal(dish.id)}>...</span>
+      <div key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
+        <div className={styles.dishTd}>{dish.name}</div>
+        <div className={styles.dishTd}>{dish._count.preferences}</div>
+        <div className={styles.dishTd}>{dish.weightGrams}</div>
+        <div className={styles.dishTd}>
+          <div className={styles.aboutBtn} onClick={() => openModal(dish.id)}>
+            <span>...</span>
           </div>
-        </td>
-      </tr>
+        </div>
+      </div>
     );
   });
 
@@ -42,9 +41,7 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   return (
     <div className={styles.orderContainer}>
       <div
-        className={
-          isOpen ? styles.orderRow + " " + styles.openOrder : styles.orderRow
-        }
+        className={isOpen ? `${styles.orderRow} ${styles.openOrder}` : styles.orderRow}
         onClick={() => setOpen(!isOpen)}
       >
         <div className={styles.orderInfo}>
@@ -52,30 +49,22 @@ const OrderCard: React.FC<Props> = ({ order }) => {
           <span>{`${order.breakIndex + 1} переменна`}</span>
         </div>
         <img
-          src='/img/arrow.png'
-          alt='arrow'
+          src="/img/arrow.png"
+          alt="arrow"
           width={20}
           height={20}
           className={isOpen ? styles.arrowImg : styles.arrowUp}
         />
       </div>
-      <div
-        className={
-          isOpen ? styles.orderDetailsContainer : styles.orderDetailsHide
-        }
-      >
+      <div className={isOpen ? styles.orderDetailsContainer : styles.orderDetailsHide}>
         <div className={styles.orderDetails}>
-          <table className={styles.orderTable}>
-            <tbody>
-              <tr className={styles.orderTableHeads}>
-                <td width={"35%"}>Блюдо</td>
-                <td width={"15%"}>Количество</td>
-                <td width={"15%"}>гр/шт</td>
-                <td width={"35%"}>Дополнительно</td>
-              </tr>
-              {ordersTable}
-            </tbody>
-          </table>
+          <div className={styles.orderTableHeads}>
+            <div className={styles.orderTableHead}>Блюдо</div>
+            <div className={styles.orderTableHead}>Количество</div>
+            <div className={styles.orderTableHead}>гр/шт</div>
+            <div className={styles.orderTableHead}>Дополнительно</div>
+          </div>
+          {ordersTable}
         </div>
       </div>
     </div>

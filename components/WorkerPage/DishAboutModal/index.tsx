@@ -1,35 +1,47 @@
-import dishStore from "stores/DishStore";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import { useRouter } from "next/router";
 import deleteEmptyParams from "utils/deleteEmptyParams";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const Modal = ({ isOpen }: { isOpen: boolean }) => {
+
+const Modal = ({ dishId }: { dishId: number }) => {
   const router = useRouter();
-  
-  if (!dishStore.dish) {
-    return null;
-  }
+  const [dish, setDish] = useState(null);
+
+  useEffect(() => {
+    axios
+        .get(`/api/dishes/${dishId}`)
+        .then((resp) => setDish(resp.data))
+        .catch(console.log);
+  }, [dishId]);
 
   return (
-    <div className={isOpen ? styles.active : styles.inactive}>
-      {JSON.stringify(dishStore.dish)}
-      <div
-        className={styles.close}
-        onClick={() => {
-          router.replace(
-            {
-              pathname: "",
-              query: deleteEmptyParams({ ...router.query, dish: undefined }),
-            },
-            undefined,
-            {
-              shallow: true,
-            }
-          );
-        }}
-      >
-        close
+    <div className={styles.active}>
+      <div className={styles.modalContainer}>
+        {dish ? 
+        <div
+          className={styles.close}
+          onClick={() => {
+            router.replace(
+              {
+                pathname: "",
+                query: deleteEmptyParams({ ...router.query, dish: undefined }),
+              },
+              undefined,
+              {
+                shallow: true,
+              }
+            );
+          }}
+        >
+          close
+        </div>
+        : "Loading"}
       </div>
+
+
+      
     </div>
   );
 };

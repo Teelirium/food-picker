@@ -1,5 +1,6 @@
 .container {
   width: 100%;
+
   & > span {
     margin-left: 3rem;
   }
@@ -31,10 +32,10 @@
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  &[data-action='edit'] {
+  &[data-action="edit"] {
     background: linear-gradient(270deg, #272640 0%, #144552 100%);
   }
-  &[data-action='delete'] {
+  &[data-action="delete"] {
     background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
   }
 }
