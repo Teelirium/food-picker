@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
-
 import Modal from 'components/WorkerPage/DishAboutModal';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import Orders from 'components/WorkerPage/Orders';
@@ -59,7 +58,7 @@ const OrdersPage: NextPage = () => {
         <LeftSideNavibar activePage={2} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dish !== undefined ? <Modal isOpen /> : null}
+      {dish !== undefined ? <Modal dishId={dish} /> : null}
     </>
   );
 };

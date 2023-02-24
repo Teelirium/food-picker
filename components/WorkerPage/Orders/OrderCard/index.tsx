@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-
 import { GradeInfo } from 'pages/api/grades/total-orders';
 import dishStore from 'stores/DishStore';
-
 import styles from './styles.module.scss';
 
 type Props = {
@@ -15,24 +13,29 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   const [isOpen, setOpen] = useState(false);
 
   const openModal = (id: number) => {
-    dishStore.fetchDish(id);
-    router.replace({ pathname: '', query: { ...router.query, dish: id } }, undefined, {
-      shallow: true,
-    });
+    router.replace(
+      { pathname: "", query: { ...router.query, dish: id } },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
   };
 
-  const ordersTable = order.dishes.map((dish) => (
-    <tr key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
-      <td width="35%">{dish.name}</td>
-      <td width="15%">{dish._count.preferences}</td>
-      <td width="15%">{dish.weightGrams}</td>
-      <td width="35%" className={styles.aboutCell}>
-        <div className={styles.aboutBtn}>
-          <span onClick={() => openModal(dish.id)}>...</span>
+  const ordersTable = order.dishes.map((dish) => {
+    return (
+      <div key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
+        <div className={styles.dishTd}>{dish.name}</div>
+        <div className={styles.dishTd}>{dish._count.preferences}</div>
+        <div className={styles.dishTd}>{dish.weightGrams}</div>
+        <div className={styles.dishTd}>
+          <div className={styles.aboutBtn} onClick={() => openModal(dish.id)}>
+            <span>...</span>
+          </div>
         </div>
-      </td>
-    </tr>
-  ));
+      </div>
+    );
+  });
 
   if (!order) return null;
   return (
@@ -55,17 +58,13 @@ const OrderCard: React.FC<Props> = ({ order }) => {
       </div>
       <div className={isOpen ? styles.orderDetailsContainer : styles.orderDetailsHide}>
         <div className={styles.orderDetails}>
-          <table className={styles.orderTable}>
-            <tbody>
-              <tr className={styles.orderTableHeads}>
-                <td width="35%">Блюдо</td>
-                <td width="15%">Количество</td>
-                <td width="15%">гр/шт</td>
-                <td width="35%">Дополнительно</td>
-              </tr>
-              {ordersTable}
-            </tbody>
-          </table>
+          <div className={styles.orderTableHeads}>
+            <div className={styles.orderTableHead}>Блюдо</div>
+            <div className={styles.orderTableHead}>Количество</div>
+            <div className={styles.orderTableHead}>гр/шт</div>
+            <div className={styles.orderTableHead}>Дополнительно</div>
+          </div>
+          {ordersTable}
         </div>
       </div>
     </div>

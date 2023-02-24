@@ -1,11 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
-
 import { GradeInfo } from 'pages/api/grades/total-orders';
 import dayMap from 'utils/dayMap';
 import maxDay from 'utils/maxDay';
-
 import OrderCard from './OrderCard';
 import styles from './styles.module.css';
 
