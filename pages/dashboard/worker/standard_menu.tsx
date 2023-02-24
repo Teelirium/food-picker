@@ -1,44 +1,39 @@
-import { GetServerSideProps, NextPage } from "next";
-import { getServerSideSession } from "utils/getServerSession";
-import Head from "next/head";
-import styles from "styles/worker.module.css";
-import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
-import verifyRole from "utils/verifyRole";
+import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
+
+import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import styles from 'styles/worker.module.css';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const session = await getServerSideSession(ctx);
-  
-    if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      };
-    }
-  
+  const session = await getServerSideSession(ctx);
+
+  if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {
-      props: {
-        session
-      }
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
     };
   }
 
-const StandardMenu: NextPage = () => {
-    return (
-        <>
-        <Head>
-            <title>
-                Стандартное питание
-            </title>
-        </Head>
-        <div className={styles.container}>
-            <LeftSideNavibar activePage={3}/>
-        </div>
-
-        
-    </>
-    );
+  return {
+    props: {
+      session,
+    },
+  };
 };
+
+const StandardMenu: NextPage = () => (
+  <>
+    <Head>
+      <title>Стандартное питание</title>
+    </Head>
+    <div className={styles.container}>
+      <LeftSideNavibar activePage={3} />
+    </div>
+  </>
+);
 
 export default StandardMenu;

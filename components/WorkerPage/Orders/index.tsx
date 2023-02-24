@@ -1,23 +1,24 @@
-import { GradeInfo } from "pages/api/grades/total-orders";
-import React, { useMemo, useState } from "react";
-import styles from "./styles.module.css";
-import OrderCard from "./OrderCard";
-import dayMap from "utils/dayMap";
-import maxDay from "utils/maxDay";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
+import { GradeInfo } from 'pages/api/grades/total-orders';
+import dayMap from 'utils/dayMap';
+import maxDay from 'utils/maxDay';
+import OrderCard from './OrderCard';
+import styles from './styles.module.css';
 
 type Props = {
   orders: GradeInfo | undefined;
   weekDay: number;
 };
 
-const Orders: React.FC<Props> = (props) => {
-  const [breakIndex, setBreakIndex] = useState(0);
+const Orders: React.FC<Props> = ({ orders, weekDay }) => {
+  const [breakIndex, setBreakIndex] = useState(1);
   const router = useRouter();
-  const filteredOrders = useMemo(() => {
-    return props.orders?.filter((order) => order.breakIndex == breakIndex);
-  }, [breakIndex, props.orders]);
+  const filteredOrders = useMemo(
+    () => orders?.filter((order) => order.breakIndex === breakIndex),
+    [breakIndex, orders],
+  );
 
   const breakIndexes = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -29,15 +30,11 @@ const Orders: React.FC<Props> = (props) => {
             {dayMap.slice(0, maxDay).map((dayName, i) => (
               <Link
                 key={i}
-                href={{ pathname: "", query: { ...router.query, day: i } }}
-                shallow={true}
-                replace={true}
+                href={{ pathname: '', query: { ...router.query, day: i } }}
+                shallow
+                replace
               >
-                <div
-                  className={
-                    props.weekDay === i ? styles.activeWeekDay : styles.weekDay
-                  }
-                >
+                <div className={weekDay === i ? styles.activeWeekDay : styles.weekDay}>
                   {dayName}
                 </div>
               </Link>
@@ -45,8 +42,8 @@ const Orders: React.FC<Props> = (props) => {
           </div>
           <div className={styles.excelBtn}>
             <img
-              src={"/img/Excel.png"}
-              alt='excel'
+              src="/img/Excel.png"
+              alt="excel"
               width={25}
               height={25}
               className={styles.excelImg}
@@ -63,17 +60,15 @@ const Orders: React.FC<Props> = (props) => {
       <div className={styles.breakContainer}>
         <span>Перемена</span>
         <div className={styles.breaks}>
-          {breakIndexes.map((i) => {
-            return (
-              <div
-                key={i}
-                className={breakIndex === i ? styles.activeBreak : styles.break}
-                onClick={() => setBreakIndex(i)}
-              >
-                <span>{i + 1}</span>
-              </div>
-            );
-          })}
+          {breakIndexes.map((i) => (
+            <div
+              key={i}
+              className={breakIndex === i ? styles.activeBreak : styles.break}
+              onClick={() => setBreakIndex(i)}
+            >
+              <span>{i + 1}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

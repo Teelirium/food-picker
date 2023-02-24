@@ -1,8 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiHandler } from "next";
-import { DishFormData } from "types/Dish";
-import { getServerSideSession } from "utils/getServerSession";
-import verifyRole from "utils/verifyRole";
+import { PrismaClient } from '@prisma/client';
+import { NextApiHandler } from 'next';
+
+import { DishFormData } from 'types/Dish';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
@@ -33,20 +34,20 @@ const prisma = new PrismaClient();
  */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
-  const isWorkerOrAdmin = !!session && verifyRole(session, ["WORKER", "ADMIN"]);
+  const isWorkerOrAdmin = !!session && verifyRole(session, ['WORKER', 'ADMIN']);
 
   switch (req.method) {
-    case "GET": {
+    case 'GET': {
       if (!session) {
-        return res.status(401).send("");
+        return res.status(401).send('');
       }
       const dishes = await prisma.dish.findMany({});
       return res.json(dishes);
     }
 
-    case "POST":
+    case 'POST': {
       if (!isWorkerOrAdmin) {
-        return res.status(403).send("");
+        return res.status(403).send('');
       }
       const { dish } = req.body as { dish: DishFormData };
       console.log(dish);
@@ -59,21 +60,22 @@ const handler: NextApiHandler = async (req, res) => {
         console.error(err);
         return res.status(500).send(err);
       }
+    }
 
-    case "DELETE":
+    case 'DELETE':
       if (!isWorkerOrAdmin) {
-        return res.status(403).send("");
+        return res.status(403).send('');
       }
       try {
         await prisma.dish.deleteMany({});
-        return res.send("OK");
+        return res.send('OK');
       } catch (err) {
         console.error(err);
         return res.status(500).send(err);
       }
 
     default:
-      return res.status(405).send("Method not allowed");
+      return res.status(405).send('Method not allowed');
   }
 };
 

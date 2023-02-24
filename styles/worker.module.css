@@ -1,7 +1,7 @@
 .container {
-    display: flex;
-    flex-direction: row;
-    width: auto;
-    height: 100vh;
-    background: linear-gradient(0deg, #1B3A4B 0%, #3E1F47 100%);
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  height: 100vh;
+  background: linear-gradient(0deg, #1b3a4b 0%, #3e1f47 100%);
 }

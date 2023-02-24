@@ -1,4 +1,4 @@
-@import 'styles/fonts/fonts.css';
+@import "styles/fonts/fonts.css";
 
 .active {
     position: fixed;
@@ -25,13 +25,13 @@
 }
 
 .close {
-    width: 100px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: yellow;
-    cursor: pointer;
-    user-select: none;
-    color: black !important;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: yellow;
+  cursor: pointer;
+  user-select: none;
+  color: black !important;
 }

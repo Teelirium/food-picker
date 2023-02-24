@@ -1,20 +1,20 @@
 @font-face {
-    font-family: 'Century Gothic';
-    font-style: normal;
-    font-weight: 400;
-    src: url(centurygothic.ttf)
+  font-family: "Century Gothic";
+  font-style: normal;
+  font-weight: 400;
+  src: url("centurygothic.ttf");
 }
 
 @font-face {
-    font-family: 'Century Gothic Bold';
-    font-style: normal;
-    font-weight: 400;
-    src: url(centurygothic_bold.ttf)
+  font-family: "Century Gothic Bold";
+  font-style: normal;
+  font-weight: 400;
+  src: url("centurygothic_bold.ttf");
 }
 
 @font-face {
-    font-family: 'Raleway';
-    font-style: normal;
-    font-weight: 500;
-    src: url(Raleway-VariableFont_wght.ttf)
+  font-family: Raleway;
+  font-style: normal;
+  font-weight: 500;
+  src: url("Raleway-VariableFont_wght.ttf");
 }

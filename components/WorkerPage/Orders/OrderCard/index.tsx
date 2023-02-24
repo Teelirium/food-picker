@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
-import { GradeInfo } from "pages/api/grades/total-orders";
-import React, { useState } from "react";
-import dishStore from "stores/DishStore";
-import styles from "./styles.module.scss";
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { GradeInfo } from 'pages/api/grades/total-orders';
+import dishStore from 'stores/DishStore';
+import styles from './styles.module.scss';
 
 type Props = {
   order: GradeInfo[number];
@@ -41,9 +41,7 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   return (
     <div className={styles.orderContainer}>
       <div
-        className={
-          isOpen ? styles.orderRow + " " + styles.openOrder : styles.orderRow
-        }
+        className={isOpen ? `${styles.orderRow} ${styles.openOrder}` : styles.orderRow}
         onClick={() => setOpen(!isOpen)}
       >
         <div className={styles.orderInfo}>
@@ -51,18 +49,14 @@ const OrderCard: React.FC<Props> = ({ order }) => {
           <span>{`${order.breakIndex + 1} переменна`}</span>
         </div>
         <img
-          src='/img/arrow.png'
-          alt='arrow'
+          src="/img/arrow.png"
+          alt="arrow"
           width={20}
           height={20}
           className={isOpen ? styles.arrowImg : styles.arrowUp}
         />
       </div>
-      <div
-        className={
-          isOpen ? styles.orderDetailsContainer : styles.orderDetailsHide
-        }
-      >
+      <div className={isOpen ? styles.orderDetailsContainer : styles.orderDetailsHide}>
         <div className={styles.orderDetails}>
           <div className={styles.orderTableHeads}>
             <div className={styles.orderTableHead}>Блюдо</div>
