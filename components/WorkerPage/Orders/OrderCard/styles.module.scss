@@ -70,39 +70,41 @@
   margin-top: 10px;
   overflow: hidden;
   transition: max-height 0.4s ease;
-}
-
-.orderTable,
-.dishesTable {
-  width: 100%;
-  overflow-y: scroll;
-}
-
-.orderDetails td {
   text-align: center;
   vertical-align: center;
   font-family: "Century Gothic";
   font-weight: 400;
 }
 
-.orderTableHeads td {
+.orderTableHeads {
+  display: grid;
+  grid-template-columns: 35% 15% 15% 35%;
+  grid-template-rows: 50px;
+  align-items: center;
+}
+
+.orderTableHead {
+  display: grid;
   font-size: 18px;
+  align-items: center;
   color: #ffffff;
   height: 50px;
 }
 
-.dishRow td {
-  padding: 0.8rem;
+.dishRow {
+  display: grid;
+  grid-template-columns: 35% 15% 15% 35%;
+  grid-template-rows: 48px;
+}
+
+.dishTd {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  line-height: 20px;
   font-size: 20px;
   color: #181818;
   height: 100%;
-}
-
-.aboutCell {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .aboutBtn {

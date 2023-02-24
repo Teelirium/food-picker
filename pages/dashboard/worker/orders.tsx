@@ -61,7 +61,7 @@ const OrdersPage: NextPage = () => {
         <LeftSideNavibar activePage={2} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dish !== undefined ? <Modal isOpen={true} /> : null}
+      {dish !== undefined ? <Modal dishId={dish} /> : null}
     </>
   );
 };
