@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -6,7 +6,6 @@ import styles from './styles.module.css';
 
 const LeftSideNavibar = ({ activePage }: { activePage: number }) => {
   const [isLogoutVisible, setLogoutVisible] = useState(false);
-  const router = useRouter();
 
   const logOut = () => {
     signOut();
@@ -30,53 +29,62 @@ const LeftSideNavibar = ({ activePage }: { activePage: number }) => {
         Выйти из аккаунта
       </div>
 
-      <div className={styles.nav}>
-        <div
-          className={
-            activePage === 1 ? `${styles.navElement} ${styles.activeNavElement}` : styles.navElement
-          }
-          onClick={() => router.push('dishes')}
-        >
-          <img
-            src={activePage === 1 ? '/img/activeDishes.png' : '/img/dishes.png'}
-            alt="dishes"
-            width={25}
-            height={25}
-            className={styles.navElementImg}
-          />
-          <span>Блюда</span>
-        </div>
-        <div
-          className={
-            activePage === 2 ? `${styles.navElement} ${styles.activeNavElement}` : styles.navElement
-          }
-          onClick={() => router.push('orders')}
-        >
-          <img
-            src={activePage === 2 ? '/img/activeOrders.png' : '/img/orders.png'}
-            alt="orders"
-            width={25}
-            height={25}
-            className={styles.navElementImg}
-          />
-          <span>Заказы</span>
-        </div>
-        <div
-          className={
-            activePage === 3 ? `${styles.navElement} ${styles.activeNavElement}` : styles.navElement
-          }
-          onClick={() => router.push('standard_menu')}
-        >
-          <img
-            src={activePage === 3 ? '/img/standardMenu.png' : '/img/standardMenu.png'}
-            alt="standardMenu"
-            width={25}
-            height={25}
-            className={styles.navElementImg}
-          />
-          <span>Стандартное питание</span>
-        </div>
-      </div>
+      <nav className={styles.nav}>
+        <Link href="dishes">
+          <div
+            className={
+              activePage === 1
+                ? `${styles.navElement} ${styles.activeNavElement}`
+                : styles.navElement
+            }
+          >
+            <img
+              src={activePage === 1 ? '/img/activeDishes.png' : '/img/dishes.png'}
+              alt="dishes"
+              width={25}
+              height={25}
+              className={styles.navElementImg}
+            />
+            <span>Блюда</span>
+          </div>
+        </Link>
+        <Link href="orders">
+          <div
+            className={
+              activePage === 2
+                ? `${styles.navElement} ${styles.activeNavElement}`
+                : styles.navElement
+            }
+          >
+            <img
+              src={activePage === 2 ? '/img/activeOrders.png' : '/img/orders.png'}
+              alt="orders"
+              width={25}
+              height={25}
+              className={styles.navElementImg}
+            />
+            <span>Заказы</span>
+          </div>
+        </Link>
+        <Link href="standard-menu">
+          <div
+            className={
+              activePage === 3
+                ? `${styles.navElement} ${styles.activeNavElement}`
+                : styles.navElement
+            }
+          >
+            <img
+              src={activePage === 3 ? '/img/activeStandardMenu.png' : '/img/standardMenu.png'}
+              alt="standardMenu"
+              width={25}
+              height={25}
+              className={styles.navElementImg}
+            />
+            <span>Стандартное питание</span>
+          </div>
+        </Link>
+      </nav>
     </div>
   );
 };

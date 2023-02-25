@@ -1,13 +1,14 @@
 import { Dish, DishType } from '@prisma/client';
 import axios from 'axios';
-import DashboardHeader from 'components/Dashboard/Header';
-import DashboardLayout from 'components/Dashboard/Layout';
-import PreferenceSection from 'components/PreferenceSection';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+
+import DashboardHeader from 'components/Dashboard/Header';
+import DashboardLayout from 'components/Dashboard/Layout';
+import PreferenceSection from 'components/PreferenceSection';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
 import dayMap from 'utils/dayMap';
@@ -83,11 +84,11 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
 
   function handleDelete(key: DishType) {
     const dish = dishes.get(key);
-    if (!!dish) {
+    if (dish) {
       axios
         .delete(`/api/preferences/${dish.prefId}`)
         .then(() => {
-          if (!!preferences) {
+          if (preferences) {
             setPreferences(preferences.filter((p) => p.id !== dish.prefId));
           }
         })
@@ -110,7 +111,7 @@ const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => {
             const dish = dishes.get(k as DishType)?.dish;
-            if (!!dish) {
+            if (dish) {
               return (
                 <PreferenceSection
                   key={k}

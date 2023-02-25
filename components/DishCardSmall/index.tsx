@@ -7,7 +7,7 @@ type Props = {
   dish: Dish;
 };
 
-const DishCardSmall: React.FC<Props> = React.forwardRef(({ dish }, ref) => {
+const DishCardSmall: React.FC<Props> = ({ dish }) => {
   return (
     <div className={styles.container}>
       <div className={styles.image}>
@@ -19,7 +19,6 @@ const DishCardSmall: React.FC<Props> = React.forwardRef(({ dish }, ref) => {
       </div>
     </div>
   );
-});
-DishCardSmall.displayName = 'DishCardSmall';
+};
 
 export default DishCardSmall;

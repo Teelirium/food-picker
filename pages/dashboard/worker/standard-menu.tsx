@@ -1,18 +1,19 @@
-import { GetServerSideProps, NextPage } from "next";
-import { getServerSideSession } from "utils/getServerSession";
-import Head from "next/head";
-import styles from "styles/worker.module.css";
-import LeftSideNavibar from "components/WorkerPage/LeftSideNavibar";
-import verifyRole from "utils/verifyRole";
-import StandardMenu from "components/WorkerPage/StandardMenu";
+import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
+
+import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import StandardMenu from 'components/WorkerPage/StandardMenu';
+import styles from 'styles/worker.module.css';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
-  if (!session || !verifyRole(session, ["WORKER", "ADMIN"])) {
+  if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {
       redirect: {
-        destination: "/login",
+        destination: '/login',
         permanent: false,
       },
     };

@@ -1,10 +1,12 @@
 import { Dish } from '@prisma/client';
-import DishCardSmall from 'components/DishCardSmall';
 import Image from 'next/image';
+import React, { MouseEventHandler } from 'react';
+
+import DishCardSmall from 'components/DishCardSmall';
 import deleteIcon from 'public/svg/delete.svg';
 import editIcon from 'public/svg/edit.svg';
 import plusIcon from 'public/svg/plus.svg';
-import React, { MouseEventHandler } from 'react';
+
 import styles from './styles.module.scss';
 
 type Props = {
@@ -29,22 +31,32 @@ const PreferenceSection: React.FC<Props> = ({
       <span>{title}</span>
       {dish ? (
         <div className={styles.body}>
-          <div onClick={handleView} style={{ width: '100%' }} role="button">
+          <div onClick={handleView} style={{ width: '100%' }} role="button" tabIndex={0}>
             <DishCardSmall dish={dish} />
           </div>
           <div className={styles.btnGroup}>
-            <button className={styles.actionBtn} data-action="delete" onClick={handleDelete}>
+            <button
+              className={styles.actionBtn}
+              data-action="delete"
+              onClick={handleDelete}
+              type="button"
+            >
               <Image src={deleteIcon} alt="delete" />
               Удалить
             </button>
-            <button className={styles.actionBtn} data-action="edit" onClick={handleEdit}>
+            <button
+              className={styles.actionBtn}
+              data-action="edit"
+              onClick={handleEdit}
+              type="button"
+            >
               <Image src={editIcon} alt="edit" />
               Изменить
             </button>
           </div>
         </div>
       ) : (
-        <div className={styles.body} onClick={handleAdd} role="button">
+        <div className={styles.body} onClick={handleAdd} role="button" tabIndex={0}>
           <span className={styles.label}>
             <Image src={plusIcon} alt="+" /> Добавить Блюдо
           </span>
