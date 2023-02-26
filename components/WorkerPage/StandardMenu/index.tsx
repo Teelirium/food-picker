@@ -35,6 +35,11 @@ const StandardMenu: React.FC = () => {
   const query = useQuery(['defaults', day], () => getDishes(day), { keepPreviousData: true });
   return (
     <div className={styles.container}>
+      {(query.isLoading || query.isPreviousData) && (
+        <div className={styles.spinner}>
+          <span>Загрузка...</span>
+        </div>
+      )}
       <header className={styles.header}>
         <ul>
           {dayMap.slice(0, maxDay).map((d, i) => (
@@ -46,7 +51,6 @@ const StandardMenu: React.FC = () => {
         {/* <span>Видеоинструкция</span> */}
       </header>
       <main className={styles.body}>
-        {(query.isLoading || query.isPreviousData) && <span>Загрузка...</span>}
         {query.isSuccess &&
           dishTypes.map((type) => (
             <PreferenceSection key={type} title={dishTypeMap[type]} dish={query.data.get(type)} />
