@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "npm run lint:next && npm run lint:es && npm run lint:css",
@@ -22,6 +22,7 @@
     "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
     "cookies": "^0.8.0",
+    "jsonwebtoken": "^9.0.0",
     "mobx": "^6.7.0",
     "mobx-react": "^7.6.0",
     "next": "12.3.1",
@@ -30,12 +31,14 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.38.0",
+    "react-query": "^3.39.2",
     "swagger-ui-react": "^4.15.5",
     "zod": "^3.20.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cookies": "^0.7.7",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "18.11.3",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",

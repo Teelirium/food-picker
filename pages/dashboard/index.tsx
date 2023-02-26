@@ -1,8 +1,8 @@
 import { GetServerSideProps, NextPage } from 'next';
-
 import ParentPage from 'components/ParentPage';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
+import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
@@ -20,6 +20,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-const Index: NextPage = () => <ParentPage />;
+const Index: NextPage = () => {
+  return (
+    <>
+      <Head>
+        <title>Выбор ребёнка и дня недели</title>
+      </Head>
+      <ParentPage />
+    </>
+  );
+};
 
 export default Index;
