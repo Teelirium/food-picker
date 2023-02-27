@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Orders: React.FC<Props> = ({ orders, weekDay }) => {
-  const [breakIndex, setBreakIndex] = useState(1);
+  const [breakIndex, setBreakIndex] = useState(0);
   const router = useRouter();
   const filteredOrders = useMemo(
     () => orders?.filter((order) => order.breakIndex === breakIndex),

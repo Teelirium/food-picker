@@ -13,6 +13,9 @@ import { getServerSideSession } from 'utils/getServerSession';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const querySchema = z.object({
   day: dayOfWeekSchema.default(0),
@@ -32,12 +35,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const workerData = await prisma.worker.findUnique({
+    where: {
+      id: +session.user.id,
+    }
+  });
+  const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`
+
   return {
-    props: {},
+    props: {
+      workerName,
+    },
   };
 };
 
-const OrdersPage: NextPage = () => {
+type Props = {
+  workerName: string;
+}
+
+const OrdersPage: NextPage<Props> = ({workerName}) => {
   const router = useRouter();
   const [orders, setOrders] = useState<GradeInfo>();
   const { day, dish } = useMemo(() => querySchema.parse(router.query), [router.query]);
@@ -55,7 +71,7 @@ const OrdersPage: NextPage = () => {
         <title>Заказы</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar activePage={2} />
+        <LeftSideNavibar activePage={2} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
       {dish !== undefined ? <Modal dishId={dish} /> : null}

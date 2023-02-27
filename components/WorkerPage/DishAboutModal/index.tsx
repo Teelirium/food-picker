@@ -4,7 +4,6 @@ import deleteEmptyParams from "utils/deleteEmptyParams";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-
 const Modal = ({ dishId }: { dishId: number }) => {
   const router = useRouter();
   const [dish, setDish] = useState(null);
@@ -39,9 +38,6 @@ const Modal = ({ dishId }: { dishId: number }) => {
         </div>
         : "Loading"}
       </div>
-
-
-      
     </div>
   );
 };
