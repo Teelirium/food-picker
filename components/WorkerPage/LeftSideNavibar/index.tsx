@@ -1,7 +1,8 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import styles from './styles.module.css';
+import router from 'next/router';
 
 type Props = {
   activePage: number;
@@ -10,7 +11,6 @@ type Props = {
 
 const LeftSideNavibar: React.FC<Props> = ({ activePage, workerName }) => {
   const [isLogoutVisible, setLogoutVisible] = useState(false);
-  const router = useRouter();
 
   const logOut = () => {
     signOut();
@@ -69,7 +69,7 @@ const LeftSideNavibar: React.FC<Props> = ({ activePage, workerName }) => {
           className={
             activePage === 3 ? `${styles.navElement} ${styles.activeNavElement}` : styles.navElement
           }
-          onClick={() => router.push('standard_menu')}
+          onClick={() => router.push('standard-menu')}
         >
           <img
             src={activePage === 3 ? '/img/activeStandardMenu.png' : '/img/standardMenu.png'}

@@ -4,11 +4,10 @@ import React from 'react';
 import styles from './styles.module.scss';
 
 type Props = {
-  dish: Dish | undefined;
+  dish: Dish;
 };
 
 const DishCardSmall: React.FC<Props> = ({ dish }) => {
-  if (!dish) return null;
   return (
     <div className={styles.container}>
       <div className={styles.image}>

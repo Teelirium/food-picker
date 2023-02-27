@@ -11,7 +11,7 @@ const paramSchema = z.object({
   day: dayOfWeekSchema.optional(),
 });
 
-export type GradeInfo = Awaited<ReturnType<typeof getHandler>>;
+export type GradeInfo = Awaited<ReturnType<typeof handleGet>>;
 
 type DishWithOrders = Prisma.DishGetPayload<{
   select: { id: true; name: true; weightGrams: true; type: true };
@@ -36,7 +36,7 @@ const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
     case 'GET': {
       const { day } = paramSchema.parse(req.query);
-      return res.json(await getHandler(day));
+      return res.json(await handleGet(day));
     }
     default: {
       return res.status(405).send('');
@@ -46,7 +46,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 export default handler;
 
-async function getHandler(day?: number) {
+async function handleGet(day?: number) {
   const defaultPrefs = await prisma.preference.findMany({
     where: {
       isDefault: true,

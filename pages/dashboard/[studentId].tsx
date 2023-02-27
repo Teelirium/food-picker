@@ -1,17 +1,14 @@
 import { Dish, DishType } from '@prisma/client';
 import axios from 'axios';
-import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
-import Image from 'next/image';
+import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
 import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
-import DishCardSmall from 'components/DishCardSmall';
 import PreferenceSection from 'components/PreferenceSection';
-import deleteIcon from 'public/svg/delete.svg';
-import editIcon from 'public/svg/edit.svg';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
 import dayMap from 'utils/dayMap';
@@ -53,9 +50,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-const StudentChoice: NextPage<Props> = (props) => {
-  const { studentId, day } = props;
-
+const StudentChoice: NextPage<Props> = ({ studentId, day }) => {
+  const router = useRouter();
   const [preferences, setPreferences] = useState<PreferenceWithDish[] | null>(null);
 
   useEffect(() => {
@@ -86,19 +82,25 @@ const StudentChoice: NextPage<Props> = (props) => {
     return preferences.map((pref) => pref.Dish.price).reduce((total, cur) => total + cur, 0);
   }, [preferences]);
 
-  const handleDelete = (preferenceId: number) => {
-    axios
-      .delete(`/api/preferences/${preferenceId}`)
-      .then(() => {
-        if (preferences) {
-          setPreferences(preferences.filter((p) => p.id !== preferenceId));
-        }
-      })
-      .catch(alert);
-  };
+  function handleDelete(key: DishType) {
+    const dish = dishes.get(key);
+    if (dish) {
+      axios
+        .delete(`/api/preferences/${dish.prefId}`)
+        .then(() => {
+          if (preferences) {
+            setPreferences(preferences.filter((p) => p.id !== dish.prefId));
+          }
+        })
+        .catch(alert);
+    }
+  }
 
   return (
     <DashboardLayout>
+      <Head>
+        <title>Выбор блюд на день</title>
+      </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
         <button className={styles.saveBtn} type="button">
@@ -109,52 +111,28 @@ const StudentChoice: NextPage<Props> = (props) => {
         <main className={styles.body}>
           {Object.entries(dishTypeMap).map(([k, v]) => {
             const dish = dishes.get(k as DishType)?.dish;
-            if (dish !== undefined)
+            if (dish) {
               return (
-                <PreferenceSection title={v} key={k}>
-                  <Link href={`/dashboard/dishes/${dish.id}`} legacyBehavior>
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a style={{ width: '100%' }}>
-                      <DishCardSmall dish={dish} />
-                    </a>
-                  </Link>
-                  <div className={styles.btnGroup}>
-                    <button
-                      type="button"
-                      className={classNames(styles.deleteBtn, styles.actionBtn)}
-                      onClick={() => {
-                        const dish = dishes.get(k as DishType);
-                        if (dish) {
-                          handleDelete(dish.prefId);
-                        }
-                      }}
-                    >
-                      <Image src={deleteIcon} alt="delete" />
-                      Удалить
-                    </button>
-                    <Link href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}>
-                      <button
-                        className={classNames(styles.editBtn, styles.actionBtn)}
-                        type="button"
-                      >
-                        <Image src={editIcon} alt="edit" />
-                        Изменить
-                      </button>
-                    </Link>
-                  </div>
-                </PreferenceSection>
+                <PreferenceSection
+                  key={k}
+                  title={v}
+                  dish={dish}
+                  handleView={() => router.push(`/dashboard/dishes/${dish.id}`)}
+                  handleDelete={() => handleDelete(k as DishType)}
+                  handleEdit={() =>
+                    router.push(`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`)
+                  }
+                />
               );
+            }
             return (
-              <Link
+              <PreferenceSection
                 key={k}
-                href={`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`}
-                legacyBehavior
-              >
-                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a>
-                  <PreferenceSection title={v}>+ Добавить Блюдо</PreferenceSection>
-                </a>
-              </Link>
+                title={v}
+                handleAdd={() =>
+                  router.push(`/dashboard/dishes?type=${k}&studentId=${studentId}&day=${day}`)
+                }
+              />
             );
           })}
         </main>

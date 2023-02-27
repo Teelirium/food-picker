@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { NextApiHandler } from 'next';
 
 import { getServerSideSession } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
+import prisma from 'utils/prismaClient';
 import verifyRole from 'utils/verifyRole';
-
-const prisma = new PrismaClient();
 
 const handler: NextApiHandler = async (req, res) => {
   const { prefId } = req.query;

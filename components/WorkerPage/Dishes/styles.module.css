@@ -1,11 +1,11 @@
 @import "styles/fonts/fonts.css";
 
 .content {
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   height: inherit;
-  flex-basis: 1300px;
   background: #181818;
   border-radius: 45px;
   margin-right: 30px;

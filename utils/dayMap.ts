@@ -1,4 +1,4 @@
-const dayMap = Object.freeze([
+const dayMap = [
   'Понедельник',
   'Вторник',
   'Среда',
@@ -6,6 +6,6 @@ const dayMap = Object.freeze([
   'Пятница',
   'Суббота',
   'Воскресенье',
-]);
+] as const;
 
 export default dayMap;

@@ -1,10 +1,16 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
+import { PreferenceWithDish } from 'types/Preference';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
+import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
+
+const paramSchema = z.object({
+  day: dayOfWeekSchema.optional(),
+});
 
 const bodySchema = z.object({
   dishId: idSchema,
@@ -12,7 +18,7 @@ const bodySchema = z.object({
 
 /**
  * @swagger
- * /api/preferences/default:
+ * /api/preferences/default?day={}:
  *  get:
  *    summary: Получает список стандартного питания
  *  post:
@@ -27,31 +33,36 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(403).send('');
   }
 
+  const { day } = paramSchema.parse(req.query);
+
   switch (req.method) {
     case 'GET': {
-      return getHandler(req, res);
+      return getHandler(day).then(res.json);
     }
     case 'POST': {
-      return postHandler(req, res);
+      return postHandler(req, res, day);
     }
     default:
       return res.status(405).send('Method not allowed');
   }
 };
 
-async function getHandler(req: NextApiRequest, res: NextApiResponse) {
-  const dishes = await prisma.preference.findMany({
+export type DefaultDishes = Awaited<ReturnType<typeof getHandler>>;
+
+async function getHandler(day?: number) {
+  const prefs = await prisma.preference.findMany({
     where: {
       isDefault: true,
+      dayOfWeek: day,
     },
     include: {
       Dish: true,
     },
   });
-  return res.json(dishes);
+  return prefs.filter((p): p is PreferenceWithDish => !!p.Dish);
 }
 
-async function postHandler(req: NextApiRequest, res: NextApiResponse) {
+async function postHandler(req: NextApiRequest, res: NextApiResponse, day = 0) {
   const { dishId } = bodySchema.parse(req.body);
 
   const dishType = await prisma.dish.findUnique({
@@ -67,14 +78,14 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   const existingPref = await prisma.preference.findFirst({
     where: {
       isDefault: true,
+      dayOfWeek: day,
       Dish: {
         type: dishType.type,
       },
     },
   });
 
-  // eslint-disable-next-line no-unused-expressions
-  existingPref
+  const _ = existingPref
     ? await prisma.preference.update({
         where: {
           id: existingPref.id,
@@ -87,7 +98,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
     : await prisma.preference.create({
         data: {
           isDefault: true,
-          dayOfWeek: 0,
+          dayOfWeek: day,
           dishId,
         },
         include: { Dish: true },
