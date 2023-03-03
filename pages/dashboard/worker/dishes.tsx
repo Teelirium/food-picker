@@ -1,13 +1,12 @@
-import { Dish, PrismaClient } from '@prisma/client';
+import { Dish } from '@prisma/client';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Dishes from 'components/WorkerPage/Dishes';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
+import prisma from 'utils/prismaClient';
 import verifyRole from 'utils/verifyRole';
-
-const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);

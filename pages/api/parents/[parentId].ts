@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { NextApiHandler } from 'next';
 
 import { Parent } from 'types/Parent';
 import exclude from 'utils/exclude';
-
-const prisma = new PrismaClient();
+import prisma from 'utils/prismaClient';
 
 /**
  * @swagger

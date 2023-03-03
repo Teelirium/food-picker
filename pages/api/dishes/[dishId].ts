@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { NextApiHandler } from 'next';
 
 import { PartialDish } from 'types/Dish';
 import { getServerSideSession } from 'utils/getServerSession';
+import prisma from 'utils/prismaClient';
 import verifyRole from 'utils/verifyRole';
-
-const prisma = new PrismaClient();
 
 /**
  * @swagger

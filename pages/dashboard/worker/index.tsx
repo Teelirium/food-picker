@@ -1,14 +1,16 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from 'next';
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     redirect: {
-      destination: "/dashboard/worker/dishes",
+      destination: '/dashboard/worker/dishes',
       permanent: true,
     },
   };
 };
 
-export default function Worker() {
+const Worker = () => {
   return null;
-}
+};
+
+export default Worker;

@@ -1,4 +1,4 @@
-import { Dish, DishType, PrismaClient } from '@prisma/client';
+import { Dish, DishType } from '@prisma/client';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 
@@ -10,9 +10,8 @@ import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import isValidDay from 'utils/isValidDay';
+import prisma from 'utils/prismaClient';
 import verifyRole from 'utils/verifyRole';
-
-const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { type } = ctx.query;

@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+
 import { GradeInfo } from 'pages/api/grades/total-orders';
-import dishStore from 'stores/DishStore';
+
 import styles from './styles.module.scss';
 
 type Props = {
@@ -13,13 +14,9 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   const [isOpen, setOpen] = useState(false);
 
   const openModal = (id: number) => {
-    router.replace(
-      { pathname: "", query: { ...router.query, dish: id } },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
+    router.replace({ pathname: '', query: { ...router.query, dish: id } }, undefined, {
+      shallow: true,
+    });
   };
 
   const ordersTable = order.dishes.map((dish) => {

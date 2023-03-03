@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import { Session } from 'next-auth';
 
-const prisma = new PrismaClient();
+import prisma from 'utils/prismaClient';
 
 export default async function isParentOf(session: Session, childId: number) {
   if (session.user.role !== 'PARENT') {

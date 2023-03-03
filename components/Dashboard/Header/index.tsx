@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
 
@@ -7,14 +8,22 @@ type Props = {
   children: React.ReactNode;
 };
 
-const DashboardHeader: React.FC<Props> = ({ children, backUrl }) => (
-  <header className={styles.header}>
-    {/* eslint-disable-next-line no-script-url */}
-    <Link href={backUrl || 'javascript:history.back()'}>
-      <span>&lt;</span>
-    </Link>
-    {children}
-  </header>
-);
+const DashboardHeader: React.FC<Props> = ({ children, backUrl }) => {
+  const router = useRouter();
+  return (
+    <header className={styles.header}>
+      {backUrl ? (
+        <Link href={backUrl}>
+          <span>&lt;</span>
+        </Link>
+      ) : (
+        <button type="button" onClick={() => router.back()}>
+          <span>&lt;</span>
+        </button>
+      )}
+      {children}
+    </header>
+  );
+};
 
 export default DashboardHeader;
