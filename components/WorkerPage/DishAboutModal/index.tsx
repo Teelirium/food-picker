@@ -1,12 +1,28 @@
-import styles from './styles.module.scss';
-import { useRouter } from 'next/router';
-import deleteEmptyParams from 'utils/deleteEmptyParams';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+
+import ModalWrapper from 'components/ModalWrapper';
+import deleteEmptyParams from 'utils/deleteEmptyParams';
+
+import styles from './styles.module.scss';
 
 const Modal = ({ dishId }: { dishId: number }) => {
   const router = useRouter();
   const [dish, setDish] = useState(null);
+
+  const toggle = useCallback(() => {
+    router.replace(
+      {
+        pathname: '',
+        query: deleteEmptyParams({ ...router.query, dish: undefined }),
+      },
+      undefined,
+      {
+        shallow: true,
+      },
+    );
+  }, [router]);
 
   useEffect(() => {
     axios
@@ -16,31 +32,17 @@ const Modal = ({ dishId }: { dishId: number }) => {
   }, [dishId]);
 
   return (
-    <div className={styles.active}>
-      <div className={styles.modalContainer}>
+    <ModalWrapper toggle={toggle}>
+      <div className={styles.container}>
         {dish ? (
-          <div
-            className={styles.close}
-            onClick={() => {
-              router.replace(
-                {
-                  pathname: '',
-                  query: deleteEmptyParams({ ...router.query, dish: undefined }),
-                },
-                undefined,
-                {
-                  shallow: true,
-                },
-              );
-            }}
-          >
+          <div className={styles.close} onClick={toggle}>
             close
           </div>
         ) : (
           'Loading'
         )}
       </div>
-    </div>
+    </ModalWrapper>
   );
 };
 
