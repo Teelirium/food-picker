@@ -1,12 +1,14 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
-import DashboardLayout from 'components/Dashboard/Layout';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
+import dishImage from '../public/img/authDish.png';
+import dishCircleImage from '../public/img/authDishCircle.png';
 import styles from '../styles/login.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -77,38 +79,54 @@ const Login: NextPage = () => {
         <title>Вход</title>
         <meta charSet="utf-8" />
       </Head>
-      <DashboardLayout>
-        <div className={styles.schoolName}>
-          <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
+      <div className={styles.container}>
+        <div className={styles.sideImageDish}>
+          <Image src={dishImage} alt="Центральное блюдо" />
         </div>
-        <form className={styles.form} onSubmit={onSubmit}>
-          <label className={styles.label}>
-            <p>Логин</p>
-            <div className={styles.inputBorder}>
-              <input type="text" {...register('username')} placeholder="Логин" required />
+
+        <div className={styles.gradientBg}>
+          <div className={styles.dashedBorder}>
+            <div className={styles.sideImageDishesCircle}>
+              <Image src={dishCircleImage} alt="Круг из блюд" />
             </div>
-          </label>
+          </div>
+        </div>
 
-          <label className={styles.label}>
-            <p>Пароль</p>
-            <div className={styles.inputBorder}>
-              <input type="password" {...register('password')} placeholder="Пароль" required />
+        <div className={styles.cardWrapper}>
+          <div className={styles.card}>
+            <div className={styles.schoolName}>
+              <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
             </div>
-          </label>
+            <form className={styles.form} onSubmit={onSubmit}>
+              <label className={styles.label}>
+                <p>Логин</p>
+                <div className={styles.inputBorder}>
+                  <input type="text" {...register('username')} placeholder="Логин" required />
+                </div>
+              </label>
 
-          <label className={styles.labelRememberMe}>
-            <label className={styles.checkboxLabel}>
-              <input className={styles.checkbox} type="checkbox" {...register('rememberMe')} />
-              <span className={styles.customCheckbox} />
-            </label>
-            <p>Запомнить меня</p>
-          </label>
+              <label className={styles.label}>
+                <p>Пароль</p>
+                <div className={styles.inputBorder}>
+                  <input type="password" {...register('password')} placeholder="Пароль" required />
+                </div>
+              </label>
 
-          <button className={styles.logInButton} type="submit">
-            Войти
-          </button>
-        </form>
-      </DashboardLayout>
+              <label className={styles.labelRememberMe}>
+                <label className={styles.checkboxLabel}>
+                  <input className={styles.checkbox} type="checkbox" {...register('rememberMe')} />
+                  <span className={styles.customCheckbox} />
+                </label>
+                <p>Запомнить меня</p>
+              </label>
+
+              <button className={styles.logInButton} type="submit">
+                Войти
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

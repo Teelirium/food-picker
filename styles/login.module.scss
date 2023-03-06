@@ -1,26 +1,204 @@
 @import "./fonts/fonts.css";
 
 .container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;
+  background: var(--dark-bg-color);
   min-height: 100vh;
-  width: 100%;
-  min-width: calc(100vw - 17px);
-  min-width: 400px;
-  background-color: #181818;
 }
 
-/* Smartphones */
-@media (max-width: 767px) {
-  .schoolName {
-    width: 100vw !important;
+.gradientBg {
+  width: 100vw;
+  height: 100vw;
+  background: linear-gradient(-90deg, #3e1f47 18.37%, #144552 109.15%);
+  position: fixed;
+  left: 329px;
+  overflow: hidden;
+  border-radius: 50%;
+  top: 50vh;
+  transform: translate(0, -50%);
+
+  @media (max-width: 1800px) {
+    left: 250px;
   }
 
-  .form {
-    height: 100vh;
+  @media (max-width: 1500px) {
+    left: 180px;
+  }
+
+  @media (max-width: 1400px) {
+    left: 160px;
+  }
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}
+
+.sideImage {
+  &Dish {
+    position: fixed;
+    left: 90px;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 1;
+    pointer-events: none;
+
+    @media (max-width: 1800px) {
+      width: 420px;
+      left: 40px;
+    }
+
+    @media (max-width: 1500px) {
+      width: 340px;
+      left: 18px;
+    }
+
+    @media (max-width: 1400px) {
+      width: 290px;
+      left: 12px;
+    }
+
+    @media (max-width: 1200px) {
+      display: none;
+    }
+  }
+
+  &DishesCircle {
+    right: -90px;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    pointer-events: none;
+
+    @media (max-width: 1800px) {
+      width: 540px;
+    }
+
+    @media (max-width: 1500px) {
+      width: 400px;
+      right: -60px;
+    }
+
+    @media (max-width: 1400px) {
+      width: 350px;
+      right: -52px;
+    }
+  }
+}
+
+.dashedBorder {
+  width: 924px;
+  height: 924px;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100%' ry='100%' stroke='%23FFF' stroke-width='2' stroke-dasharray='12 20' stroke-dashoffset='3' stroke-linecap='butt'/%3e%3c/svg%3e");
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: -493px;
+
+  @media (max-width: 1800px) {
+    width: 870px;
+    height: 870px;
+  }
+
+  @media (max-width: 1500px) {
+    width: 600px;
+    height: 600px;
+    left: -300px;
+  }
+
+  @media (max-width: 1400px) {
+    width: 540px;
+    height: 540px;
+    left: -270px;
+  }
+}
+
+.card {
+  background: var(--dark-bg-color);
+  border-radius: 40px;
+  padding: 116px 70px 67px;
+
+  @media (max-width: 1500px) {
+    padding: 80px 60px 50px;
+  }
+
+  @media (max-width: 1400px) {
+    padding: 60px 50px 50px;
+  }
+
+  @media (max-width: 767px) {
+    padding: 0;
+  }
+
+  &Wrapper {
+    width: 674px;
+    margin: 0 75px 0 auto;
+    padding: 120px 0;
+    position: relative;
+
+    @media (max-width: 1500px) {
+      padding: 90px 0;
+    }
+
+    @media (max-width: 1400px) {
+      width: 620px;
+      padding: 72px 0;
+      margin-right: 60px;
+    }
+
+    @media (max-width: 1200px) {
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    @media (max-width: 767px) {
+      width: 100%;
+      padding: 24px 0;
+    }
+  }
+}
+
+.school {
+  &Name {
+    @media (max-width: 1200px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to right, #3e1f47, #144552);
+      height: 100px;
+      width: 100%;
+      margin: 0 0 90px;
+    }
+
+    @media (max-width: 767px) {
+      width: 100vw !important;
+    }
+  }
+
+  &Title {
+    color: #fff;
+    font-family: "Century Gothic", sans-serif;
+    text-align: center;
+    font-size: 64px;
+    user-select: none;
+    margin-bottom: 87px;
+
+    @media (max-width: 1500px) {
+      font-size: 56px;
+      margin-bottom: 70px;
+    }
+
+    @media (max-width: 1400px) {
+      font-size: 48px;
+      margin-bottom: 54px;
+    }
+
+    @media (max-width: 1200px) {
+      color: #fff;
+      font-family: "Century Gothic Bold", sans-serif;
+      font-size: 40px;
+      user-select: none;
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -29,28 +207,19 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 2rem;
-}
 
-.schoolName {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to right, #3e1f47, #144552);
-  height: 100px;
-  width: 400px;
-  margin: 24px 0 90px;
-}
+  @media (max-width: 1200px) {
+    padding: 2rem;
+  }
 
-.schoolTitle {
-  color: #fff;
-  font-family: "Century Gothic Bold", sans-serif;
-  font-size: 40px;
-  user-select: none;
+  @media (max-width: 767px) {
+    max-width: 520px;
+    margin: 0 auto;
+  }
 }
 
 .label {
-  margin-bottom: 38px;
+  margin-bottom: 35px;
   display: flex;
   flex-direction: column;
   color: #fff;
@@ -58,27 +227,53 @@
   font-size: 20px;
   user-select: none;
   width: 100%;
-}
+  line-height: 32px;
 
-.label p {
-  margin: 0 0 25px 35px;
-}
+  p {
+    margin: 0 0 20px 38px;
+    font-size: 26px;
 
-.label input {
-  width: 100%;
-  height: 50px;
-  padding-left: 33px;
-  background-color: #181818;
-  border-radius: 20px;
-  border: none;
-  outline: none;
+    @media (max-width: 1400px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      font-size: 20px;
+      margin-left: 28px;
+    }
+  }
+
+  input {
+    width: 100%;
+    height: 63px;
+    padding: 0 33px;
+    background-color: #181818;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+
+    @media (max-width: 1400px) {
+      border-radius: 24px;
+      height: 56px;
+    }
+
+    @media (max-width: 1200px) {
+      font-size: 18px;
+      padding: 0 28px;
+    }
+  }
 }
 
 .inputBorder {
   display: inline-flex;
   background: linear-gradient(to right, #3e1f47, #144552);
   padding: 2px;
-  border-radius: 20px;
+  border-radius: 30px;
+
+  @media (max-width: 1400px) {
+    border-radius: 24px;
+  }
 }
 
 .labelRememberMe {
@@ -86,7 +281,7 @@
   display: flex;
   color: #fff;
   font-family: "Century Gothic", sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   align-self: flex-start;
   user-select: none;
 }
@@ -143,4 +338,8 @@
   color: #fff;
   font-family: "Century Gothic", sans-serif;
   font-size: 20px;
+
+  @media (max-width: 1200px) {
+    margin-right: 0;
+  }
 }
