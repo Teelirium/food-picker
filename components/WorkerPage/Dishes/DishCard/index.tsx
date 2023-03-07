@@ -1,25 +1,29 @@
 import { Dish } from '@prisma/client';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import styles from './styles.module.css';
+import Link from 'next/link';
 
 type Props = {
   dish: Dish | undefined;
-  updateDish: (dish: Dish) => void;
 };
 
-const DishCard: React.FC<Props> = ({ dish, updateDish }) => {
+const DishCard: React.FC<Props> = ({ dish }) => {
+  const router = useRouter();
   if (!dish) return null;
   return (
     <div className={styles.dishContainer}>
-      <div
-        className={styles.dish}
-        style={{ backgroundImage: `url(${dish.imgURL})` }}
-        onClick={() => updateDish(dish)}
+      <Link
+        href={{ pathname: '', query: { ...router.query, modalMethod: 'GET', dishId: dish.id } }}
+        shallow
+        replace
       >
-        <span className={styles.dishName}>{dish.name}</span>
-        <span className={styles.dishPrice}>{dish.price}</span>
-      </div>
+        <div className={styles.dish} style={{ backgroundImage: `url(${dish.imgURL})` }}>
+          <span className={styles.dishName}>{dish.name}</span>
+          <span className={styles.dishPrice}>{dish.price}</span>
+        </div>
+      </Link>
     </div>
   );
 };

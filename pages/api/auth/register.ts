@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
 
 import { UserFormData, UserData } from 'types/UserData';
+import prisma from 'utils/prismaClient';
 
 import type { NextApiHandler } from 'next';
-
-const prisma = new PrismaClient();
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {

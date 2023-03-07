@@ -1,48 +1,49 @@
 import { Dish } from '@prisma/client';
 import axios from 'axios';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import ModalWrapper from 'components/ModalWrapper';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 
 import styles from './styles.module.scss';
 
-type Props = {
-  dishId: number;
+interface Props {
+  dishId?: number;
   page: string;
-};
+}
 
 const Modal: React.FC<Props> = ({ dishId, page }) => {
   const router = useRouter();
-  const [dish, setDish] = useState<Dish | null>(null);
+  const [dish, setDish] = useState<Dish | undefined>(undefined);
+
+  const toggle = useCallback(() => {
+    router.replace(
+      {
+        pathname: '',
+        query: deleteEmptyParams({ ...router.query, dishId: undefined, modalMethod: undefined }),
+      },
+      undefined,
+      {
+        shallow: true,
+      },
+    );
+  }, [router]);
 
   useEffect(() => {
     axios
       .get(`/api/dishes/${dishId}`)
       .then((resp) => setDish(resp.data))
       .catch(console.log);
-  }, [dishId]);
+  }, [dish, dishId]);
 
   return (
-    <div className={styles.active}>
-      <div className={styles.modalContainer}>
+    <ModalWrapper toggle={toggle}>
+      <div className={styles.container}>
         {dish ? (
           <div className={styles.modalContent}>
-            <div
-              className={styles.close}
-              onClick={() => {
-                router.replace(
-                  {
-                    pathname: '',
-                    query: deleteEmptyParams({ ...router.query, dish: undefined }),
-                  },
-                  undefined,
-                  {
-                    shallow: true,
-                  },
-                );
-              }}
-            >
+            <div className={styles.close} onClick={toggle}>
               <img src="/img/close.png" alt="close" width={20} height={20} />
             </div>
             <img className={styles.dishImg} src={dish.imgURL} alt="dishImg" />
@@ -65,13 +66,23 @@ const Modal: React.FC<Props> = ({ dishId, page }) => {
                 Состав: <br />
                 {dish.ingredients}
               </div>
+
+              {page === 'Dishes' ? (
+                <Link
+                  href={{ pathname: '', query: { ...router.query, modalMethod: 'UPDATE' } }}
+                  shallow
+                  replace
+                >
+                  <div className={styles.edit}>Редактировать</div>
+                </Link>
+              ) : null}
             </div>
           </div>
         ) : (
           'Loading'
         )}
       </div>
-    </div>
+    </ModalWrapper>
   );
 };
 

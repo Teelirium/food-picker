@@ -20,7 +20,7 @@ const prisma = new PrismaClient();
 
 const querySchema = z.object({
   day: dayOfWeekSchema.default(0),
-  dish: idSchema.optional(),
+  dishId: idSchema.optional(),
   breakIndex: z.coerce.number().min(0).max(7).default(0),
 });
 
@@ -57,7 +57,7 @@ type Props = {
 const OrdersPage: NextPage<Props> = ({ workerName }) => {
   const router = useRouter();
   const [orders, setOrders] = useState<GradeInfo>();
-  const { day, dish } = useMemo(() => querySchema.parse(router.query), [router.query]);
+  const { day, dishId } = useMemo(() => querySchema.parse(router.query), [router.query]);
 
   useEffect(() => {
     axios
@@ -75,7 +75,7 @@ const OrdersPage: NextPage<Props> = ({ workerName }) => {
         <LeftSideNavibar activePage={2} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dish !== undefined ? <Modal dishId={dish} page="orders" /> : null}
+      {dishId !== undefined ? <Modal dishId={dishId} page="orders" /> : null}
     </>
   );
 };

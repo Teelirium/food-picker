@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { compare } from 'bcryptjs';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
 import { SessionData, dbUserData } from 'types/UserData';
-
-const prisma = new PrismaClient();
+import prisma from 'utils/prismaClient';
 
 async function findUser(username: string): Promise<dbUserData | null> {
   const parent = await prisma.parent.findUnique({
