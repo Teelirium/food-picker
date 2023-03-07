@@ -17,7 +17,7 @@
   transform: translate(0, -50%);
 
   @media (max-width: 1800px) {
-    left: 250px;
+    left: 210px;
   }
 
   @media (max-width: 1500px) {
@@ -43,17 +43,17 @@
     pointer-events: none;
 
     @media (max-width: 1800px) {
-      width: 420px;
+      width: 340px;
       left: 40px;
     }
 
     @media (max-width: 1500px) {
-      width: 340px;
+      width: 280px;
       left: 18px;
     }
 
     @media (max-width: 1400px) {
-      width: 290px;
+      width: 250px;
       left: 12px;
     }
 
@@ -70,7 +70,8 @@
     pointer-events: none;
 
     @media (max-width: 1800px) {
-      width: 540px;
+      width: 450px;
+      right: -80px;
     }
 
     @media (max-width: 1500px) {
@@ -95,34 +96,31 @@
   left: -493px;
 
   @media (max-width: 1800px) {
-    width: 870px;
-    height: 870px;
+    width: 780px;
+    height: 780px;
+    left: -450px;
   }
 
   @media (max-width: 1500px) {
     width: 600px;
     height: 600px;
-    left: -300px;
+    left: -340px;
   }
 
   @media (max-width: 1400px) {
     width: 540px;
     height: 540px;
-    left: -270px;
+    left: -300px;
   }
 }
 
 .card {
   background: var(--dark-bg-color);
   border-radius: 40px;
-  padding: 116px 70px 67px;
+  padding: 54px 54px 40px;
 
-  @media (max-width: 1500px) {
-    padding: 80px 60px 50px;
-  }
-
-  @media (max-width: 1400px) {
-    padding: 60px 50px 50px;
+  @media (max-width: 1700px) {
+    padding: 50px 48px 36px;
   }
 
   @media (max-width: 767px) {
@@ -130,18 +128,19 @@
   }
 
   &Wrapper {
-    width: 674px;
+    width: 620px;
     margin: 0 75px 0 auto;
-    padding: 120px 0;
+    padding: 90px 0;
     position: relative;
 
-    @media (max-width: 1500px) {
-      padding: 90px 0;
+    @media (max-width: 1700px) {
+      padding: 60px 0;
+      width: 580px;
     }
 
     @media (max-width: 1400px) {
-      width: 620px;
-      padding: 72px 0;
+      width: 520px;
+      padding: 48px 0;
       margin-right: 60px;
     }
 
@@ -166,7 +165,7 @@
       background: linear-gradient(to right, #3e1f47, #144552);
       height: 100px;
       width: 100%;
-      margin: 0 0 90px;
+      margin: 0 0 60px;
     }
 
     @media (max-width: 767px) {
@@ -178,24 +177,18 @@
     color: #fff;
     font-family: "Century Gothic", sans-serif;
     text-align: center;
-    font-size: 64px;
+    font-size: 40px;
     user-select: none;
-    margin-bottom: 87px;
+    margin-bottom: 48px;
 
-    @media (max-width: 1500px) {
-      font-size: 56px;
-      margin-bottom: 70px;
-    }
-
-    @media (max-width: 1400px) {
-      font-size: 48px;
-      margin-bottom: 54px;
+    @media (max-width: 1700px) {
+      font-size: 36px;
+      margin-bottom: 40px;
     }
 
     @media (max-width: 1200px) {
       color: #fff;
       font-family: "Century Gothic Bold", sans-serif;
-      font-size: 40px;
       user-select: none;
       margin-bottom: 0;
     }
@@ -227,25 +220,32 @@
   font-size: 20px;
   user-select: none;
   width: 100%;
-  line-height: 32px;
+
+  @media (max-width: 1500px) {
+    margin-bottom: 32px;
+  }
 
   p {
     margin: 0 0 20px 38px;
-    font-size: 26px;
+    font-size: 22px;
+
+    @media (max-width: 1700px) {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
 
     @media (max-width: 1400px) {
-      font-size: 24px;
+      font-size: 16px;
     }
 
     @media (max-width: 1200px) {
-      font-size: 20px;
       margin-left: 28px;
     }
   }
 
   input {
     width: 100%;
-    height: 63px;
+    height: 56px;
     padding: 0 33px;
     background-color: #181818;
     border-radius: 30px;
@@ -253,13 +253,14 @@
     outline: none;
     font-size: 20px;
 
-    @media (max-width: 1400px) {
+    @media (max-width: 1700px) {
       border-radius: 24px;
-      height: 56px;
+      height: 48px;
+      font-size: 18px;
     }
 
     @media (max-width: 1200px) {
-      font-size: 18px;
+      font-size: 16px;
       padding: 0 28px;
     }
   }
@@ -269,7 +270,7 @@
   display: inline-flex;
   background: linear-gradient(to right, #3e1f47, #144552);
   padding: 2px;
-  border-radius: 30px;
+  border-radius: 35px;
 
   @media (max-width: 1400px) {
     border-radius: 24px;
@@ -284,6 +285,10 @@
   font-size: 20px;
   align-self: flex-start;
   user-select: none;
+
+  @media (max-width: 1600px) {
+    margin-bottom: 32px;
+  }
 }
 
 .checkbox {
