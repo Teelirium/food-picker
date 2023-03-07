@@ -1,9 +1,11 @@
+import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
+
 import Modal from 'components/WorkerPage/DishAboutModal';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import Orders from 'components/WorkerPage/Orders';
@@ -13,7 +15,6 @@ import { getServerSideSession } from 'utils/getServerSession';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
-import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -38,9 +39,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const workerData = await prisma.worker.findUnique({
     where: {
       id: +session.user.id,
-    }
+    },
   });
-  const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`
+  const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`;
 
   return {
     props: {
@@ -51,9 +52,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 type Props = {
   workerName: string;
-}
+};
 
-const OrdersPage: NextPage<Props> = ({workerName}) => {
+const OrdersPage: NextPage<Props> = ({ workerName }) => {
   const router = useRouter();
   const [orders, setOrders] = useState<GradeInfo>();
   const { day, dish } = useMemo(() => querySchema.parse(router.query), [router.query]);
@@ -74,7 +75,7 @@ const OrdersPage: NextPage<Props> = ({workerName}) => {
         <LeftSideNavibar activePage={2} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dish !== undefined ? <Modal dishId={dish} /> : null}
+      {dish !== undefined ? <Modal dishId={dish} page="orders" /> : null}
     </>
   );
 };
