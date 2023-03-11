@@ -178,11 +178,13 @@
 .dishesContainer {
   display: flex;
   flex-wrap: wrap;
-  overflow: hidden;
-  overflow-y: auto;
   justify-content: center;
   align-items: flex-start;
-  height: calc(100vh - 130px);
+  gap: 20px;
+  overflow: hidden;
+  overflow-y: auto;
+  min-height: max-content;
+  max-height: calc(100vh - 130px);
 }
 
 .dishesContainer::-webkit-scrollbar {
