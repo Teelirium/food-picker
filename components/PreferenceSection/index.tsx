@@ -1,17 +1,19 @@
 import { Dish } from '@prisma/client';
 import Image from 'next/image';
 import React, { MouseEventHandler } from 'react';
+
 import DishCardSmall from 'components/DishCardSmall';
 import deleteIcon from 'public/svg/delete.svg';
 import editIcon from 'public/svg/edit.svg';
 import plusIcon from 'public/svg/plus.svg';
+
 import styles from './styles.module.scss';
 
 type Props = {
   title: string;
   dish?: Dish;
-  handleAdd?: MouseEventHandler<HTMLElement>;
   handleView?: MouseEventHandler<HTMLElement>;
+  handleAdd?: MouseEventHandler<HTMLElement>;
   handleDelete?: MouseEventHandler<HTMLElement>;
   handleEdit?: MouseEventHandler<HTMLElement>;
 };
@@ -19,8 +21,8 @@ type Props = {
 const PreferenceSection: React.FC<Props> = ({
   title,
   dish,
-  handleAdd,
   handleView,
+  handleAdd,
   handleDelete,
   handleEdit,
 }) => {
@@ -33,24 +35,28 @@ const PreferenceSection: React.FC<Props> = ({
             <DishCardSmall dish={dish} />
           </div>
           <div className={styles.btnGroup}>
-            <button
-              className={styles.actionBtn}
-              data-action="delete"
-              onClick={handleDelete}
-              type="button"
-            >
-              <Image src={deleteIcon} alt="delete" />
-              Удалить
-            </button>
-            <button
-              className={styles.actionBtn}
-              data-action="edit"
-              onClick={handleEdit}
-              type="button"
-            >
-              <Image src={editIcon} alt="edit" />
-              Изменить
-            </button>
+            {handleDelete && (
+              <button
+                className={styles.actionBtn}
+                data-action="delete"
+                onClick={handleDelete}
+                type="button"
+              >
+                <Image src={deleteIcon} alt="delete" />
+                Удалить
+              </button>
+            )}
+            {handleEdit && (
+              <button
+                className={styles.actionBtn}
+                data-action="edit"
+                onClick={handleEdit}
+                type="button"
+              >
+                <Image src={editIcon} alt="edit" />
+                Изменить
+              </button>
+            )}
           </div>
         </div>
       ) : (
