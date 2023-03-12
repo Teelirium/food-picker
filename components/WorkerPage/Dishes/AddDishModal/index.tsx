@@ -19,7 +19,7 @@ interface Props {
 const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
   const { register, handleSubmit } = useForm<DishFormData>();
   const router = useRouter();
-  const resetQuery = () => {
+  const toggle = useCallback(() => {
     router.replace(
       {
         pathname: '',
@@ -30,8 +30,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
         shallow: true,
       },
     );
-  };
-  const toggle = useCallback(resetQuery, [router]);
+  }, [router]);
 
   const onSubmit = handleSubmit((data) => {
     switch (method) {
@@ -43,7 +42,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
             Router.reload();
           })
           .catch(console.error);
-        resetQuery();
+        toggle();
         break;
       }
 
@@ -55,7 +54,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
             Router.reload();
           })
           .catch(console.log);
-        resetQuery();
+        toggle();
         break;
       }
       default:
@@ -87,7 +86,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
         Router.reload();
       })
       .catch(console.log);
-    resetQuery();
+    toggle();
   };
 
   return (
@@ -98,7 +97,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
             {method === 'POST'
               ? `Добавление ${headerDishType(dishType)}`
               : `Редактирование ${headerDishType(dishType)}`}
-            <div className={styles.closeBtn} onClick={resetQuery}>
+            <div className={styles.closeBtn} onClick={toggle}>
               <img src="/img/close.png" alt="close" width={20} height={20} />
             </div>
           </div>
@@ -229,7 +228,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
           />
 
           <div className={styles.formBtns}>
-            <div className={styles.cancelBtn} onClick={resetQuery}>
+            <div className={styles.cancelBtn} onClick={toggle}>
               Отмена
             </div>
             {method === 'UPDATE' ? (

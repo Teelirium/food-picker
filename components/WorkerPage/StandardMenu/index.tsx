@@ -2,7 +2,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { z } from 'zod';
 
 import PreferenceSection from 'components/PreferenceSection';
@@ -105,6 +105,7 @@ const StandardMenu: React.FC = () => {
               shallow: true,
             })
           }
+          toggleInfo={toggleInfo}
         />
       )}
       {dishId && <DishAboutModal dishId={dishId} />}

@@ -5,14 +5,13 @@ import styles from './styles.module.scss';
 
 type Props = {
   dish: Dish;
-  onClick: () => void;
+  onClick?: () => void;
   onButtonClick?: () => void;
 };
 
 const DishCard: React.FC<Props> = ({ dish, onClick, onButtonClick }) => {
   return (
-    <button
-      type="button"
+    <div
       onClick={onClick}
       className={styles.container}
       style={{ backgroundImage: `url(${dish.imgURL})` }}
@@ -22,11 +21,18 @@ const DishCard: React.FC<Props> = ({ dish, onClick, onButtonClick }) => {
         <span className={styles.price}>{dish.price} руб.</span>
       </div>
       {onButtonClick && (
-        <button type="button" className={styles.btn}>
+        <button
+          type="button"
+          className={styles.btn}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onButtonClick();
+          }}
+        >
           Выбрать блюдо
         </button>
       )}
-    </button>
+    </div>
   );
 };
 

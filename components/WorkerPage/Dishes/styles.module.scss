@@ -185,22 +185,22 @@
   overflow-y: auto;
   min-height: max-content;
   max-height: calc(100vh - 130px);
-}
 
-.dishesContainer::-webkit-scrollbar {
-  width: 10px;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
+  &::-webkit-scrollbar {
+    width: 10px;
+    border: 1px solid #968796;
+    border-radius: 20px;
+  }
 
-.dishesContainer::-webkit-scrollbar-track {
-  background: #312244;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
+  &::-webkit-scrollbar-track {
+    background: #312244;
+    border: 1px solid #968796;
+    border-radius: 20px;
+  }
 
-.dishesContainer::-webkit-scrollbar-thumb {
-  background-color: #fff;
-  width: 8px;
-  border-radius: 20px;
+  &::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    width: 8px;
+    border-radius: 20px;
+  }
 }
