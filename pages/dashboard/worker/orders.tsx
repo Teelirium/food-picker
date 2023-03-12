@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 
-import Modal from 'components/WorkerPage/DishAboutModal';
+import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import Orders from 'components/WorkerPage/Orders';
 import { GradeInfo } from 'pages/api/grades/total-orders';
@@ -57,7 +57,7 @@ type Props = {
 const OrdersPage: NextPage<Props> = ({ workerName }) => {
   const router = useRouter();
   const [orders, setOrders] = useState<GradeInfo>();
-  const { day, dishId } = useMemo(() => querySchema.parse(router.query), [router.query]);
+  const { day, dishId } = querySchema.parse(router.query);
 
   useEffect(() => {
     axios
@@ -75,7 +75,7 @@ const OrdersPage: NextPage<Props> = ({ workerName }) => {
         <LeftSideNavibar activePage={2} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dishId !== undefined ? <Modal dishId={dishId} page="orders" /> : null}
+      {dishId !== undefined ? <DishAboutModal dishId={dishId} /> : null}
     </>
   );
 };

@@ -6,13 +6,16 @@ import { useQuery } from 'react-query';
 import { z } from 'zod';
 
 import PreferenceSection from 'components/PreferenceSection';
+import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import { DefaultDishes } from 'pages/api/preferences/default';
 import { DishType } from 'types/Dish';
 import dayMap from 'utils/dayMap';
+import deleteEmptyParams from 'utils/deleteEmptyParams';
 import dishTypeMap from 'utils/dishTypeMap';
 import maxDay from 'utils/maxDay';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
+import idSchema from 'utils/schemas/idSchema';
 
 import ListModal from './ListModal';
 import styles from './styles.module.scss';
@@ -20,6 +23,7 @@ import styles from './styles.module.scss';
 const paramSchema = z.object({
   day: dayOfWeekSchema.default(0),
   dishType: dishTypeSchema.optional(),
+  dishId: idSchema.optional(),
 });
 
 const dishTypes: DishType[] = ['PRIMARY', 'SECONDARY', 'SIDE', 'DRINK'];
@@ -35,17 +39,30 @@ async function getDishes(day: number) {
 const StandardMenu: React.FC = () => {
   const router = useRouter();
 
-  const { day, dishType } = paramSchema.parse(router.query);
+  const { day, dishType, dishId } = paramSchema.parse(router.query);
 
   const query = useQuery(['defaults', day], () => getDishes(day), { keepPreviousData: true });
 
-  const toggleModal = useCallback(
+  const toggleList = useCallback(
     (dishType: DishType) => () => {
       router.replace({ pathname: router.basePath, query: { day, dishType } }, undefined, {
         shallow: true,
       });
     },
     [day, router],
+  );
+  const toggleInfo = useCallback(
+    (id?: number) => () => {
+      router.replace(
+        {
+          pathname: router.basePath,
+          query: deleteEmptyParams({ ...router.query, dishId: id }),
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [router],
   );
 
   return (
@@ -72,8 +89,9 @@ const StandardMenu: React.FC = () => {
               key={type}
               title={dishTypeMap[type]}
               dish={query.data.get(type)}
-              handleEdit={toggleModal(type)}
-              handleAdd={toggleModal(type)}
+              handleEdit={toggleList(type)}
+              handleAdd={toggleList(type)}
+              handleView={toggleInfo(query.data.get(type)?.id)}
             />
           ))}
       </main>
@@ -89,6 +107,7 @@ const StandardMenu: React.FC = () => {
           }
         />
       )}
+      {dishId && <DishAboutModal dishId={dishId} />}
     </div>
   );
 };

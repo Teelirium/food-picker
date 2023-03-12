@@ -12,7 +12,7 @@ import styles from './styles.module.scss';
 
 interface Props {
   method: string;
-  dish: Dish | undefined;
+  dish?: Dish;
   dishType?: DishType;
 }
 
@@ -42,7 +42,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
             console.log('Блюдо добавлено!');
             Router.reload();
           })
-          .catch(console.log);
+          .catch(console.error);
         resetQuery();
         break;
       }

@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
-import AddDishModal from 'components/WorkerPage/Dishes/DishModal';
+import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -61,6 +61,7 @@ type Props = {
 const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
   const router = useRouter();
   const [currentDish, setCurrentDish] = useState<Dish | undefined>(undefined);
+
   const { mealTime, dishType, modalMethod, dishId } = useMemo(
     () => querySchema.parse(router.query),
     [router.query],
@@ -69,6 +70,7 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
   useEffect(() => {
     if (dishId) setCurrentDish(dishes.find((e) => e.id === dishId));
   }, [dishId, dishes]);
+
   return (
     <>
       <Head>
@@ -81,8 +83,9 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (
         <AddDishModal dish={currentDish} method={modalMethod} dishType={dishType} />
       ) : null}
-
-      {modalMethod === 'GET' ? <DishAboutModal page="Dishes" dishId={dishId} /> : null}
+      {modalMethod === 'GET' && dishId !== undefined ? (
+        <DishAboutModal dishId={dishId} allowEditing />
+      ) : null}
     </>
   );
 };
