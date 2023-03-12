@@ -120,7 +120,11 @@
   padding: 54px 54px 40px;
 
   @media (max-width: 1700px) {
-    padding: 50px 48px 36px;
+    padding: 46px 48px 32px;
+  }
+
+  @media (max-width: 1400px) {
+    padding: 36px 48px 24px;
   }
 
   @media (max-width: 767px) {
@@ -129,23 +133,28 @@
 
   &Wrapper {
     width: 620px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin: 0 75px 0 auto;
-    padding: 90px 0;
+    padding: 48px 0;
     position: relative;
 
     @media (max-width: 1700px) {
-      padding: 60px 0;
+      padding: 20px 0;
       width: 580px;
     }
 
     @media (max-width: 1400px) {
       width: 520px;
-      padding: 48px 0;
+      padding: 16px 0;
       margin-right: 60px;
     }
 
     @media (max-width: 1200px) {
       margin: 0 auto;
+      display: block;
       padding: 0;
     }
 
@@ -183,7 +192,12 @@
 
     @media (max-width: 1700px) {
       font-size: 36px;
-      margin-bottom: 40px;
+      margin-bottom: 36px;
+    }
+
+    @media (max-width: 1400px) {
+      font-size: 32px;
+      margin-bottom: 24px;
     }
 
     @media (max-width: 1200px) {
@@ -225,6 +239,10 @@
     margin-bottom: 32px;
   }
 
+  @media (max-width: 1400px) {
+    margin-bottom: 28px;
+  }
+
   p {
     margin: 0 0 20px 38px;
     font-size: 22px;
@@ -235,11 +253,9 @@
     }
 
     @media (max-width: 1400px) {
-      font-size: 16px;
-    }
-
-    @media (max-width: 1200px) {
+      font-size: 15px;
       margin-left: 28px;
+      margin-bottom: 12px;
     }
   }
 
@@ -259,8 +275,9 @@
       font-size: 18px;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1400px) {
       font-size: 16px;
+      height: 42px;
       padding: 0 28px;
     }
   }
@@ -278,16 +295,27 @@
 }
 
 .labelRememberMe {
-  margin: 0 0 50px 13px;
+  margin: 0 0 28px 13px;
   display: flex;
   color: #fff;
   font-family: "Century Gothic", sans-serif;
-  font-size: 20px;
   align-self: flex-start;
   user-select: none;
 
-  @media (max-width: 1600px) {
-    margin-bottom: 32px;
+  @media (max-width: 1700px) {
+    margin-bottom: 22px;
+  }
+
+  @media (max-width: 1400px) {
+    margin-bottom: 18px;
+  }
+
+  p {
+    font-size: 16px;
+
+    @media (max-width: 1400px) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -312,6 +340,11 @@
   border-image: linear-gradient(to right, #3e1f47, #144552);
   border-image-slice: 1;
   cursor: pointer;
+
+  @media (max-width: 1400px) {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .customCheckbox::before {
@@ -327,6 +360,11 @@
   top: 50%;
   transform: translate(-50%, -50%) scale(0);
   transition: 0.1s ease-in;
+
+  @media (max-width: 1400px) {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .checkbox:checked + .customCheckbox::before {
@@ -343,6 +381,12 @@
   color: #fff;
   font-family: "Century Gothic", sans-serif;
   font-size: 20px;
+
+  @media (max-width: 1400px) {
+    font-size: 18px;
+    width: 135px;
+    height: 45px;
+  }
 
   @media (max-width: 1200px) {
     margin-right: 0;
