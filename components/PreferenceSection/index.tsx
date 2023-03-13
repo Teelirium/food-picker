@@ -1,10 +1,12 @@
 import { Dish } from '@prisma/client';
 import Image from 'next/image';
 import React, { MouseEventHandler } from 'react';
+
 import DishCardSmall from 'components/DishCardSmall';
 import deleteIcon from 'public/svg/delete.svg';
 import editIcon from 'public/svg/edit.svg';
 import plusIcon from 'public/svg/plus.svg';
+
 import styles from './styles.module.scss';
 
 type Props = {
