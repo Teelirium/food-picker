@@ -1,6 +1,7 @@
+import { PrismaClient } from '@prisma/client';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { PrismaClient } from '@prisma/client';
+
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import StandardMenu from 'components/WorkerPage/StandardMenu';
 import styles from 'styles/worker.module.css';
@@ -24,10 +25,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const workerData = await prisma.worker.findUnique({
     where: {
       id: +session.user.id,
-    }
+    },
   });
-  const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`
-
+  const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`;
 
   return {
     props: {
@@ -38,9 +38,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 type Props = {
   workerName: string;
-}
+};
 
-const StandardMenuPage: NextPage<Props> = ({workerName}) => {
+const StandardMenuPage: NextPage<Props> = ({ workerName }) => {
   return (
     <>
       <Head>

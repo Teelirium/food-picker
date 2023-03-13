@@ -2,7 +2,7 @@ import { Dish } from '@prisma/client';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
@@ -62,10 +62,7 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
   const router = useRouter();
   const [currentDish, setCurrentDish] = useState<Dish | undefined>(undefined);
 
-  const { mealTime, dishType, modalMethod, dishId } = useMemo(
-    () => querySchema.parse(router.query),
-    [router.query],
-  );
+  const { mealTime, dishType, modalMethod, dishId } = querySchema.parse(router.query);
 
   useEffect(() => {
     if (dishId) setCurrentDish(dishes.find((e) => e.id === dishId));
@@ -83,9 +80,9 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (
         <AddDishModal dish={currentDish} method={modalMethod} dishType={dishType} />
       ) : null}
-      {modalMethod === 'GET' && dishId !== undefined ? (
+      {modalMethod === 'GET' && dishId !== undefined && (
         <DishAboutModal dishId={dishId} allowEditing />
-      ) : null}
+      )}
     </>
   );
 };

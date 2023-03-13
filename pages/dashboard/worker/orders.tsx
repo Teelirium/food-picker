@@ -3,7 +3,7 @@ import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
@@ -75,7 +75,7 @@ const OrdersPage: NextPage<Props> = ({ workerName }) => {
         <LeftSideNavibar activePage={2} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
-      {dishId !== undefined ? <DishAboutModal dishId={dishId} /> : null}
+      {dishId !== undefined && <DishAboutModal dishId={dishId} />}
     </>
   );
 };

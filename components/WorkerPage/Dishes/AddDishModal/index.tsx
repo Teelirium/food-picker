@@ -7,11 +7,12 @@ import { useForm } from 'react-hook-form';
 import ModalWrapper from 'components/ModalWrapper';
 import { DishFormData } from 'types/Dish';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
+import { ModalMethod } from 'utils/schemas/modalMethodSchema';
 
 import styles from './styles.module.scss';
 
 interface Props {
-  method: string;
+  method: ModalMethod;
   dish?: Dish;
   dishType?: DishType;
 }
