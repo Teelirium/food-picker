@@ -96,24 +96,6 @@
   overflow-y: auto;
 }
 
-.ordersContainer::-webkit-scrollbar {
-  width: 10px;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
-
-.ordersContainer::-webkit-scrollbar-track {
-  background: #312244;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
-
-.ordersContainer::-webkit-scrollbar-thumb {
-  background-color: #fff;
-  width: 8px;
-  border-radius: 20px;
-}
-
 .breakContainer {
   position: absolute;
   top: 100px;

@@ -39,3 +39,28 @@ a {
   }
 }
 */
+
+::-webkit-scrollbar {
+  width: 10px;
+  border: 1px solid #968796;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: #312244;
+}
+
+:not(body)::-webkit-scrollbar-track {
+  border: 1px solid #968796;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  width: 8px;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-corner {
+  background: #312244;
+}
