@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
@@ -50,28 +51,10 @@ type LoginFormData = {
 
 const Login: NextPage = () => {
   const { register, handleSubmit } = useForm<LoginFormData>();
-  // const router = useRouter();
+  const router = useRouter();
+  const { error } = router.query as { error?: string };
 
-  const onSubmit = handleSubmit((data: LoginFormData) => {
-    signIn('credentials', {
-      // callbackUrl: "/dashboard?student=0",
-      ...data,
-    })
-      // .then((resp) => {
-      //   alert(JSON.stringify(resp));
-      //   if (!resp) {
-      //     alert(JSON.stringify(resp));
-      //     return;
-      //   }
-      //   if (resp.error) {
-      //     alert(signInErrors[resp.error] || resp.error);
-      //     return;
-      //   }
-      //   return router.push("/dashboard?student=0");
-      // })
-      // eslint-disable-next-line no-alert
-      .catch(() => alert('Неверное имя пользователя или пароль'));
-  });
+  const onSubmit = handleSubmit((data: LoginFormData) => signIn('credentials', data));
 
   return (
     <>
@@ -98,6 +81,9 @@ const Login: NextPage = () => {
               <h1 className={styles.schoolTitle}>ШКОЛА № 123</h1>
             </div>
             <form className={styles.form} onSubmit={onSubmit}>
+              {error ? (
+                <div className={styles.error}>Неверное имя пользователя или пароль</div>
+              ) : null}
               <label className={styles.label}>
                 <p>Логин</p>
                 <div className={styles.inputBorder}>
