@@ -325,9 +325,14 @@
   background: linear-gradient(to right, #3e1f47, #144552);
   padding: 2px;
   border-radius: 35px;
+  transition: 0.5s;
 
   @media (max-width: 1400px) {
     border-radius: 24px;
+  }
+
+  &WithError {
+    background: #891c20;
   }
 }
 

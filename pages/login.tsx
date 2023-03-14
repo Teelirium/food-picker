@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -50,7 +51,12 @@ type LoginFormData = {
 };
 
 const Login: NextPage = () => {
-  const { register, handleSubmit } = useForm<LoginFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>();
+
   const router = useRouter();
   const { error } = router.query as { error?: string };
 
@@ -86,15 +92,33 @@ const Login: NextPage = () => {
               ) : null}
               <label className={styles.label}>
                 <p>Логин</p>
-                <div className={styles.inputBorder}>
-                  <input type="text" {...register('username')} placeholder="Логин" required />
+                <div
+                  className={classNames(
+                    styles.inputBorder,
+                    errors.username && styles.inputBorderWithError,
+                  )}
+                >
+                  <input
+                    type="text"
+                    {...register('username', { required: true })}
+                    placeholder="Логин"
+                  />
                 </div>
               </label>
 
               <label className={styles.label}>
                 <p>Пароль</p>
-                <div className={styles.inputBorder}>
-                  <input type="password" {...register('password')} placeholder="Пароль" required />
+                <div
+                  className={classNames(
+                    styles.inputBorder,
+                    errors.password && styles.inputBorderWithError,
+                  )}
+                >
+                  <input
+                    type="password"
+                    {...register('password', { required: true })}
+                    placeholder="Пароль"
+                  />
                 </div>
               </label>
 
