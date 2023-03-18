@@ -26,6 +26,9 @@ a {
 
 * {
   box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color: #fff #312244;
 }
 
 :root {

@@ -1,45 +1,40 @@
 import { NextApiHandler } from 'next';
+import { z } from 'zod';
 
 import { DishFormData } from 'types/Dish';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
+import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import verifyRole from 'utils/verifyRole';
+
+const paramSchema = z.object({
+  type: dishTypeSchema.optional(),
+});
 
 /**
  * @swagger
- * /api/dishes:
+ * /api/dishes?type={}:
  *  get:
- *    summary: Получает список доступных блюд
- *    responses:
- *      200:
- *        description: Возвращает список доступных блюд
+ *    summary: Получает список доступных блюд. Параметр type фильтрует блюда по типу.
  *  post:
- *    summary: Добавляет блюдо в базу данных
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              dish:
- *                type: object
- *    responses:
- *      201:
- *        description: Возвращает добавленное блюдо
- *  delete:
- *    summary: Удаляет все блюда
+ *    summary: Добавляет блюдо в базу данных.
  */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
   const isWorkerOrAdmin = !!session && verifyRole(session, ['WORKER', 'ADMIN']);
+
+  const { type } = paramSchema.parse(req.query);
 
   switch (req.method) {
     case 'GET': {
       if (!session) {
         return res.status(401).send('');
       }
-      const dishes = await prisma.dish.findMany({});
+      const dishes = await prisma.dish.findMany({
+        where: {
+          type,
+        },
+      });
       return res.json(dishes);
     }
 
@@ -59,18 +54,6 @@ const handler: NextApiHandler = async (req, res) => {
         return res.status(500).send(err);
       }
     }
-
-    case 'DELETE':
-      if (!isWorkerOrAdmin) {
-        return res.status(403).send('');
-      }
-      try {
-        await prisma.dish.deleteMany({});
-        return res.send('OK');
-      } catch (err) {
-        console.error(err);
-        return res.status(500).send(err);
-      }
 
     default:
       return res.status(405).send('Method not allowed');

@@ -1,29 +1,37 @@
 import { Dish } from '@prisma/client';
-import { useRouter } from 'next/router';
 import React from 'react';
 
-import styles from './styles.module.css';
-import Link from 'next/link';
+import styles from './styles.module.scss';
 
 type Props = {
-  dish: Dish | undefined;
+  dish: Dish;
+  onClick?: () => void;
+  onButtonClick?: () => void;
 };
 
-const DishCard: React.FC<Props> = ({ dish }) => {
-  const router = useRouter();
-  if (!dish) return null;
+const DishCard: React.FC<Props> = ({ dish, onClick, onButtonClick }) => {
   return (
-    <div className={styles.dishContainer}>
-      <Link
-        href={{ pathname: '', query: { ...router.query, modalMethod: 'GET', dishId: dish.id } }}
-        shallow
-        replace
-      >
-        <div className={styles.dish} style={{ backgroundImage: `url(${dish.imgURL})` }}>
-          <span className={styles.dishName}>{dish.name}</span>
-          <span className={styles.dishPrice}>{dish.price}</span>
-        </div>
-      </Link>
+    <div
+      onClick={onClick}
+      className={styles.container}
+      style={{ backgroundImage: `url(${dish.imgURL})` }}
+    >
+      <div className={styles.info}>
+        <span className={styles.name}>{dish.name}</span>
+        <span className={styles.price}>{dish.price} руб.</span>
+      </div>
+      {onButtonClick && (
+        <button
+          type="button"
+          className={styles.btn}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onButtonClick();
+          }}
+        >
+          Выбрать блюдо
+        </button>
+      )}
     </div>
   );
 };

@@ -2,7 +2,8 @@ import { Dish } from '@prisma/client';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useQuery } from 'react-query';
 
 import ModalWrapper from 'components/ModalWrapper';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
@@ -10,13 +11,16 @@ import deleteEmptyParams from 'utils/deleteEmptyParams';
 import styles from './styles.module.scss';
 
 interface Props {
-  dishId?: number;
-  page: string;
+  dishId: number;
+  allowEditing?: boolean;
 }
 
-const Modal: React.FC<Props> = ({ dishId, page }) => {
+const DishAboutModal: React.FC<Props> = ({ dishId, allowEditing = false }) => {
   const router = useRouter();
-  const [dish, setDish] = useState<Dish | undefined>(undefined);
+
+  const dishQuery = useQuery(['query.data', dishId], () =>
+    axios.get(`/api/dishes/${dishId}`).then((resp) => resp.data as Dish),
+  );
 
   const toggle = useCallback(() => {
     router.replace(
@@ -31,43 +35,35 @@ const Modal: React.FC<Props> = ({ dishId, page }) => {
     );
   }, [router]);
 
-  useEffect(() => {
-    axios
-      .get(`/api/dishes/${dishId}`)
-      .then((resp) => setDish(resp.data))
-      .catch(console.log);
-  }, [dish, dishId]);
-
   return (
     <ModalWrapper toggle={toggle}>
       <div className={styles.container}>
-        {dish ? (
+        {dishQuery.isSuccess && (
           <div className={styles.modalContent}>
             <div className={styles.close} onClick={toggle}>
               <img src="/img/close.png" alt="close" width={20} height={20} />
             </div>
-            <img className={styles.dishImg} src={dish.imgURL} alt="dishImg" />
+            <img className={styles.dishImg} src={dishQuery.data.imgURL} alt="dishImg" />
             <div className={styles.dishInfo}>
               <div className={styles.nameAndWeight}>
-                <div className={styles.name}>{dish.name}</div>
-                <div className={styles.weight}>Вес: {dish.weightGrams} г.</div>
+                <div className={styles.name}>{dishQuery.data.name}</div>
+                <div className={styles.weight}>Вес: {dishQuery.data.weightGrams} г.</div>
               </div>
-              <div className={styles.price}>Стоимость: {dish.price} р.</div>
+              <div className={styles.price}>Стоимость: {dishQuery.data.price} руб.</div>
               <div className={styles.calories}>
-                Энергетическая ценность (калорийность): {dish.calories} ккал
+                Энергетическая ценность (калорийность): {dishQuery.data.calories} ккал.
               </div>
               <ul className={styles.proteinsFatsAndCarbs}>
-                <li>Белки: {dish.proteins} г.</li>
-                <li>Жиры: {dish.fats} г.</li>
-                <li>Углеводы: {dish.carbs} г.</li>
+                <li>Белки: {dishQuery.data.proteins} г.</li>
+                <li>Жиры: {dishQuery.data.fats} г.</li>
+                <li>Углеводы: {dishQuery.data.carbs} г.</li>
               </ul>
-
               <div className={styles.ingredients}>
-                Состав: <br />
-                {dish.ingredients}
+                Состав:
+                <br />
+                {dishQuery.data.ingredients}
               </div>
-
-              {page === 'Dishes' ? (
+              {allowEditing ? (
                 <Link
                   href={{ pathname: '', query: { ...router.query, modalMethod: 'UPDATE' } }}
                   shallow
@@ -78,12 +74,10 @@ const Modal: React.FC<Props> = ({ dishId, page }) => {
               ) : null}
             </div>
           </div>
-        ) : (
-          'Loading'
         )}
       </div>
     </ModalWrapper>
   );
 };
 
-export default Modal;
+export default DishAboutModal;

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
-const modalMethodSchema = z.enum(['GET', 'POST', 'UPDATE']);
+export const ModalMethods = ['GET', 'POST', 'UPDATE'] as const;
 
+const modalMethodSchema = z.enum(ModalMethods);
 export default modalMethodSchema;
+
+export type ModalMethod = z.infer<typeof modalMethodSchema>;

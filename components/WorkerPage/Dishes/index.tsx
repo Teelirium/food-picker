@@ -7,7 +7,7 @@ import DishCard from 'components/WorkerPage/Dishes/DishCard';
 import dishTypeMap from 'utils/dishTypeMap';
 import mealTimeMap from 'utils/mealTimeMap';
 
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 
 type Props = {
   dishes: Dish[];
@@ -22,8 +22,6 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
     () => dishes.filter((dish) => dish.type === dishType),
     [dishType, dishes],
   );
-
-  const dishesComponents = filteredDishes.map((dish) => <DishCard key={dish.id} dish={dish} />);
 
   return (
     <div className={styles.content}>
@@ -82,7 +80,24 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
           </Link>
         </div>
 
-        <div className={styles.dishesContainer}>{dishesComponents}</div>
+        <div className={styles.dishesContainer}>
+          {filteredDishes.map((dish) => (
+            <DishCard
+              key={dish.id}
+              dish={dish}
+              onClick={() =>
+                router.replace(
+                  {
+                    pathname: '',
+                    query: { ...router.query, modalMethod: 'GET', dishId: dish.id },
+                  },
+                  undefined,
+                  { shallow: true },
+                )
+              }
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
