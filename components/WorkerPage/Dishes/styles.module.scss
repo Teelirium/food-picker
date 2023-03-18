@@ -2,13 +2,12 @@
 
 .content {
   width: 100%;
+  height: inherit;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: inherit;
   background: #181818;
   border-radius: 45px;
-  margin-right: 30px;
 }
 
 .contentInner {
@@ -185,22 +184,4 @@
   overflow-y: auto;
   min-height: max-content;
   max-height: calc(100vh - 130px);
-
-  &::-webkit-scrollbar {
-    width: 10px;
-    border: 1px solid #968796;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #312244;
-    border: 1px solid #968796;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #fff;
-    width: 8px;
-    border-radius: 20px;
-  }
 }

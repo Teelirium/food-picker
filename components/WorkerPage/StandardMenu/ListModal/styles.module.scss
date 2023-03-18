@@ -28,26 +28,6 @@
   overflow-y: scroll;
 
   padding-right: 20px;
-  scrollbar-width: thin;
-  scrollbar-color: #fff #312244;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-    border: 1px solid #968796;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #312244;
-    border: 1px solid #968796;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #fff;
-    width: 8px;
-    border-radius: 20px;
-  }
 }
 
 .cancel {
