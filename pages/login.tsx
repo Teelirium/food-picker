@@ -7,6 +7,7 @@ import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 import Button from 'components/Button';
+import Checkbox from 'components/Checkbox';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
@@ -123,13 +124,9 @@ const Login: NextPage = () => {
                 </div>
               </label>
 
-              <label className={styles.labelRememberMe}>
-                <label className={styles.checkboxLabel}>
-                  <input className={styles.checkbox} type="checkbox" {...register('rememberMe')} />
-                  <span className={styles.customCheckbox} />
-                </label>
-                <p>Запомнить меня</p>
-              </label>
+              <Checkbox className={styles.rememberMeCheckbox} {...register('rememberMe')}>
+                Запомнить меня
+              </Checkbox>
 
               <Button type="submit" className={styles.logInButton}>
                 Войти
