@@ -1,12 +1,11 @@
 .content {
   width: 100%;
+  height: inherit;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: inherit;
   background: #181818;
   border-radius: 45px;
-  margin-right: 30px;
 }
 
 .contentInner {
@@ -171,27 +170,11 @@
 .dishesContainer {
   display: flex;
   flex-wrap: wrap;
-  overflow: hidden;
-  overflow-y: auto;
   justify-content: center;
   align-items: flex-start;
-  height: calc(100vh - 130px);
-}
-
-.dishesContainer::-webkit-scrollbar {
-  width: 10px;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
-
-.dishesContainer::-webkit-scrollbar-track {
-  background: #312244;
-  border: 1px solid #968796;
-  border-radius: 20px;
-}
-
-.dishesContainer::-webkit-scrollbar-thumb {
-  background-color: #fff;
-  width: 8px;
-  border-radius: 20px;
+  gap: 20px;
+  overflow: hidden;
+  overflow-y: auto;
+  min-height: max-content;
+  max-height: calc(100vh - 130px);
 }

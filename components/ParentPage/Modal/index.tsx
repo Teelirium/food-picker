@@ -1,19 +1,13 @@
-import { useRouter } from 'next/router';
+import { observer } from 'mobx-react';
 import { signOut } from 'next-auth/react';
-import { useEffect } from 'react';
-import ReactDOM from 'react-dom';
 
+import ModalWrapper from 'components/ModalWrapper';
 import parentStore from 'stores/ParentStore';
 import getFullName from 'utils/getFullName';
 
 import styles from './styles.module.scss';
 
-const Modal = ({ isOpen }: { isOpen: boolean }) => {
-  const router = useRouter();
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'auto';
-  }, [isOpen]);
-
+const Modal = ({ toggle }: { toggle: () => void }) => {
   if (!parentStore.parent) {
     return null;
   }
@@ -30,15 +24,11 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
     </div>
   ));
 
-  return ReactDOM.createPortal(
-    <div
-      className={isOpen ? styles.active : styles.inactive}
-      onClick={() => router.push('', undefined, { shallow: true })}
-    >
+  return (
+    <ModalWrapper toggle={toggle}>
       <div className={styles.container}>
         <div className={styles.header}>
-          {/* <span>Добро пожаловать,</span> */}
-          <h2>{getFullName(parentStore.parent)}</h2>
+          <h2>Добро пожаловать, {getFullName(parentStore.parent)}</h2>
         </div>
         <h3 className={styles.subHeader}>Выбор еды для:</h3>
         <div className={styles.body}>
@@ -48,9 +38,8 @@ const Modal = ({ isOpen }: { isOpen: boolean }) => {
           </button>
         </div>
       </div>
-    </div>,
-    document.querySelector('#__next') as HTMLElement,
+    </ModalWrapper>
   );
 };
 
-export default Modal;
+export default observer(Modal);

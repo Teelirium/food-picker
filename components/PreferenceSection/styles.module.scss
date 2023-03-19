@@ -23,6 +23,9 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  .actionBtn:only-child {
+    margin: 0 auto;
+  }
 }
 
 .actionBtn {

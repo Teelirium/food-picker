@@ -1,26 +1,10 @@
-.active {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgb(0 0 0 / 70%);
-  z-index: 1;
-
-  * {
-    z-index: 2;
-  }
-}
-
-.inactive {
-  opacity: 0;
-  display: none;
-}
-
 .container {
-  max-width: 70%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 70%;
+  max-width: 90%;
   max-height: max-content;
   background: linear-gradient(to right, #3e1f47, #144552);
   border-radius: 30px;
@@ -36,7 +20,7 @@
   border-radius: 30px 30px 0 0;
   padding: 1.2rem;
 
-  * {
+  h2 {
     text-align: center;
     font-size: 1.8rem;
     color: linear-gradient(to right, #3e1f47, #144552);
@@ -54,11 +38,6 @@
 }
 
 .body {
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
-  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -72,6 +51,7 @@
   flex-direction: column;
   max-height: 25rem;
   overflow-y: scroll;
+  padding-right: 10px;
 }
 
 .childname {

@@ -1,25 +1,37 @@
 import { Dish } from '@prisma/client';
 import React from 'react';
 
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 
 type Props = {
-  dish: Dish | undefined;
-  updateDish: (dish: Dish) => void;
+  dish: Dish;
+  onClick?: () => void;
+  onButtonClick?: () => void;
 };
 
-const DishCard: React.FC<Props> = ({ dish, updateDish }) => {
-  if (!dish) return null;
+const DishCard: React.FC<Props> = ({ dish, onClick, onButtonClick }) => {
   return (
-    <div className={styles.dishContainer}>
-      <div
-        className={styles.dish}
-        style={{ backgroundImage: `url(${dish.imgURL})` }}
-        onClick={() => updateDish(dish)}
-      >
-        <span className={styles.dishName}>{dish.name}</span>
-        <span className={styles.dishPrice}>{dish.price}</span>
+    <div
+      onClick={onClick}
+      className={styles.container}
+      style={{ backgroundImage: `url(${dish.imgURL})` }}
+    >
+      <div className={styles.info}>
+        <span className={styles.name}>{dish.name}</span>
+        <span className={styles.price}>{dish.price} руб.</span>
       </div>
+      {onButtonClick && (
+        <button
+          type="button"
+          className={styles.btn}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onButtonClick();
+          }}
+        >
+          Выбрать блюдо
+        </button>
+      )}
     </div>
   );
 };

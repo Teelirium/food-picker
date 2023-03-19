@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign, no-restricted-syntax */
-import { ParsedUrlQuery } from 'querystring';
-
-export default function deleteEmptyParams(query: ParsedUrlQuery) {
-  for (const param in query) {
-    if (query[param] === undefined) {
-      delete query[param];
-    }
-  }
-  return query;
+export default function deleteEmptyParams<T>(query: { [k: string]: T | undefined }) {
+  const result = Object.fromEntries(Object.entries(query).filter(([k, v]) => v !== undefined));
+  return result;
+  // for (const param in query) {
+  //   if (query[param] === undefined) {
+  //     delete query[param];
+  //   }
+  // }
+  // return query;
 }

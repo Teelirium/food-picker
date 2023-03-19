@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
@@ -24,6 +24,10 @@ const Parent = () => {
   const router = useRouter();
 
   const { student } = useMemo(() => queryValidator.parse(router.query), [router.query]);
+
+  const toggleModal = useCallback(() => {
+    router.replace('', undefined, { shallow: true });
+  }, [router]);
 
   useEffect(() => {
     if (session.data) {
@@ -58,7 +62,7 @@ const Parent = () => {
       ) : (
         <div>Загрузка...</div>
       )}
-      <Modal isOpen={student !== undefined} />
+      {student !== undefined && <Modal toggle={toggleModal} />}
     </DashboardLayout>
   );
 };

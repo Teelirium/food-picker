@@ -1,0 +1,11 @@
+.wrapper {
+  & > .bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($color: #000, $alpha: 50%);
+    backdrop-filter: blur(1px);
+  }
+}

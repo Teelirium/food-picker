@@ -1,0 +1,38 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-height: 90%;
+
+  background-color: var(--dark-bg-color);
+  border-radius: 20px;
+  color: white;
+
+  padding: 22px 32px 22px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  font-family: "Century Gothic";
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 22px;
+
+  min-height: 100%;
+  overflow-y: scroll;
+
+  padding-right: 20px;
+}
+
+.cancel {
+  background: linear-gradient(270deg, #272640 0%, #144552 100%);
+  box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.35);
+  border-radius: 30px;
+  padding: 15px 25px;
+}

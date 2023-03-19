@@ -3,6 +3,14 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 10px;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
 html,
 body {
   height: 100%;
@@ -18,8 +26,9 @@ a {
 }
 
 * {
-  font-size: 1.6rem;
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #fff #312244;
 }
 
 :root {
@@ -33,3 +42,28 @@ a {
   }
 }
 */
+
+::-webkit-scrollbar {
+  width: 10px;
+  border: 1px solid #968796;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: #312244;
+}
+
+:not(body)::-webkit-scrollbar-track {
+  border: 1px solid #968796;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  width: 8px;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-corner {
+  background: #312244;
+}

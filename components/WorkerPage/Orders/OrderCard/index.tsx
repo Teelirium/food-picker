@@ -14,7 +14,7 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   const [isOpen, setOpen] = useState(false);
 
   const openModal = (id: number) => {
-    router.replace({ pathname: '', query: { ...router.query, dish: id } }, undefined, {
+    router.replace({ pathname: '', query: { ...router.query, dishId: id } }, undefined, {
       shallow: true,
     });
   };
