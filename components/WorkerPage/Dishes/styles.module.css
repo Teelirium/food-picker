@@ -1,5 +1,3 @@
-@import "styles/fonts/fonts.css";
-
 .content {
   width: 100%;
   display: flex;
@@ -35,7 +33,6 @@
 }
 
 .mealTimeElement {
-  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   line-height: 25px;
   color: white;
@@ -44,7 +41,6 @@
 }
 
 .activeMealTimeElement {
-  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   line-height: 25px;
   color: #936ec3;
@@ -120,7 +116,6 @@
 }
 
 .dishType span {
-  font-family: "Century Gothic", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -142,7 +137,6 @@
 }
 
 .activeDishType span {
-  font-family: "Century Gothic", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -167,7 +161,6 @@
 }
 
 .addDishBtn span {
-  font-family: "Century Gothic", sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;

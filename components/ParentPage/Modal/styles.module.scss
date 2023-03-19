@@ -1,5 +1,3 @@
-@import "styles/fonts/fonts.css";
-
 .active {
   position: fixed;
   display: flex;
@@ -40,7 +38,6 @@
 
   * {
     text-align: center;
-    font-family: "Century Gothic", sans-serif;
     font-size: 1.8rem;
     color: linear-gradient(to right, #3e1f47, #144552);
     font-weight: 600;
@@ -48,7 +45,6 @@
 }
 
 .subHeader {
-  font-family: "Century Gothic", sans-serif;
   font-size: 18px;
   color: white;
   background-color: var(--dark-bg-color);
@@ -98,7 +94,6 @@
 
 .childname span,
 .activeChildname span {
-  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   color: white;
   user-select: none;
@@ -110,7 +105,6 @@
   border-radius: 30px;
   background: white;
   color: black;
-  font-family: "Century Gothic", sans-serif;
   font-size: 18px;
   user-select: none;
 }

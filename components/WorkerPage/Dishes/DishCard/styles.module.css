@@ -1,5 +1,3 @@
-@import "styles/fonts/fonts.css";
-
 .dishContainer {
   display: flex;
   align-items: center;
@@ -26,14 +24,12 @@
 }
 
 .dishName {
-  font-family: "Century Gothic", sans-serif;
   font-weight: 700;
   font-size: 18px;
   color: #fff;
 }
 
 .dishPrice {
-  font-family: "Century Gothic", sans-serif;
   font-weight: 400;
   font-size: 18px;
   color: #fff;
