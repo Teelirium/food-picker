@@ -1,5 +1,3 @@
-@import "styles/fonts/fonts.css";
-
 .navibar {
   display: flex;
   flex-direction: column;
@@ -18,7 +16,6 @@
 
 .workerName span {
   width: 167px;
-  font-family: "Century Gothic", sans-serif;
   font-size: 22px;
   color: white;
   font-weight: 700;
@@ -67,7 +64,6 @@
   align-items: center;
   justify-content: center;
   color: white;
-  font-family: "Century Gothic", sans-serif;
   font-size: 20px;
   width: 247px;
   height: 44px;
