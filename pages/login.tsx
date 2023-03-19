@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
+import Button from 'components/Button';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
@@ -130,9 +131,9 @@ const Login: NextPage = () => {
                 <p>Запомнить меня</p>
               </label>
 
-              <button className={styles.logInButton} type="submit">
+              <Button type="submit" className={styles.logInButton}>
                 Войти
-              </button>
+              </Button>
             </form>
           </div>
         </div>

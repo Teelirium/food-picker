@@ -411,18 +411,6 @@
 .logInButton {
   align-self: flex-end;
   margin-right: 13px;
-  width: 150px;
-  height: 50px;
-  background: linear-gradient(to right, #3e1f47, #144552);
-  border-radius: 25px;
-  color: #fff;
-  font-size: 20px;
-
-  @media (max-width: 1400px) {
-    font-size: 18px;
-    width: 135px;
-    height: 45px;
-  }
 
   @media (max-width: 1200px) {
     margin-right: 0;

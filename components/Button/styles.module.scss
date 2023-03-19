@@ -1,0 +1,12 @@
+.button {
+  padding: 10px 47px;
+  background: linear-gradient(to right, #3e1f47, #144552);
+  border-radius: 25px;
+  color: #fff;
+  font-size: 20px;
+
+  @media (max-width: 1440px) {
+    font-size: 18px;
+    padding: 9px 42px;
+  }
+}
