@@ -62,7 +62,7 @@ const handler: NextApiHandler = async (req, res) => {
     case 'POST': {
       const { studentId } = bodySchema.parse(req.body);
 
-      const existing = await prisma.absentStudent.findFirst({
+      const existing = await prisma.studentPresence.findFirst({
         where: {
           studentId,
           date,
@@ -72,7 +72,7 @@ const handler: NextApiHandler = async (req, res) => {
         },
       });
       if (!existing) {
-        await prisma.absentStudent.create({
+        await prisma.studentPresence.create({
           data: {
             studentId,
             date,
@@ -85,7 +85,7 @@ const handler: NextApiHandler = async (req, res) => {
     case 'DELETE': {
       const { studentId } = bodySchema.parse(req.body);
 
-      await prisma.absentStudent.deleteMany({
+      await prisma.studentPresence.deleteMany({
         where: {
           studentId,
           date,
@@ -102,7 +102,7 @@ const handler: NextApiHandler = async (req, res) => {
 export default handler;
 
 async function handleGet(date: Date, gradeId: number) {
-  const students = await prisma.absentStudent.findMany({
+  const students = await prisma.studentPresence.findMany({
     where: {
       student: {
         gradeId,
