@@ -41,6 +41,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  if (verifyRole(session, ['TEACHER', 'ADMIN'])) {
+    return {
+      redirect: {
+        destination: '/dashboard/teacher',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {},
   };
