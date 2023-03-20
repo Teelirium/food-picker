@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  if (verifyRole(session, ['TEACHER', 'ADMIN'])) {
+  if (verifyRole(session, ['TEACHER'])) {
     return {
       redirect: {
         destination: '/dashboard/teacher',
