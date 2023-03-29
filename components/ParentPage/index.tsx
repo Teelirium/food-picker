@@ -10,7 +10,7 @@ import DashboardLayout from 'components/Dashboard/Layout';
 import menuIcon from 'public/svg/menu.svg';
 import parentStore from 'stores/ParentStore';
 import dayMap from 'utils/dayMap';
-import getFullName from 'utils/getFullName';
+import { getFullName } from 'utils/names';
 
 import Modal from './Modal';
 import styles from './styles.module.scss';

@@ -1,14 +1,15 @@
 import Link from 'next/link';
-import styles from './styles.module.scss';
 import router from 'next/router';
 
+import styles from './styles.module.scss';
+
 type Props = {
-  class: string;
+  grade: string;
   selectedList: string;
 };
 
-const Navibar: React.FC<Props> = ({ class, selectedList }) => {
-    return <>{class}</>
+const Navibar: React.FC<Props> = ({ grade, selectedList }) => {
+  return <div>grade</div>;
 };
 
 export default Navibar;

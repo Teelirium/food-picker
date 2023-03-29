@@ -1,26 +1,30 @@
 import { Grade, Student, Teacher } from '@prisma/client';
+import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import Navibar from 'components/Teacher/Navibar';
 import styles from 'styles/teacher.module.scss';
 import { getServerSideSession } from 'utils/getServerSession';
+import { getFullName, getInitials } from 'utils/names';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
+import teacherPage from 'utils/schemas/teacherPageSchema';
 import verifyRole from 'utils/verifyRole';
-import studentsListSchema from 'utils/schemas/studentsListSchema';
-import axios from 'axios';
 
-const querySchema = z.object({
-  gradeID: idSchema,
-  // attendance = присутствие, arrears = задолженности
-  selectedList: studentsListSchema.default('attendance'),
+const paramSchema = z.object({
+  gradeId: idSchema,
+  page: teacherPage.default('attendance'),
 });
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+const paramSchemaServerside = z.object({
+  gradeId: idSchema.optional(),
+  page: teacherPage.default('attendance'),
+});
+
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
   if (!session || !verifyRole(session, ['TEACHER'])) {
@@ -32,42 +36,48 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const teacherData = await prisma.teacher.findUnique({
+  const teacher = await prisma.teacher.findUniqueOrThrow({
     where: {
       id: +session.user.id,
     },
-
     include: {
       Grades: true,
     },
   });
-  const teacherName = `${teacherData?.middleName}  ${teacherData?.name} ${teacherData?.surname}`;
-  const teacherShortName = `${teacherData?.middleName} ${teacherData?.name[0]}. ${teacherData?.surname[0]}.`;
-  const grades = teacherData?.Grades;
+  const teacherFullName = getFullName(teacher);
+  const teacherInitials = getInitials(teacher);
+  const grades = teacher.Grades;
 
-  const test = ctx.query.selectedList;
+  const { gradeId } = paramSchemaServerside.parse(ctx.query);
 
-  if (!ctx.query.gradeID)
+  if (gradeId === undefined) {
+    if (grades.length === 0) {
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
+    }
     return {
       redirect: {
-        source: '/dashboard/teacher',
-        destination: `/dashboard/teacher?gradeID=${
-          grades !== undefined ? grades[0].id : console.log('Error')
-        }`,
+        destination: `/dashboard/teacher?gradeId=${grades[0].id}`,
         permanent: false,
       },
     };
+  }
 
   const students = await prisma.student.findMany({
     where: {
-      gradeId: +ctx.query.gradeID,
+      gradeId,
     },
   });
 
   return {
     props: {
-      teacherName,
-      teacherShortName,
+      teacherFullName,
+      teacherInitials,
+      gradeId,
       grades,
       students,
     },
@@ -75,20 +85,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 type Props = {
-  teacherName: string;
-  teacherShortName: string;
+  teacherFullName: string;
+  teacherInitials: string;
+  gradeId: number;
   grades: Grade[];
   students: Student[];
 };
 
-const TeacherIndexPage: NextPage<Props> = ({ teacherName, teacherShortName, grades, students }) => {
+const TeacherIndexPage: NextPage<Props> = ({
+  teacherFullName,
+  teacherInitials,
+  gradeId,
+  grades,
+  students,
+}) => {
   const router = useRouter();
-  const { gradeID, selectedList } = querySchema.parse(router.query);
+  const { page } = paramSchema.parse(router.query);
 
   return (
     <>
       <Head>
-        <title>{teacherShortName}</title>
+        <title>{teacherInitials}</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.containerInner}>{JSON.stringify(students)}</div>
