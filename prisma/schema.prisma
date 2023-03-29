@@ -25,7 +25,7 @@ model Teacher {
   middleName String?
   username   String  @unique
   password   String
-  Grade      Grade?
+  Grades     Grade[]
 }
 
 model Worker {
@@ -44,21 +44,22 @@ model Grade {
   number     Int
   breakIndex Int       @default(0)
   students   Student[]
-  teacher    Teacher   @relation(fields: [teacherId], references: [id])
   teacherId  Int       @unique
+  teacher    Teacher   @relation(fields: [teacherId], references: [id])
 }
 
 model Student {
-  id            Int             @id @default(autoincrement())
-  name          String
-  surname       String
-  middleName    String?
-  parentStudent ParentStudent[]
-  grade         Grade?          @relation(fields: [gradeId], references: [id])
-  gradeId       Int?
-  preferences   Preference[]
-  Orders        Order[]
-  AbsentStudent AbsentStudent[]
+  id              Int               @id @default(autoincrement())
+  name            String
+  surname         String
+  middleName      String?
+  debt            Int               @default(0)
+  parentStudent   ParentStudent[]
+  grade           Grade?            @relation(fields: [gradeId], references: [id])
+  gradeId         Int?
+  preferences     Preference[]
+  Orders          Order[]
+  StudentPresence StudentPresence[]
 }
 
 model ParentStudent {
@@ -118,7 +119,7 @@ model Order {
   studentId Int
 }
 
-model AbsentStudent {
+model StudentPresence {
   id        Int      @id @default(autoincrement())
   studentId Int
   student   Student  @relation(fields: [studentId], references: [id])
