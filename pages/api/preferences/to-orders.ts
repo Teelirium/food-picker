@@ -3,7 +3,7 @@ import { verifySignature } from '@upstash/qstash/nextjs';
 import _ from 'lodash';
 import { NextApiHandler } from 'next';
 
-import { maxWeekdays } from 'app.config';
+import { MAX_WEEKDAYS } from 'app.config';
 import prisma from 'utils/prismaClient';
 
 type OrderWithoutId = Omit<Order, 'id'>;
@@ -27,7 +27,7 @@ export default handler;
 // export default verifySignature(handler);
 
 async function getOrdersForStudent(studentId: number, defaults: Preference[]) {
-  const weekdays = _.range(0, maxWeekdays);
+  const weekdays = _.range(0, MAX_WEEKDAYS);
   return;
 }
 
