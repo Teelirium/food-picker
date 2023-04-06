@@ -103,7 +103,7 @@ const TeacherIndexPage: NextPage<Props> = ({
   const router = useRouter();
   const { page } = paramSchema.parse(router.query);
   const grade = grades.find((grade) => grade.id === gradeId);
-  const currentGrade = grade !== undefined ? grade.number + grade.letter : '';
+  const currentGrade = grade !== undefined ? `${grade.number} ${grade.letter}` : '';
 
   return (
     <>

@@ -10,17 +10,30 @@ type Props = {
 };
 
 const Navibar: React.FC<Props> = ({ grade, selectedPage, teacherFio }) => {
+  const selectPage = (pageName: string) => {
+    if (pageName !== selectedPage)
+      router.replace({ pathname: '', query: { ...router.query, page: pageName } }, undefined, {
+        shallow: true,
+      });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.gradeBtn}>
-        <img src="/img/burgerIcon.png" alt="burgerIcon" />
+        <img src="/img/burgerIcon.png" alt="burgerIcon" className={styles.burgerIcon} />
         <div className={styles.grade}>{grade}</div>
       </div>
       <div className={styles.pages}>
-        <div className={selectedPage === 'attendance' ? styles.activePage : styles.inactivePage}>
+        <div
+          className={selectedPage === 'attendance' ? styles.activePage : styles.inactivePage}
+          onClick={() => selectPage('attendance')}
+        >
           Присутствие
         </div>
-        <div className={selectedPage === 'dept' ? styles.activePage : styles.inactivePage}>
+        <div
+          className={selectedPage === 'debt' ? styles.activePage : styles.inactivePage}
+          onClick={() => selectPage('debt')}
+        >
           Задолженности
         </div>
       </div>
