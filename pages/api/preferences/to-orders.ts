@@ -3,9 +3,11 @@ import { verifySignature } from '@upstash/qstash/nextjs';
 import _ from 'lodash';
 import { NextApiHandler } from 'next';
 
-import { MAX_WEEKDAYS } from 'app.config';
-import prisma from 'utils/prismaClient';
+import { WEEKDAYS } from 'app.config';
 import { PreferenceWithDish } from 'types/Preference';
+import getNextMonday from 'utils/getNextMonday';
+import prisma from 'utils/prismaClient';
+import withErrHandler from 'utils/validation/withErrHandler';
 
 type OrderWithoutId = Omit<Order, 'id'>;
 
@@ -19,23 +21,24 @@ const handler: NextApiHandler = async (req, res) => {
     },
   });
   const students = await prisma.student.findMany({});
-  // const orders = await prisma.order.findMany({
-  //   where: {},
-  // });
-  const orders = await getOrdersForStudent(students[0].id, defaults);
-  const currentDate = new Date();
+
+  const preorderPromises = students.map((student) => getPreorderForStudent(student.id, defaults));
+  const orders = await Promise.all(preorderPromises);
+  const nextMonday = getNextMonday(new Date());
   res.send(orders);
 };
 
-export default handler;
-// export default verifySignature(handler);
+export default withErrHandler(handler);
+// export default verifySignature(withErrHandler(handler));
 
-async function getOrdersForStudent(studentId: number, defaults: PreferenceWithDish[]) {
-  const weekdays = _.range(0, MAX_WEEKDAYS);
-  return getPreferencesForDay(studentId, weekdays[0], defaults);
+async function getPreorderForStudent(studentId: number, defaults: PreferenceWithDish[]) {
+  const promises = WEEKDAYS.map((weekday) =>
+    getPreferencesWithDefaults(studentId, weekday, defaults),
+  );
+  return Promise.all(promises);
 }
 
-async function getPreferencesForDay(
+async function getPreferencesWithDefaults(
   studentId: number,
   dayOfWeek: number,
   defaults: PreferenceWithDish[],
@@ -48,8 +51,16 @@ async function getPreferencesForDay(
     },
     include: { Dish: true },
   });
-  return _.uniqBy([...prefs, ...defaults], 'Dish.type');
+  return _.uniqBy(prefs.concat(defaults), 'Dish.type');
 }
+
+// async function createOrders(
+//   studentId: number,
+//   preferences: PreferenceWithDish[],
+//   mondayDate: Date,
+// ) {
+
+// }
 
 export const config = {
   api: {
