@@ -11,3 +11,7 @@ export function addDaysToDate(date: Date, dayCount: number): Date {
   dateCopy.setDate(dateCopy.getDate() + dayCount);
   return dateCopy;
 }
+
+export function stripTimeFromDate(date: Date): Date {
+  return new Date(date.toJSON().split('T')[0]);
+}
