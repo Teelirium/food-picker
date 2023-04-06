@@ -1,13 +1,13 @@
 import { verifySignature } from '@upstash/qstash/nextjs';
 import _ from 'lodash';
 import { NextApiHandler } from 'next';
+import { z } from 'zod';
 
 import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
 import { PreferenceWithDish } from 'types/Preference';
 import { addDaysToDate, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import prisma from 'utils/prismaClient';
 import withErrHandler from 'utils/validation/withErrHandler';
-import { z } from 'zod';
 
 const handler: NextApiHandler = async (req, res) => {
   const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
@@ -26,26 +26,26 @@ const handler: NextApiHandler = async (req, res) => {
   const students = await prisma.student.findMany({});
   const studentIds = students.map((s) => s.id);
 
-  // await prisma.order.deleteMany({
-  //   where: {
-  //     date: {
-  //       gte: nextMonday,
-  //       lte: nextEndOfWeek,
-  //     },
-  //   },
-  // });
-  await resetDebt();
+  await prisma.order.deleteMany({
+    where: {
+      date: {
+        gte: nextMonday,
+        lte: nextEndOfWeek,
+      },
+    },
+  });
+  // await resetDebt();
 
-  // const preorderPromises = students.map((student) =>
-  //   getPreorderForStudent(student.id, defaults, nextMonday),
-  // );
-  // const allOrders = await Promise.all(preorderPromises);
+  const preorderPromises = students.map((student) =>
+    getPreorderForStudent(student.id, defaults, nextMonday),
+  );
+  const allOrders = await Promise.all(preorderPromises);
   const allDebts = await addDebt(studentIds, nextMonday, nextEndOfWeek);
-  res.send('Orders generated successfully');
+  res.send('Orders and debts generated successfully');
 };
 
-export default withErrHandler(handler);
-// export default verifySignature(withErrHandler(handler));
+// export default withErrHandler(handler);
+export default verifySignature(withErrHandler(handler));
 
 async function getPreorderForStudent(
   studentId: number,
@@ -115,8 +115,8 @@ async function addDebt(studentIds: number[], dateFrom: Date, dateTo: Date) {
 
 async function getTotalOrderCost(studentId: number, dateFrom: Date, dateTo: Date) {
   const schema = z.object({ total: z.coerce.number() }).array();
-  const result =
-    await prisma.$queryRaw`select sum(cost) as total from \`Order\` where date between ${dateFrom} and ${dateTo} and studentId=${studentId}`;
+  const result = await prisma.$queryRaw`select sum(cost) as total 
+    from \`Order\` where date between ${dateFrom} and ${dateTo} and studentId=${studentId}`;
   return schema.parse(result)[0].total;
 }
 
