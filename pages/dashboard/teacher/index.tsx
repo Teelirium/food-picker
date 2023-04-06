@@ -13,6 +13,7 @@ import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
 import teacherPage from 'utils/schemas/teacherPageSchema';
 import verifyRole from 'utils/verifyRole';
+import Navibar from 'components/Teacher/Navibar';
 
 const paramSchema = z.object({
   gradeId: idSchema,
@@ -101,6 +102,8 @@ const TeacherIndexPage: NextPage<Props> = ({
 }) => {
   const router = useRouter();
   const { page } = paramSchema.parse(router.query);
+  const grade = grades.find((grade) => grade.id === gradeId);
+  const currentGrade = grade !== undefined ? grade.number + grade.letter : '';
 
   return (
     <>
@@ -108,7 +111,9 @@ const TeacherIndexPage: NextPage<Props> = ({
         <title>{teacherInitials}</title>
       </Head>
       <div className={styles.container}>
-        <div className={styles.containerInner}>{JSON.stringify(students)}</div>
+        <div className={styles.containerInner}>
+          <Navibar grade={currentGrade} selectedPage={page} teacherFio={teacherInitials} />
+        </div>
       </div>
     </>
   );
