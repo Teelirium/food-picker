@@ -24,7 +24,7 @@ const querySchema = z.object({
   breakIndex: z.coerce.number().min(0).max(7).default(0),
 });
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {

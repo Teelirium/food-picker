@@ -3,9 +3,11 @@ import { Session } from 'next-auth';
 import { z } from 'zod';
 
 import { getServerSideSession } from 'utils/getServerSession';
+import HttpError from 'utils/HttpError';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
 import stripTimeFromDate from 'utils/stripTimeFromDate';
+import withErrHandler from 'utils/validation/withErrHandler';
 import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
@@ -23,6 +25,9 @@ async function verify(session: Session, gradeId: number) {
   if (verifyRole(session, ['ADMIN'])) {
     return true;
   }
+  if (!verifyRole(session, ['TEACHER'])) {
+    return false;
+  }
   const count = await prisma.grade.count({
     where: {
       id: gradeId,
@@ -36,22 +41,23 @@ async function verify(session: Session, gradeId: number) {
  * @swagger
  * /api/students/absent?gradeId={}&date={}:
  *  get:
- *    summary: Получает список отсутствующих учеников
+ *    summary: Получает список присутствующих учеников
  *  post:
- *    summary: Добавляет ученика в список отсутствующих
+ *    summary: Добавляет ученика в список присутствующих
+ *  put:
+ *    summary: Полностью обновляет список присутствующих в классе
  *  delete:
- *    summary: Удаляет записи об остутствии ученика в некоторый день
+ *    summary: Удаляет все записи об присутствии ученика в некоторый день
  */
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
   if (!session) {
-    return res.status(401).send('');
+    throw new HttpError('Unauthorized', 401);
   }
 
   const { gradeId, date } = paramSchema.parse(req.query);
-  // console.log(gradeId, date, getTodayDate())
-  if (!verifyRole(session, ['ADMIN', 'TEACHER']) || !(await verify(session, gradeId))) {
-    return res.status(403).send('');
+  if (!(await verify(session, gradeId))) {
+    throw new HttpError('Forbidden', 403);
   }
 
   switch (req.method) {
@@ -61,6 +67,16 @@ const handler: NextApiHandler = async (req, res) => {
     }
     case 'POST': {
       const { studentId } = bodySchema.parse(req.body);
+
+      const count = await prisma.student.count({
+        where: {
+          id: studentId,
+          gradeId,
+        },
+      });
+      if (count === 0) {
+        throw new HttpError('Такой ученик не существует либо не обучается в данном классе', 404);
+      }
 
       const existing = await prisma.studentPresence.findFirst({
         where: {
@@ -78,9 +94,44 @@ const handler: NextApiHandler = async (req, res) => {
             date,
           },
         });
-        return res.status(201).send('OK');
+        return res.send('OK');
       }
-      return res.send('Entry already exists');
+      return res.send('Запись уже существует');
+    }
+    case 'PUT': {
+      const { students } = z.object({ students: z.array(idSchema) }).parse(req.body);
+      const count = await prisma.student.count({
+        where: {
+          id: {
+            in: students,
+          },
+          gradeId,
+        },
+      });
+      if (count !== students.length) {
+        throw new HttpError(
+          'Один из учеников не существует либо не обучается в данном классе',
+          404,
+        );
+      }
+
+      await prisma.studentPresence.deleteMany({
+        where: {
+          studentId: {
+            in: students,
+          },
+          date,
+        },
+      });
+
+      await prisma.studentPresence.createMany({
+        data: students.map((id) => ({
+          studentId: id,
+          date,
+        })),
+        skipDuplicates: true,
+      });
+      return res.send('OK');
     }
     case 'DELETE': {
       const { studentId } = bodySchema.parse(req.body);
@@ -99,7 +150,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withErrHandler(handler);
 
 async function handleGet(date: Date, gradeId: number) {
   const students = await prisma.studentPresence.findMany({
@@ -115,3 +166,5 @@ async function handleGet(date: Date, gradeId: number) {
   });
   return students;
 }
+
+// async function addStudentPresence(studentId: number) {}
