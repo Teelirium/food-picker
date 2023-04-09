@@ -3,6 +3,7 @@ import { NextApiHandler } from 'next';
 import { PartialDish } from 'types/Dish';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
+import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
 
 /**
@@ -10,30 +11,13 @@ import verifyRole from 'utils/verifyRole';
  * /api/dishes/{dishId}:
  *  get:
  *    summary: Получает блюдо по id
- *    responses:
- *      200:
- *        description: Возвращает найденное блюдо
- *      404:
- *        description: Блюдо не найдено
  *  patch:
  *    summary: Обновляет блюдо с новыми данными
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              partialDish:
- *                type: object
- *    responses:
- *      201:
- *        description: Возвращает обновлённое блюдо
  *  delete:
  *    summary: Удаляет блюдо
  */
 const handler: NextApiHandler = async (req, res) => {
-  const { dishId } = req.query;
+  const dishId = idSchema.parse(req.query.dishId);
   if (!dishId) {
     return res.status(404).send('');
   }
@@ -45,7 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
     case 'GET': {
       const dish = await prisma.dish.findUnique({
         where: {
-          id: +dishId,
+          id: dishId,
         },
       });
       if (!dish) {
@@ -62,7 +46,7 @@ const handler: NextApiHandler = async (req, res) => {
       const { partialDish } = req.body as { partialDish: PartialDish };
       try {
         const newDish = await prisma.dish.update({
-          where: { id: +dishId },
+          where: { id: dishId },
           data: partialDish,
         });
         return res.status(201).send(newDish);
@@ -77,11 +61,15 @@ const handler: NextApiHandler = async (req, res) => {
         return res.status(403).send('');
       }
       try {
-        await prisma.dish.delete({
+        const removePrefsWithDish = prisma.preference.deleteMany({
+          where: { dishId },
+        });
+        const removeDish = prisma.dish.delete({
           where: {
-            id: +dishId,
+            id: dishId,
           },
         });
+        await prisma.$transaction([removePrefsWithDish, removeDish]);
         return res.send('OK');
       } catch (err) {
         console.error(err);

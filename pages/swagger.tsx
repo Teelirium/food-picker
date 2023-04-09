@@ -11,7 +11,7 @@ export const getStaticProps: GetStaticProps = async () => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Next Swagger API Example',
+        title: "Food Picker's very epic API",
         version: '1.0',
       },
     },

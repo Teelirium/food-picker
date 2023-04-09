@@ -1,3 +1,3 @@
-import { Dish, Preference } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-export type PreferenceWithDish = Preference & { Dish: Dish };
+export type PreferenceWithDish = Prisma.PreferenceGetPayload<{ include: { Dish: true } }>;

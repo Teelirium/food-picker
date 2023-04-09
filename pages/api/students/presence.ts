@@ -2,11 +2,11 @@ import { NextApiHandler } from 'next';
 import { Session } from 'next-auth';
 import { z } from 'zod';
 
+import { stripTimeFromDate } from 'utils/dateHelpers';
 import { getServerSideSession } from 'utils/getServerSession';
 import HttpError from 'utils/HttpError';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
-import stripTimeFromDate from 'utils/stripTimeFromDate';
 import withErrHandler from 'utils/validation/withErrHandler';
 import verifyRole from 'utils/verifyRole';
 
