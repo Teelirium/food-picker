@@ -14,15 +14,19 @@ import idSchema from 'utils/schemas/idSchema';
 import teacherPage from 'utils/schemas/teacherPageSchema';
 import verifyRole from 'utils/verifyRole';
 import Navibar from 'components/Teacher/Navibar';
+import modalSchema from 'utils/schemas/modalSchema';
+import TeacherModal from 'components/Teacher/TeacherModal';
 
 const paramSchema = z.object({
   gradeId: idSchema,
   page: teacherPage.default('attendance'),
+  isModalOpen: modalSchema.optional(),
 });
 
 const paramSchemaServerside = z.object({
   gradeId: idSchema.optional(),
   page: teacherPage.default('attendance'),
+  isModalOpen: modalSchema.optional(),
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
@@ -101,7 +105,7 @@ const TeacherIndexPage: NextPage<Props> = ({
   students,
 }) => {
   const router = useRouter();
-  const { page } = paramSchema.parse(router.query);
+  const { page, isModalOpen } = paramSchema.parse(router.query);
   const grade = grades.find((grade) => grade.id === gradeId);
   const currentGrade = grade !== undefined ? `${grade.number} ${grade.letter}` : '';
 
@@ -115,6 +119,7 @@ const TeacherIndexPage: NextPage<Props> = ({
           <Navibar grade={currentGrade} selectedPage={page} teacherFio={teacherInitials} />
         </div>
       </div>
+      {isModalOpen ? <TeacherModal gradeId={gradeId} grades={grades} /> : null}
     </>
   );
 };

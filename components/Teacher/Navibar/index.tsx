@@ -19,7 +19,19 @@ const Navibar: React.FC<Props> = ({ grade, selectedPage, teacherFio }) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.gradeBtn}>
+      <div
+        className={styles.gradeBtn}
+        onClick={() =>
+          router.replace(
+            {
+              pathname: '',
+              query: { ...router.query, isModalOpen: 1 },
+            },
+            undefined,
+            { shallow: true },
+          )
+        }
+      >
         <img src="/img/burgerIcon.png" alt="burgerIcon" className={styles.burgerIcon} />
         <div className={styles.grade}>{grade}</div>
       </div>
