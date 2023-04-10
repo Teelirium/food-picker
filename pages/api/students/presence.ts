@@ -108,7 +108,7 @@ const handler: NextApiHandler = async (req, res) => {
           gradeId,
         },
       });
-      if (count !== students.length) {
+      if (count !== students.length && students.length !== 0) {
         throw new HttpError(
           'Один из учеников не существует либо не обучается в данном классе',
           404,
@@ -117,8 +117,8 @@ const handler: NextApiHandler = async (req, res) => {
 
       await prisma.studentPresence.deleteMany({
         where: {
-          studentId: {
-            in: students,
+          student: {
+            gradeId,
           },
           date,
         },
@@ -166,5 +166,3 @@ async function handleGet(date: Date, gradeId: number) {
   });
   return students;
 }
-
-// async function addStudentPresence(studentId: number) {}
