@@ -30,8 +30,8 @@ type DishWithOrders = Prisma.DishGetPayload<{
 const handler: NextApiHandler = async (req, res) => {
   const session = await getServerSideSession({ req, res });
 
-  if (!session) return res.status(401).send('');
-  if (!verifyRole(session, ['ADMIN', 'TEACHER', 'WORKER'])) return res.status(403).send('');
+  if (!session) return res.status(401).end();
+  if (!verifyRole(session, ['ADMIN', 'TEACHER', 'WORKER'])) return res.status(403).end();
 
   switch (req.method) {
     case 'GET': {
@@ -39,7 +39,7 @@ const handler: NextApiHandler = async (req, res) => {
       return res.json(await handleGet(day));
     }
     default: {
-      return res.status(405).send('');
+      return res.status(405).end();
     }
   }
 };
