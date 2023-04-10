@@ -3,7 +3,9 @@ import Head from 'next/head';
 
 import ParentPage from 'components/ParentPage';
 import { getServerSideSession } from 'utils/getServerSession';
+import { trpc } from 'utils/trpc/next';
 import verifyRole from 'utils/verifyRole';
+import { useEffect } from 'react';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
