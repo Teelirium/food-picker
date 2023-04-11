@@ -3,11 +3,11 @@ import { Session } from 'next-auth';
 import { z } from 'zod';
 
 import { stripTimeFromDate } from 'utils/dateHelpers';
-import { getServerSideSession } from 'utils/getServerSession';
 import HttpError from 'utils/errorUtils/HttpError';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
+import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
-import withErrHandler from 'utils/errorUtils/withErrHandler';
 import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
