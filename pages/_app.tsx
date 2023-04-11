@@ -3,7 +3,7 @@ import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 
-import { trpc } from 'utils/trpc/next';
+import { trpc } from 'utils/trpc/client';
 
 import type { AppProps } from 'next/app';
 

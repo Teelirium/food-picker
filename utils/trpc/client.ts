@@ -5,7 +5,7 @@ import { AppRouter } from './routers/_app';
 
 export const trpc = createTRPCNext<AppRouter>({
   ssr: false,
-  config({ ctx }) {
+  config() {
     return {
       links: [httpBatchLink({ url: '/api/trpc' })],
     };
