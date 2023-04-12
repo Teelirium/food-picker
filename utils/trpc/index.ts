@@ -1,6 +1,6 @@
 import { initTRPC, inferAsyncReturnType, TRPCError } from '@trpc/server';
 import { CreateNextContextOptions } from '@trpc/server/adapters/next';
-import { Session } from 'inspector';
+import SuperJSON from 'superjson';
 import { UserRole } from 'types/UserData';
 
 import { getServerSideSession } from 'utils/getServerSession';
@@ -17,7 +17,9 @@ export const createContext = async (opts: CreateNextContextOptions) => {
 
 type Context = inferAsyncReturnType<typeof createContext>;
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create({
+  transformer: SuperJSON,
+});
 
 export const { router, procedure, middleware } = t;
 
@@ -39,7 +41,6 @@ export const authTeacher = middleware(async ({ rawInput, ctx, next }) => {
   if (!ctx.session) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Доступ запрещён' });
   }
-
   const { gradeId } = teacherAuthInput.parse(rawInput);
   if (ctx.session.user.role === 'TEACHER') {
     const count = await prisma.grade.count({

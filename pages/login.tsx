@@ -14,6 +14,7 @@ import verifyRole from 'utils/verifyRole';
 import dishImage from '../public/img/authDish.png';
 import dishCircleImage from '../public/img/authDishCircle.png';
 import styles from '../styles/login.module.scss';
+import { trpc } from 'utils/trpc/client';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
