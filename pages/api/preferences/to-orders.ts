@@ -6,8 +6,8 @@ import { z } from 'zod';
 import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
 import { PreferenceWithDish } from 'types/Preference';
 import { addDaysToDate, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import prisma from 'utils/prismaClient';
-import withErrHandler from 'utils/validation/withErrHandler';
 
 const handler: NextApiHandler = async (req, res) => {
   const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
