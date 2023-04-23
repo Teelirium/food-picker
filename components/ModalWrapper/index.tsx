@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   children: React.ReactNode;
-  toggle: () => void;
+  toggle?: () => void;
 };
 
 const ModalWrapper: React.FC<Props> = ({ children, toggle }) => {

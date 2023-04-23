@@ -1,6 +1,6 @@
 import { Dish } from '@prisma/client';
 import Image from 'next/image';
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 
 import DishCardSmall from 'components/DishCardSmall';
 import deleteIcon from 'public/svg/delete.svg';
@@ -18,14 +18,14 @@ type Props = {
   handleEdit?: MouseEventHandler<HTMLElement>;
 };
 
-const PreferenceSection: React.FC<Props> = ({
+export default function PreferenceSection({
   title,
   dish,
   handleView,
   handleAdd,
   handleDelete,
   handleEdit,
-}) => {
+}: Props) {
   return (
     <div className={styles.container}>
       <span>{title}</span>
@@ -68,6 +68,4 @@ const PreferenceSection: React.FC<Props> = ({
       )}
     </div>
   );
-};
-
-export default PreferenceSection;
+}

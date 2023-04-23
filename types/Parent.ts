@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { Prisma } from '@prisma/client';
+import { Parent, Student } from '@prisma/client';
 
-export type Parent = Omit<Prisma.ParentGetPayload<{}>, 'password'> & {
-  children: Prisma.StudentGetPayload<{}>[];
+export type ParentWithChildren = Omit<Parent, 'password'> & {
+  children: Student[];
 };

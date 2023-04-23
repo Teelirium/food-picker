@@ -1,11 +1,9 @@
+import { TRPCError } from '@trpc/server';
+import prisma from 'utils/prismaClient';
+import dateSchema from 'utils/schemas/dateSchema';
+import idSchema from 'utils/schemas/idSchema';
 import { z } from 'zod';
 import { auth, authTeacher, procedure, router } from '..';
-import idSchema from 'utils/schemas/idSchema';
-import { stripTimeFromDate } from 'utils/dateHelpers';
-import prisma from 'utils/prismaClient';
-import { TRPCError } from '@trpc/server';
-
-const dateSchema = z.preprocess((val) => stripTimeFromDate(z.coerce.date().parse(val)), z.date());
 
 export const presenceRouter = router({
   getPresenceSet: procedure

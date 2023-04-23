@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
@@ -15,7 +15,7 @@ import getFullName from 'utils/getFullName';
 import Modal from './Modal';
 import styles from './styles.module.scss';
 
-const queryValidator = z.object({
+const paramSchema = z.object({
   student: z.preprocess((i) => Number(z.string().parse(i)), z.number().min(0)).optional(),
 });
 
@@ -23,7 +23,7 @@ const Parent = () => {
   const session = useSession();
   const router = useRouter();
 
-  const { student } = useMemo(() => queryValidator.parse(router.query), [router.query]);
+  const { student } = paramSchema.parse(router.query);
 
   const toggleModal = useCallback(() => {
     router.replace('', undefined, { shallow: true });

@@ -1,6 +1,6 @@
 import type { DishType } from '@prisma/client';
 
-const dishTypeMap: { [K in DishType]: string } = {
+const dishTypeMap: Record<DishType, string> = {
   PRIMARY: 'Первое',
   SIDE: 'Гарнир',
   SECONDARY: 'Второе',

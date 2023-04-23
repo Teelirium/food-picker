@@ -7,12 +7,13 @@ import HttpError from 'utils/errorUtils/HttpError';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
+import dateSchema from 'utils/schemas/dateSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
   gradeId: idSchema,
-  date: z.preprocess((val) => stripTimeFromDate(z.coerce.date().parse(val)), z.date()),
+  date: dateSchema,
 });
 
 const bodySchema = z.object({
