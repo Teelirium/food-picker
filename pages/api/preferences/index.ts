@@ -56,7 +56,7 @@ const handler: NextApiHandler = async (req, res) => {
       });
       if (!dishType) return res.status(404).send('Dish not found');
 
-      const existingPref = await prisma.preference.findFirst({
+      const existingPreference = await prisma.preference.findFirst({
         where: {
           studentId,
           dayOfWeek: day,
@@ -69,10 +69,10 @@ const handler: NextApiHandler = async (req, res) => {
         },
       });
 
-      const result = existingPref
+      const result = existingPreference
         ? await prisma.preference.update({
             where: {
-              id: existingPref.id,
+              id: existingPreference.id,
             },
             data: {
               dishId,

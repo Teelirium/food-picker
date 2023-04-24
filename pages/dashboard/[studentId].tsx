@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
 import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
@@ -69,7 +70,6 @@ export default function StudentChoice() {
     },
     { staleTime: 10 * 60 * 1000 },
   );
-  console.log(orders);
 
   const totalCost: number = useMemo(() => {
     if (!preferences) {
@@ -88,7 +88,7 @@ export default function StudentChoice() {
   });
 
   const showSpinner =
-    preferencesQuery.isLoading || deleteMutation.isLoading || ordersQuery.isLoading;
+    preferencesQuery.isFetching || deleteMutation.isLoading || ordersQuery.isLoading;
 
   return (
     <DashboardLayout>
@@ -97,7 +97,20 @@ export default function StudentChoice() {
       </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <button className={styles.saveBtn} type="button">
+        <button
+          className={styles.saveBtn}
+          type="button"
+          onClick={
+            () => {}
+            // queryClient.invalidateQueries(
+            //   getQueryKey(trpc.orders.getThisWeeksOrders, {
+            //     studentId,
+            //     day,
+            //     date: stripTimeFromDate(new Date()),
+            //   }),
+            // )
+          }
+        >
           {totalCost} руб.
         </button>
       </DashboardHeader>
