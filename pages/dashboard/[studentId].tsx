@@ -82,7 +82,7 @@ export default function StudentChoice() {
     async mutationFn(prefId: number) {
       return axios.delete(`/api/preferences/${prefId}`);
     },
-    onSuccess() {
+    async onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
     },
   });
