@@ -1,17 +1,16 @@
 import { Student } from '@prisma/client';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
-import { useMutation } from 'react-query';
 
 import useWindowSize from 'hooks/useWindowSize';
 import magnifierIcon from 'public/svg/magnifier.svg';
 import { getFullName, getInitials } from 'utils/names';
 
 import styles from './styles.module.scss';
+import { trpc } from 'utils/trpc/client';
 
 interface DebtListProps {
   gradeId: number;
@@ -38,25 +37,16 @@ const DebtList: FC<DebtListProps> = ({ gradeId, students }) => {
     student.surname.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const saveMutation = trpc.debt.setDebts.useMutation();
+
   const onSubmit = (data: TForm) => {
-    console.log(data);
-    // saveMutation.mutate(data.presence);
+    const debts = Object.fromEntries(
+      Object.entries(data.debt).map(([id, debt]) => [id, debt ?? 0]),
+    );
+    saveMutation.mutate({ gradeId, debts });
   };
 
   const windowSize = useWindowSize();
-
-  // const saveMutation = useMutation({
-  //   mutationFn: (updatedPresence: Record<number, boolean>) => {
-  //     const studentPresentList = Object.entries(updatedPresence)
-  //       .filter(([, isPresent]) => isPresent)
-  //       .map(([id]) => +id);
-  //     return axios.put(
-  //       '/api/students/presence',
-  //       { students: studentPresentList },
-  //       { params: { gradeId, date: date.toDate() } },
-  //     );
-  //   },
-  // });
 
   return (
     <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
