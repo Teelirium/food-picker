@@ -100,7 +100,7 @@ export default function StudentChoice() {
     return Array.from(preferences.values()).reduce((prev, curr) => prev + curr.Dish.price, 0);
   }, [preferences]);
 
-  const deleteMutation = useMutation({
+  const deletePreferenceMutation = useMutation({
     async mutationFn(prefId: number) {
       return axios.delete(`/api/preferences/${prefId}`);
     },
@@ -118,7 +118,7 @@ export default function StudentChoice() {
   const showSpinner =
     preferencesQuery.isFetching ||
     ordersQuery.isFetching ||
-    deleteMutation.isLoading ||
+    deletePreferenceMutation.isLoading ||
     setPreferenceMutation.isLoading;
   const showError = preferencesQuery.isError || ordersQuery.isError;
 
@@ -153,7 +153,7 @@ export default function StudentChoice() {
                 }}
                 handleDelete={
                   type === DishType.EXTRA
-                    ? newDish && (() => deleteMutation.mutate(newDish.id))
+                    ? preference && (() => deletePreferenceMutation.mutate(preference.id))
                     : undefined
                 }
                 handleEdit={() =>
@@ -162,14 +162,19 @@ export default function StudentChoice() {
                 handleAdd={() =>
                   router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
                 }
-                handleCancel={() =>
-                  oldDish &&
+                handleCancel={() => {
+                  if (!oldDish || !preference) return;
+
+                  if (oldDish.type === 'EXTRA') {
+                    return deletePreferenceMutation.mutate(preference.id);
+                  }
+
                   setPreferenceMutation.mutate({
                     dishId: oldDish.id,
                     day,
                     studentId,
-                  })
-                }
+                  });
+                }}
               />
             );
           })}

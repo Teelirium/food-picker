@@ -1,12 +1,8 @@
 import { Dish } from '@prisma/client';
-import Image from 'next/image';
 import { MouseEventHandler } from 'react';
 
 import DishCardSmall from 'components/DishCardSmall';
-import { ArrowDownIcon, PlusIcon } from 'components/ui/Icons';
-import deleteIcon from 'public/svg/delete.svg';
-import editIcon from 'public/svg/edit.svg';
-import plusIcon from 'public/svg/plus.svg';
+import { ArrowDownIcon, DeleteIcon, EditIcon, PlusIcon } from 'components/ui/Icons';
 
 import styles from './styles.module.scss';
 
@@ -72,7 +68,7 @@ export default function PreferenceSection({
                     onClick={handleDelete}
                     type="button"
                   >
-                    <Image src={deleteIcon} alt="delete" />
+                    <DeleteIcon />
                     Удалить
                   </button>
                 )}
@@ -83,7 +79,7 @@ export default function PreferenceSection({
                     onClick={handleEdit}
                     type="button"
                   >
-                    <Image src={editIcon} alt="edit" />
+                    <EditIcon />
                     Изменить
                   </button>
                 )}
