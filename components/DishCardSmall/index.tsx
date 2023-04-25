@@ -2,6 +2,7 @@ import { Dish } from '@prisma/client';
 import classNames from 'classnames';
 import { MouseEventHandler } from 'react';
 
+import { toRubles } from 'utils/localisation';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -23,7 +24,7 @@ export default function DishCardSmall({ dish, onClick, className }: Props) {
       </div>
       <div className={styles.info}>
         <strong>{dish.name}</strong>
-        <span>{dish.price} рублей</span>
+        <span>{toRubles(dish.price)}</span>
       </div>
     </div>
   );

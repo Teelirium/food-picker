@@ -51,7 +51,7 @@ export default function PreferenceSection({
                     onClick={handleCancel}
                     type="button"
                   >
-                    Отменить выбор
+                    Отменить изменения
                   </button>
                 )}
               </div>

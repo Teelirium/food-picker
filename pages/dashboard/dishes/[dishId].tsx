@@ -8,6 +8,7 @@ import styles from 'styles/dishInfo.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
+import { toRubles } from 'utils/localisation';
 import { useSetPreferenceMutation } from 'utils/mutations';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
@@ -96,9 +97,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
             <b>&lt;</b>
           </span>
         </button>
-        <span className={styles.priceTag}>
-          {dish.price.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}
-        </span>
+        <span className={styles.priceTag}>{toRubles(dish.price)}</span>
       </header>
       <main className={styles.body}>
         <h1>{dish.name}</h1>

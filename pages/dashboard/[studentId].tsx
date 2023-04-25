@@ -17,6 +17,7 @@ import { stripTimeFromDate } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
+import { toRubles } from 'utils/localisation';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import { trpc } from 'utils/trpc/client';
@@ -129,7 +130,7 @@ export default function StudentChoice() {
       </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <div className={styles.saveBtn}>{totalCost} руб.</div>
+        <div className={styles.saveBtn}>{toRubles(totalCost)}</div>
       </DashboardHeader>
       <main className={styles.body}>
         {showSpinner && <ModalWrapper>Загрузка...</ModalWrapper>}
