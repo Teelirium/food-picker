@@ -92,7 +92,7 @@ const StandardMenu: React.FC = () => {
             <PreferenceSection
               key={type}
               title={dishTypeMap[type]}
-              dish={query.data.get(type)}
+              newDish={query.data.get(type)}
               handleEdit={toggleList(type)}
               handleAdd={toggleList(type)}
               handleView={toggleInfo(query.data.get(type)?.id)}

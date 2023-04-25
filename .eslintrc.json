@@ -65,7 +65,7 @@
     "react/function-component-definition": [
       "warn",
       {
-        "namedComponents": ["arrow-function", "function"]
+        "namedComponents": ["arrow-function", "function-declaration"]
       }
     ],
     "react/jsx-filename-extension": [

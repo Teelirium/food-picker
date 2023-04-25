@@ -1,12 +1,12 @@
-import { DishType } from '@prisma/client';
+import { Dish, DishType } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { z } from 'zod';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getQueryKey } from '@trpc/react-query';
 import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
@@ -21,7 +21,6 @@ import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import { trpc } from 'utils/trpc/client';
 import verifyRole from 'utils/verifyRole';
-import { z } from 'zod';
 
 const paramSchema = z.object({
   studentId: idSchema,
@@ -45,10 +44,33 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
+function markDishesAsNewOrOld(
+  preferenceDish?: Dish,
+  orderDish?: Dish,
+): { newDish?: Dish; oldDish?: Dish } {
+  if (!preferenceDish || !orderDish) {
+    if (!preferenceDish && orderDish) {
+      if (orderDish.type === 'EXTRA') return { oldDish: orderDish };
+      return { newDish: orderDish };
+    }
+    if (!orderDish && preferenceDish) {
+      return { newDish: preferenceDish };
+    }
+    return {};
+  }
+
+  if (preferenceDish.id === orderDish.id) {
+    return { newDish: preferenceDish, oldDish: undefined };
+  }
+
+  return { newDish: preferenceDish, oldDish: orderDish };
+}
+
 export default function StudentChoice() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { studentId, day } = paramSchema.parse(router.query);
+
+  const queryClient = useQueryClient();
 
   const { data: preferences, ...preferencesQuery } = useQuery({
     queryKey: ['preferences', { studentId, day }],
@@ -87,8 +109,18 @@ export default function StudentChoice() {
     },
   });
 
+  const setPreferenceMutation = trpc.preferences.setPreference.useMutation({
+    async onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
+    },
+  });
+
   const showSpinner =
-    preferencesQuery.isFetching || deleteMutation.isLoading || ordersQuery.isLoading;
+    preferencesQuery.isFetching ||
+    ordersQuery.isFetching ||
+    deleteMutation.isLoading ||
+    setPreferenceMutation.isLoading;
+  const showError = preferencesQuery.isError || ordersQuery.isError;
 
   return (
     <DashboardLayout>
@@ -97,38 +129,31 @@ export default function StudentChoice() {
       </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <button
-          className={styles.saveBtn}
-          type="button"
-          onClick={
-            () => {}
-            // queryClient.invalidateQueries(
-            //   getQueryKey(trpc.orders.getThisWeeksOrders, {
-            //     studentId,
-            //     day,
-            //     date: stripTimeFromDate(new Date()),
-            //   }),
-            // )
-          }
-        >
-          {totalCost} руб.
-        </button>
+        <div className={styles.saveBtn}>{totalCost} руб.</div>
       </DashboardHeader>
       <main className={styles.body}>
         {showSpinner && <ModalWrapper>Загрузка...</ModalWrapper>}
-        {preferencesQuery.isError && 'Что-то пошло не так'}
-        {!preferencesQuery.isError &&
+        {showError && 'Что-то пошло не так'}
+        {!showError &&
           Object.entries(dishTypeMap).map(([type, title]) => {
-            const pref = preferences?.get(type as DishType);
+            const preference = preferences?.get(type as DishType);
+            const order = orders?.get(type as DishType);
+
+            const { newDish, oldDish } = markDishesAsNewOrOld(preference?.Dish, order);
+
             return (
               <PreferenceSection
                 key={type}
                 title={title}
-                dish={pref?.Dish}
-                handleView={pref && (() => router.push(`/dashboard/dishes/${pref.Dish.id}`))}
+                dish={newDish}
+                oldDish={oldDish}
+                handleView={(id: number) => {
+                  console.log(`Viewing dish #${id}`);
+                  router.push(`/dashboard/dishes/${id}`);
+                }}
                 handleDelete={
                   type === DishType.EXTRA
-                    ? pref && (() => deleteMutation.mutate(pref.id))
+                    ? newDish && (() => deleteMutation.mutate(newDish.id))
                     : undefined
                 }
                 handleEdit={() =>
@@ -136,6 +161,14 @@ export default function StudentChoice() {
                 }
                 handleAdd={() =>
                   router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
+                }
+                handleCancel={() =>
+                  oldDish &&
+                  setPreferenceMutation.mutate({
+                    dishId: oldDish.id,
+                    day,
+                    studentId,
+                  })
                 }
               />
             );

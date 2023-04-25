@@ -1,8 +1,10 @@
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
-import { z } from 'zod';
+
 import { auth, authParent, procedure, router } from '..';
 
 export const preferencesRouter = router({

@@ -6,6 +6,13 @@
   margin-bottom: 1.6rem;
   padding: 1rem;
 
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+
+  background-color: var(--dark-bg-color);
+  z-index: 1;
+
   * {
     text-align: center;
   }

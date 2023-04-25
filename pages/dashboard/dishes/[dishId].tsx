@@ -1,8 +1,5 @@
-/* eslint-disable no-script-url */
 import { Dish } from '@prisma/client';
-import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
@@ -87,11 +84,12 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
           type="button"
           tabIndex={0}
           onClick={() => {
-            studentId
-              ? router.push(
-                  `/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`,
-                )
-              : router.back();
+            if (studentId !== null) {
+              return router.push(
+                `/dashboard/dishes/?type=${dish.type}&studentId=${studentId}&day=${day}`,
+              );
+            }
+            router.back();
           }}
         >
           <span className={styles.backBtn}>
@@ -107,7 +105,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
         <div>{dishTypeMap[dish.type]}</div>
         <div>Вес: {dish.weightGrams} г.</div>
         {day !== null && studentId !== null && (
-          <button className={styles.chooseBtn} onClick={handleChoose} type="button" tabIndex={1}>
+          <button className={styles.chooseBtn} onClick={handleChoose} type="button">
             Выбрать блюдо
           </button>
         )}

@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
+import ModalWrapper from 'components/ModalWrapper';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
 import styles from 'styles/dishes.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
@@ -24,7 +25,7 @@ const paramSchema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const { type, studentId, day } = paramSchema.parse(ctx.query);
+  const { type, studentId } = paramSchema.parse(ctx.query);
   const session = await getServerSideSession(ctx);
 
   if (
@@ -72,6 +73,7 @@ export default function Dishes({ dishes }: Props) {
         <h1>{dishTypeMap[type].toUpperCase()}</h1>
       </DashboardHeader>
       <main className={styles.body}>
+        {setPreferenceMutation.isLoading && <ModalWrapper>Загрузка...</ModalWrapper>}
         {dishes.map((dish, idx) => (
           <div key={dish.id} tabIndex={idx}>
             <DishCard
