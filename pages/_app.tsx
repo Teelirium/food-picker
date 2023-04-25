@@ -1,9 +1,11 @@
-import '../styles/globals.css';
+import 'styles/globals.css';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
+
+import { trpc } from 'utils/trpc/client';
 
 import type { AppProps } from 'next/app';
 
@@ -19,4 +21,4 @@ const MyApp = ({ Component, pageProps }: AppProps<{ session: Session }>) => (
   </QueryClientProvider>
 );
 
-export default MyApp;
+export default trpc.withTRPC(MyApp);

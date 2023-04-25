@@ -1,15 +1,20 @@
-import { Order, Preference } from '@prisma/client';
 import { verifySignature } from '@upstash/qstash/nextjs';
 import _ from 'lodash';
 import { NextApiHandler } from 'next';
+import { z } from 'zod';
 
-import { MAX_WEEKDAYS } from 'app.config';
-import prisma from 'utils/prismaClient';
+import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
 import { PreferenceWithDish } from 'types/Preference';
-
-type OrderWithoutId = Omit<Order, 'id'>;
+import { addDaysToDate, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
+import prisma from 'utils/prismaClient';
 
 const handler: NextApiHandler = async (req, res) => {
+  const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
+  const nextEndOfWeek = addDaysToDate(nextMonday, MAX_WEEKDAYS - 1);
+  console.log(
+    `Generating orders from ${nextMonday.toLocaleDateString()} to ${nextEndOfWeek.toLocaleDateString()}`,
+  );
   const defaults = await prisma.preference.findMany({
     where: {
       isDefault: true,
@@ -19,23 +24,43 @@ const handler: NextApiHandler = async (req, res) => {
     },
   });
   const students = await prisma.student.findMany({});
-  // const orders = await prisma.order.findMany({
-  //   where: {},
-  // });
-  const orders = await getOrdersForStudent(students[0].id, defaults);
-  const currentDate = new Date();
-  res.send(orders);
+  const studentIds = students.map((s) => s.id);
+
+  await prisma.order.deleteMany({
+    where: {
+      date: {
+        gte: nextMonday,
+        lte: nextEndOfWeek,
+      },
+    },
+  });
+  // await resetDebt();
+
+  const preorderPromises = students.map((student) =>
+    getPreorderForStudent(student.id, defaults, nextMonday),
+  );
+  const allOrders = await Promise.all(preorderPromises);
+  const allDebts = await addDebt(studentIds, nextMonday, nextEndOfWeek);
+  res.send('Orders and debts generated successfully');
 };
 
-export default handler;
-// export default verifySignature(handler);
+// export default withErrHandler(handler);
+export default verifySignature(withErrHandler(handler));
 
-async function getOrdersForStudent(studentId: number, defaults: PreferenceWithDish[]) {
-  const weekdays = _.range(0, MAX_WEEKDAYS);
-  return getPreferencesForDay(studentId, weekdays[0], defaults);
+async function getPreorderForStudent(
+  studentId: number,
+  defaults: PreferenceWithDish[],
+  mondayDate: Date,
+) {
+  const promises = WEEKDAYS.map(async (weekday) => {
+    const preorder = await getPreferencesWithDefaults(studentId, weekday, defaults);
+    await createOrders(studentId, preorder, addDaysToDate(mondayDate, weekday));
+    return preorder;
+  });
+  return Promise.all(promises);
 }
 
-async function getPreferencesForDay(
+async function getPreferencesWithDefaults(
   studentId: number,
   dayOfWeek: number,
   defaults: PreferenceWithDish[],
@@ -48,7 +73,51 @@ async function getPreferencesForDay(
     },
     include: { Dish: true },
   });
-  return _.uniqBy([...prefs, ...defaults], 'Dish.type');
+  return _.uniqBy(prefs.concat(defaults), 'Dish.type');
+}
+
+async function createOrders(studentId: number, preferences: PreferenceWithDish[], date: Date) {
+  const addOrders = prisma.order.createMany({
+    data: preferences.map((p) => ({
+      dishId: p.Dish.id,
+      cost: p.Dish.price,
+      studentId,
+      date,
+    })),
+  });
+  await prisma.$transaction([addOrders]);
+}
+
+async function resetDebt() {
+  await prisma.student.updateMany({
+    where: {
+      debt: {
+        gt: 0,
+      },
+    },
+    data: {
+      debt: 0,
+    },
+  });
+}
+
+async function addDebt(studentIds: number[], dateFrom: Date, dateTo: Date) {
+  const promises = studentIds.map(async (id) => {
+    const total = await getTotalOrderCost(id, dateFrom, dateTo);
+    await prisma.student.update({
+      where: { id },
+      data: { debt: { increment: total } },
+    });
+    return [id, total];
+  });
+  return Promise.all(promises);
+}
+
+async function getTotalOrderCost(studentId: number, dateFrom: Date, dateTo: Date) {
+  const schema = z.object({ total: z.coerce.number() }).array();
+  const result = await prisma.$queryRaw`select sum(cost) as total 
+    from \`Order\` where date between ${dateFrom} and ${dateTo} and studentId=${studentId}`;
+  return schema.parse(result)[0].total;
 }
 
 export const config = {
