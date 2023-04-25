@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { z } from 'zod';
 
 import DashboardHeader from 'components/Dashboard/Header';
@@ -13,7 +13,7 @@ import ModalWrapper from 'components/ModalWrapper';
 import PreferenceSection from 'components/PreferenceSection';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
-import { stripTimeFromDate } from 'utils/dateHelpers';
+import { getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -72,6 +72,7 @@ export default function StudentChoice() {
   const { studentId, day } = paramSchema.parse(router.query);
 
   const queryClient = useQueryClient();
+  const currentDate = useRef(new Date());
 
   const { data: preferences, ...preferencesQuery } = useQuery({
     queryKey: ['preferences', { studentId, day }],
@@ -89,17 +90,23 @@ export default function StudentChoice() {
     {
       studentId,
       day,
-      date: stripTimeFromDate(new Date()),
+      date: stripTimeFromDate(currentDate.current),
     },
     { staleTime: 10 * 60 * 1000 },
   );
 
   const totalCost: number = useMemo(() => {
-    if (!preferences) {
+    if (!preferences || !orders) {
       return 0;
     }
-    return Array.from(preferences.values()).reduce((prev, curr) => prev + curr.Dish.price, 0);
-  }, [preferences]);
+
+    let cost = 0;
+    for (const type of Object.keys(DishType) as DishType[]) {
+      const dish = preferences?.get(type)?.Dish ?? orders?.get(type);
+      cost += dish?.price ?? 0;
+    }
+    return cost;
+  }, [preferences, orders]);
 
   const deletePreferenceMutation = useMutation({
     async mutationFn(prefId: number) {
@@ -130,7 +137,9 @@ export default function StudentChoice() {
       </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <div className={styles.saveBtn}>{toRubles(totalCost)}</div>
+        <button className={styles.saveBtn} type="button">
+          Сохранить
+        </button>
       </DashboardHeader>
       <main className={styles.body}>
         {showSpinner && <ModalWrapper>Загрузка...</ModalWrapper>}
@@ -180,6 +189,16 @@ export default function StudentChoice() {
             );
           })}
       </main>
+      <footer className={styles.footer}>
+        <p>
+          Выбор возможен до{' '}
+          {getNextMonday(currentDate.current).addDays(-1).toLocaleDateString(undefined, {
+            month: 'numeric',
+            day: 'numeric',
+          })}
+        </p>
+        <p>Итого: {toRubles(totalCost)}</p>
+      </footer>
     </DashboardLayout>
   );
 }
