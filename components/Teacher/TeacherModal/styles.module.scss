@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%);
   height: auto;
   min-height: 155px;
-  padding: 10px;
+  padding: 1.5rem 1rem;
   width: 100%;
   max-width: 200px;
   display: flex;
@@ -23,14 +23,14 @@
     height: 100%;
     width: 100%;
 
+    padding-top: 2rem;
+    gap: 2rem;
+
     legend {
       color: #fff;
       font-size: 18px;
       margin-left: 20px;
-    }
-
-    .grades {
-      margin: 20px 0;
+      padding: 0 1rem;
     }
   }
 }

@@ -5,9 +5,9 @@ import { useCallback } from 'react';
 import ModalWrapper from 'components/ModalWrapper';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 
+import LogoutButton from 'components/LogoutButton';
 import GradeItem from './GradeItem';
 import styles from './styles.module.scss';
-import LogoutButton from 'components/LogoutButton';
 
 type Props = {
   gradeId: number | undefined;
