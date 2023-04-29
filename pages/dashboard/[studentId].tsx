@@ -11,6 +11,7 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import PreferenceSection from 'components/PreferenceSection';
+import LoadingSpinner from 'components/ui/Icons/LoadingSpinner';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
 import { getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
@@ -137,12 +138,16 @@ export default function StudentChoice() {
       </Head>
       <DashboardHeader backUrl="/dashboard">
         <h1>{dayMap[day].toUpperCase()}</h1>
-        <button className={styles.saveBtn} type="button">
+        {/* <button className={styles.saveBtn} type="button">
           Сохранить
-        </button>
+        </button> */}
       </DashboardHeader>
       <main className={styles.body}>
-        {showSpinner && <ModalWrapper>Загрузка...</ModalWrapper>}
+        {showSpinner && (
+          <ModalWrapper provideContainer>
+            <LoadingSpinner />
+          </ModalWrapper>
+        )}
         {showError && 'Что-то пошло не так'}
         {!showError &&
           Object.entries(dishTypeMap).map(([type, title]) => {
