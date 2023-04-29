@@ -1,9 +1,12 @@
+import { z } from 'zod';
+
 import { getNextMonday } from 'utils/dateHelpers';
+import dayMap from 'utils/dayMap';
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
-import { z } from 'zod';
+
 import { auth, authParent, procedure, router } from '..';
 
 export const ordersRouter = router({
@@ -19,6 +22,11 @@ export const ordersRouter = router({
     )
     .query(async ({ input }) => {
       const { studentId, day, date } = input;
+      console.log(
+        `Getting orders for student #${studentId}, ${
+          dayMap[day]
+        } at [${date.toLocaleDateString()}]`,
+      );
       const prevMonday = getNextMonday(date).addDays(-7);
       const orders = await prisma.order.findMany({
         where: {

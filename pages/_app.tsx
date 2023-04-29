@@ -2,10 +2,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import 'datejs';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
-import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
+
 import 'styles/globals.css';
 import { trpc } from 'utils/trpc/client';
+
+import type { AppProps } from 'next/app';
 
 const queryClient = new QueryClient();
 

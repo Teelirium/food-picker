@@ -1,12 +1,12 @@
 import { TRPCError, inferAsyncReturnType, initTRPC } from '@trpc/server';
 import { CreateNextContextOptions } from '@trpc/server/adapters/next';
 import SuperJSON from 'superjson';
-import { UserRole } from 'types/UserData';
+import { z } from 'zod';
 
+import { UserRole } from 'types/UserData';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
-import { z } from 'zod';
 
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerSideSession(opts);
