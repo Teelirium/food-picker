@@ -4,7 +4,9 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
+import ModalWrapper from 'components/ModalWrapper';
 import { ChevronLeftIcon } from 'components/ui/Icons';
+import LoadingSpinner from 'components/ui/Icons/LoadingSpinner';
 import styles from 'styles/dishInfo.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -69,7 +71,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
 
   const setPreferenceMutation = useSetPreferenceMutation(() =>
     router.replace('/dashboard').then(() => {
-      router.push(`/dashboard/${studentId}?day=${day}`);
+      router.push(`/dashboard/${studentId}?day=${day}#${dish.type}`);
     }),
   );
 
@@ -81,6 +83,11 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
 
   return (
     <DashboardLayout>
+      {setPreferenceMutation.isLoading && (
+        <ModalWrapper provideContainer>
+          <LoadingSpinner />
+        </ModalWrapper>
+      )}
       <header className={styles.header} style={{ backgroundImage: `url(${dish.imgURL})` }}>
         <button
           type="button"

@@ -62,7 +62,7 @@ type Props = {
 export default function Dishes({ dishes }: Props) {
   const router = useRouter();
   const { type, studentId, day } = paramSchema.parse(router.query);
-  const backUrl = `/dashboard/${studentId}?day=${day}`;
+  const backUrl = `/dashboard/${studentId}?day=${day}#${type}`;
 
   const setPreferenceMutation = useSetPreferenceMutation(() => {
     router.push(backUrl);

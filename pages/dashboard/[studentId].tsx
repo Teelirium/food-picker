@@ -159,6 +159,7 @@ export default function StudentChoice() {
             return (
               <PreferenceSection
                 key={type}
+                id={type}
                 title={title}
                 dish={newDish}
                 oldDish={oldDish}

@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   title: string;
+  id?: string;
   dish?: Dish;
   oldDish?: Dish;
   handleView?: (id: number) => void;
@@ -19,6 +20,7 @@ type Props = {
 
 export default function PreferenceSection({
   title,
+  id,
   dish,
   oldDish,
   handleView,
@@ -28,7 +30,7 @@ export default function PreferenceSection({
   handleCancel,
 }: Props) {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} id={id}>
       <span>{title}</span>
       {dish || oldDish ? (
         <div className={styles.body}>
