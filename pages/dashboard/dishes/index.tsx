@@ -7,6 +7,7 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
+import LoadingSpinner from 'components/ui/Icons/LoadingSpinner';
 import styles from 'styles/dishes.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -73,7 +74,11 @@ export default function Dishes({ dishes }: Props) {
         <h1>{dishTypeMap[type].toUpperCase()}</h1>
       </DashboardHeader>
       <main className={styles.body}>
-        {setPreferenceMutation.isLoading && <ModalWrapper>Загрузка...</ModalWrapper>}
+        {setPreferenceMutation.isLoading && (
+          <ModalWrapper provideContainer>
+            <LoadingSpinner />
+          </ModalWrapper>
+        )}
         {dishes.map((dish, idx) => (
           <div key={dish.id} tabIndex={idx}>
             <DishCard
