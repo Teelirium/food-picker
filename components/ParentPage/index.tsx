@@ -28,9 +28,6 @@ const ParentPage = () => {
 
   const toggleModal = useCallback(() => {
     router.replace('', undefined, { shallow: true });
-    // toast('Здесь какой-то текст', {
-    //   duration: 1000 * 3,
-    // });
   }, [router]);
 
   useEffect(() => {

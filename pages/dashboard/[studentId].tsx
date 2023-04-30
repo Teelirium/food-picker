@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo, useRef } from 'react';
+import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
 import DashboardHeader from 'components/Dashboard/Header';
@@ -116,11 +117,17 @@ export default function StudentChoice() {
     async onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
     },
+    async onError() {
+      toast.error('Не удалось удалить предпочтение');
+    },
   });
 
   const setPreferenceMutation = trpc.preferences.setPreference.useMutation({
     async onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
+    },
+    async onError() {
+      toast.error('Не удалось установить предпочтение');
     },
   });
 
