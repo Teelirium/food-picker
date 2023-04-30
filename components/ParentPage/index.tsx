@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
@@ -19,7 +20,7 @@ const paramSchema = z.object({
   student: z.preprocess((i) => Number(z.string().parse(i)), z.number().min(0)).optional(),
 });
 
-const Parent = () => {
+const ParentPage = () => {
   const session = useSession();
   const router = useRouter();
 
@@ -27,6 +28,9 @@ const Parent = () => {
 
   const toggleModal = useCallback(() => {
     router.replace('', undefined, { shallow: true });
+    // toast('Здесь какой-то текст', {
+    //   duration: 1000 * 3,
+    // });
   }, [router]);
 
   useEffect(() => {
@@ -67,4 +71,4 @@ const Parent = () => {
   );
 };
 
-export default observer(Parent);
+export default observer(ParentPage);

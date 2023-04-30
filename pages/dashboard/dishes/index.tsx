@@ -7,7 +7,7 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
-import LoadingSpinner from 'components/ui/Icons/LoadingSpinner';
+import LoadingSpinner from 'components/ui/LoadingSpinner';
 import styles from 'styles/dishes.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';

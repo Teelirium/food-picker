@@ -11,7 +11,7 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import PreferenceSection from 'components/PreferenceSection';
-import LoadingSpinner from 'components/ui/Icons/LoadingSpinner';
+import LoadingSpinner from 'components/ui/LoadingSpinner';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
 import { getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';

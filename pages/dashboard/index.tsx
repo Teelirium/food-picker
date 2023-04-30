@@ -2,7 +2,6 @@ import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
 import ParentPage from 'components/ParentPage';
-import { createContext, useContext } from 'react';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
