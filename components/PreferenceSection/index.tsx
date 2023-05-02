@@ -2,6 +2,7 @@ import { Dish } from '@prisma/client';
 import { MouseEventHandler } from 'react';
 
 import DishCardSmall from 'components/DishCardSmall';
+import ThinButton from 'components/ThinButton';
 import { ArrowDownIcon, DeleteIcon, EditIcon, PlusIcon } from 'components/ui/Icons';
 
 import styles from './styles.module.scss';
@@ -96,18 +97,18 @@ export default function PreferenceSection({
                 className={styles.old}
                 onClick={() => handleView && handleView(oldDish.id)}
               />
-              <button className={styles.label} onClick={handleAdd} type="button">
+              <ThinButton onClick={handleAdd}>
                 <PlusIcon /> Добавить Блюдо
-              </button>
+              </ThinButton>
             </>
           )}
         </div>
       ) : (
-        <div className={styles.body} onClick={handleAdd} role="button" tabIndex={0}>
-          <span className={styles.label}>
+        <button className={styles.body} type="button" onClick={handleAdd}>
+          <ThinButton onClick={handleAdd}>
             <PlusIcon /> Добавить Блюдо
-          </span>
-        </div>
+          </ThinButton>
+        </button>
       )}
     </div>
   );

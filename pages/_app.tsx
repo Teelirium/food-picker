@@ -5,7 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import toast, { Toaster, resolveValue } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import Notification from 'components/ui/Notification';
+import Notification from 'components/Notification';
 import 'styles/globals.css';
 import { trpc } from 'utils/trpc/client';
 

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
 
-import { XCircleIcon } from '../Icons';
+import { XCircleIcon } from 'components/ui/Icons';
 
 import styles from './styles.module.scss';
 

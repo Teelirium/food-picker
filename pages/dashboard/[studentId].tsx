@@ -12,6 +12,8 @@ import DashboardHeader from 'components/Dashboard/Header';
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import PreferenceSection from 'components/PreferenceSection';
+import ThinButton from 'components/ThinButton';
+import { PlusIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
@@ -155,52 +157,55 @@ export default function StudentChoice() {
             <LoadingSpinner />
           </ModalWrapper>
         )}
-        {showError && 'Что-то пошло не так'}
-        {!showError &&
-          Object.entries(dishTypeMap).map(([type, title]) => {
-            const preference = preferences?.get(type as DishType);
-            const order = orders?.get(type as DishType);
+        {showError && (
+          <ModalWrapper provideContainer>
+            <ThinButton>Что-то пошло не так</ThinButton>
+          </ModalWrapper>
+        )}
+        {Object.entries(dishTypeMap).map(([type, title]) => {
+          const preference = preferences?.get(type as DishType);
+          const order = orders?.get(type as DishType);
 
-            const { newDish, oldDish } = markDishesAsNewOrOld(preference?.Dish, order);
+          const { newDish, oldDish } = markDishesAsNewOrOld(preference?.Dish, order);
 
-            return (
-              <PreferenceSection
-                key={type}
-                id={type}
-                title={title}
-                dish={newDish}
-                oldDish={oldDish}
-                handleView={(id: number) => {
-                  console.log(`Viewing dish #${id}`);
-                  router.push(`/dashboard/dishes/${id}`);
-                }}
-                handleDelete={
-                  type === DishType.EXTRA
-                    ? preference && (() => deletePreferenceMutation.mutate(preference.id))
-                    : undefined
+          return (
+            <PreferenceSection
+              key={type}
+              id={type}
+              title={title}
+              dish={newDish}
+              oldDish={oldDish}
+              handleView={(id: number) => {
+                console.log(`Viewing dish #${id}`);
+                router.push(`/dashboard/dishes/${id}`);
+              }}
+              handleDelete={
+                type === DishType.EXTRA
+                  ? preference && (() => deletePreferenceMutation.mutate(preference.id))
+                  : undefined
+              }
+              handleEdit={() =>
+                router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
+              }
+              handleAdd={() =>
+                router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
+              }
+              handleCancel={() => {
+                if (!oldDish || !preference) return;
+
+                if (oldDish.type === 'EXTRA') {
+                  return deletePreferenceMutation.mutate(preference.id);
                 }
-                handleEdit={() =>
-                  router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
-                }
-                handleAdd={() =>
-                  router.push(`/dashboard/dishes?type=${type}&studentId=${studentId}&day=${day}`)
-                }
-                handleCancel={() => {
-                  if (!oldDish || !preference) return;
 
-                  if (oldDish.type === 'EXTRA') {
-                    return deletePreferenceMutation.mutate(preference.id);
-                  }
-
-                  setPreferenceMutation.mutate({
-                    dishId: oldDish.id,
-                    day,
-                    studentId,
-                  });
-                }}
-              />
-            );
-          })}
+                setPreferenceMutation.mutate({
+                  dishId: oldDish.id,
+                  day,
+                  studentId,
+                });
+              }}
+            />
+          );
+        })}
       </main>
       <footer className={styles.footer}>
         <p>

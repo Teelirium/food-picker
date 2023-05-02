@@ -2,10 +2,12 @@
   & > span {
     margin-left: 3rem;
   }
+
   color: white;
 }
 
 .body {
+  width: 100%;
   border: white 1px solid;
   border-radius: 3rem;
   padding: 3rem 1.8rem;
@@ -26,32 +28,35 @@
   gap: 1rem;
 }
 
-.btnGroup {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  .actionBtn:only-child {
-    margin: 0 auto;
-  }
-}
-
 .actionBtn {
   font-size: 1.6rem;
-  padding: 1.2rem 1.6rem 1.2rem 1.6rem;
+  padding: 1.2rem 1.6rem;
   border-radius: 3rem;
   display: flex;
   align-items: center;
   gap: 1.2rem;
+
   &[data-action="edit"] {
     background: linear-gradient(270deg, #272640 0%, #144552 100%);
   }
+
   &[data-action="delete"] {
     background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
   }
 }
 
+.btnGroup {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .actionBtn:only-child {
+    margin: 0 auto;
+  }
+}
+
 .label {
-  background: rgba(255, 255, 255, 0.16);
+  background: #3d3d3d;
   border-radius: 10rem;
   padding: 0.7rem 1.6rem;
   display: flex;
@@ -61,7 +66,4 @@
 
 .old {
   filter: brightness(0.5);
-}
-
-.removed {
 }
