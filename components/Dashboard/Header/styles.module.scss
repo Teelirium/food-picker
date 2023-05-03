@@ -6,7 +6,23 @@
   margin-bottom: 1.6rem;
   padding: 1rem;
 
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+
+  z-index: 1;
+  background-color: var(--dark-bg-color);
+
   * {
     text-align: center;
   }
+}
+
+.icon {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

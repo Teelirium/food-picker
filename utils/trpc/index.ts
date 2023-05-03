@@ -1,12 +1,12 @@
-import { initTRPC, inferAsyncReturnType, TRPCError } from '@trpc/server';
+import { TRPCError, inferAsyncReturnType, initTRPC } from '@trpc/server';
 import { CreateNextContextOptions } from '@trpc/server/adapters/next';
 import SuperJSON from 'superjson';
-import { UserRole } from 'types/UserData';
+import { z } from 'zod';
 
+import { UserRole } from 'types/UserData';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
-import { z } from 'zod';
 
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerSideSession(opts);
@@ -36,12 +36,12 @@ export const auth = (roles: UserRole[] = []) => {
   });
 };
 
-const teacherAuthInput = z.object({ gradeId: idSchema });
+const authTeacherInput = z.object({ gradeId: idSchema });
 export const authTeacher = middleware(async ({ rawInput, ctx, next }) => {
   if (!ctx.session) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Доступ запрещён' });
   }
-  const { gradeId } = teacherAuthInput.parse(rawInput);
+  const { gradeId } = authTeacherInput.parse(rawInput);
   if (ctx.session.user.role === 'TEACHER') {
     const count = await prisma.grade.count({
       where: {
@@ -50,7 +50,32 @@ export const authTeacher = middleware(async ({ rawInput, ctx, next }) => {
       },
     });
     if (count === 0) {
-      throw new TRPCError({ code: 'FORBIDDEN', message: 'У вас нет доступа к этому классу' });
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'Нет доступа к этому классу' });
+    }
+  }
+
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  });
+});
+
+const authParentInput = z.object({ studentId: idSchema });
+export const authParent = middleware(async ({ rawInput, ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'Доступ запрещєн' });
+  }
+  const { studentId } = authParentInput.parse(rawInput);
+  if (ctx.session.user.role === 'PARENT') {
+    const count = await prisma.parentStudent.count({
+      where: {
+        studentId,
+        parentId: +ctx.session.user.id,
+      },
+    });
+    if (count === 0) {
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'Нет доступа к этому ученику' });
     }
   }
 

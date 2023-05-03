@@ -2,13 +2,12 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useQuery } from 'react-query';
 import { z } from 'zod';
 
+import { DishType } from '@prisma/client';
 import PreferenceSection from 'components/PreferenceSection';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import { DefaultDishes } from 'pages/api/preferences/default';
-import { DishType } from 'types/Dish';
 import dayMap from 'utils/dayMap';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 import dishTypeMap from 'utils/dishTypeMap';
@@ -17,6 +16,7 @@ import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import idSchema from 'utils/schemas/idSchema';
 
+import { useQuery } from '@tanstack/react-query';
 import ListModal from './ListModal';
 import styles from './styles.module.scss';
 
@@ -41,7 +41,10 @@ const StandardMenu: React.FC = () => {
 
   const { day, dishType, dishId } = paramSchema.parse(router.query);
 
-  const query = useQuery(['defaults', day], () => getDishes(day), { keepPreviousData: true });
+  const query = useQuery(['defaults', day], () => getDishes(day), {
+    keepPreviousData: true,
+    staleTime: Infinity,
+  });
 
   const toggleList = useCallback(
     (dishType: DishType) => () => {
@@ -51,6 +54,7 @@ const StandardMenu: React.FC = () => {
     },
     [day, router],
   );
+
   const toggleInfo = useCallback(
     (id?: number) => () => {
       router.replace(
