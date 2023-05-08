@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
-import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
@@ -26,9 +25,9 @@ const ParentPage = () => {
 
   const { student } = paramSchema.parse(router.query);
 
-  const toggleModal = useCallback(() => {
+  const toggleModal = () => {
     router.replace('', undefined, { shallow: true });
-  }, [router]);
+  };
 
   useEffect(() => {
     if (session.data) {
