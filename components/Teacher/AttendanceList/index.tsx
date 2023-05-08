@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import toast from 'react-hot-toast';
 
 import Checkbox from 'components/Checkbox';
 import useWindowSize from 'hooks/useWindowSize';
@@ -70,6 +71,12 @@ const AttendanceList: FC<AttendanceListProps> = ({ gradeId, presenceList, studen
         { students: studentPresentList },
         { params: { gradeId, date: date.toDate() } },
       );
+    },
+    onError: () => {
+      toast.error('Ошибка сохранения списка присутствующих');
+    },
+    onSuccess: () => {
+      toast.success('Список присутствующих успешно сохранен');
     },
   });
 

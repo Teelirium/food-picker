@@ -4,13 +4,14 @@ import Image from 'next/image';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
+import { toast } from 'react-hot-toast';
 
 import useWindowSize from 'hooks/useWindowSize';
 import magnifierIcon from 'public/svg/magnifier.svg';
 import { getFullName, getInitials } from 'utils/names';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
-import { trpc } from 'utils/trpc/client';
 
 interface DebtListProps {
   gradeId: number;
@@ -37,7 +38,10 @@ const DebtList: FC<DebtListProps> = ({ gradeId, students }) => {
     student.surname.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const saveMutation = trpc.debt.setDebts.useMutation();
+  const saveMutation = trpc.debt.setDebts.useMutation({
+    onError: () => toast.error('Ошибка сохранения задолженностей'),
+    onSuccess: () => toast.success('Задолженности успешно сохранены'),
+  });
 
   const onSubmit = (data: TForm) => {
     const debts = Object.fromEntries(
