@@ -66,3 +66,7 @@ a {
 ::-webkit-scrollbar-corner {
   background: #312244;
 }
+
+.clickable {
+  cursor: pointer;
+}

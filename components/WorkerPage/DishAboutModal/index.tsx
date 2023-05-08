@@ -18,8 +18,10 @@ interface Props {
 const DishAboutModal: React.FC<Props> = ({ dishId, allowEditing = false }) => {
   const router = useRouter();
 
-  const dishQuery = useQuery(['query.data', dishId], () =>
-    axios.get(`/api/dishes/${dishId}`).then((resp) => resp.data as Dish),
+  const dishQuery = useQuery(
+    ['query.data', dishId],
+    () => axios.get(`/api/dishes/${dishId}`).then((resp) => resp.data as Dish),
+    { staleTime: 1000 * 60 * 10 },
   );
 
   const toggle = useCallback(() => {

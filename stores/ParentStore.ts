@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { Parent } from 'types/Parent';
+import { ParentWithChildren } from 'types/Parent';
 
 class ParentStore {
-  parent: Parent | null;
+  parent: ParentWithChildren | null;
 
   childIndex: number;
 

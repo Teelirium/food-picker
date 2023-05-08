@@ -21,6 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
+// const ParentContext = createContext<number | null>(null);
 const Index: NextPage = () => {
   return (
     <>

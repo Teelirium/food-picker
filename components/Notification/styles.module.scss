@@ -1,0 +1,90 @@
+.container {
+  background-color: rgb(255 255 255 / 40%);
+  backdrop-filter: blur(1px) brightness(50%);
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  max-width: 200px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 2px 2px 1px rgb(0 0 0 / 20%);
+  animation: 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) 0s 1 normal forwards running;
+  overflow: hidden;
+  transition: all 100ms;
+
+  &:hover,
+  &:active {
+    background-color: rgb(255 255 255 / 50%);
+  }
+}
+
+.x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.appear {
+  animation-name: appear;
+}
+
+.disappear {
+  animation-name: disappear;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: translateY(100%) scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0%) scale(1);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100%) scale(0.5);
+  }
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  display: flex;
+  backdrop-filter: brightness(150%);
+
+  &::after {
+    content: "";
+    background-color: white;
+    animation: normal linear shrink;
+    animation-duration: inherit;
+    border-radius: 20px;
+  }
+}
+
+@keyframes shrink {
+  0% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
