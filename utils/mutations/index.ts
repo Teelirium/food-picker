@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+
 import { trpc } from 'utils/trpc/client';
 
 export function useSetPreferenceMutation(onSuccessCallback?: () => void) {
@@ -7,7 +8,8 @@ export function useSetPreferenceMutation(onSuccessCallback?: () => void) {
     async onSuccess(data, variables) {
       const { studentId, day } = variables;
       queryClient.invalidateQueries(['preferences', { studentId, day }]);
-      onSuccessCallback && onSuccessCallback();
+
+      if (onSuccessCallback) onSuccessCallback();
     },
   });
 }
