@@ -9,7 +9,7 @@ export function getParent(id?: number) {
     queryKey: ['parent', id ?? ''],
     staleTime: Infinity,
     queryFn: async () => {
-      if (id === undefined) return null;
+      if (id === undefined) throw new Error('Родитель не указан');
       const parent = await axios
         .get(`/api/parents/${id}?children=true`)
         .then((res) => res.data as ParentWithChildren);
@@ -19,5 +19,6 @@ export function getParent(id?: number) {
     onError() {
       toast.error('Не удалость получить информацию о родителе');
     },
+    enabled: id !== undefined,
   } satisfies UseQueryOptions;
 }
