@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import router from 'next/router';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
+
 import styles from './styles.module.css';
-import router from 'next/router';
 
 type Props = {
   activePage: number;

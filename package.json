@@ -29,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
     "cookies": "^0.8.0",
+    "dayjs": "^1.11.7",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "mobx": "^6.7.0",

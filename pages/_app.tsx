@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
@@ -11,6 +13,8 @@ import { trpc } from 'utils/trpc/client';
 import type { AppProps } from 'next/app';
 
 const queryClient = new QueryClient();
+
+dayjs.extend(utc);
 
 const MyApp = ({ Component, pageProps }: AppProps<{ session: Session }>) => (
   <QueryClientProvider client={queryClient}>

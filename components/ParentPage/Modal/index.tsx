@@ -3,7 +3,7 @@ import { signOut } from 'next-auth/react';
 
 import ModalWrapper from 'components/ModalWrapper';
 import parentStore from 'stores/ParentStore';
-import getFullName from 'utils/getFullName';
+import { getFullName } from 'utils/names';
 
 import styles from './styles.module.scss';
 
