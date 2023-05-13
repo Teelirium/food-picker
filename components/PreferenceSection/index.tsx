@@ -1,73 +1,115 @@
 import { Dish } from '@prisma/client';
-import Image from 'next/image';
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 
 import DishCardSmall from 'components/DishCardSmall';
-import deleteIcon from 'public/svg/delete.svg';
-import editIcon from 'public/svg/edit.svg';
-import plusIcon from 'public/svg/plus.svg';
+import ThinButton from 'components/ThinButton';
+import { ArrowDownIcon, DeleteIcon, EditIcon, PlusIcon } from 'components/ui/Icons';
 
 import styles from './styles.module.scss';
 
 type Props = {
   title: string;
+  id?: string;
   dish?: Dish;
-  handleView?: MouseEventHandler<HTMLElement>;
+  oldDish?: Dish;
+  handleView?: (id: number) => void;
   handleAdd?: MouseEventHandler<HTMLElement>;
   handleDelete?: MouseEventHandler<HTMLElement>;
   handleEdit?: MouseEventHandler<HTMLElement>;
+  handleCancel?: MouseEventHandler<HTMLElement>;
 };
 
-const PreferenceSection: React.FC<Props> = ({
+export default function PreferenceSection({
   title,
+  id,
   dish,
+  oldDish,
   handleView,
   handleAdd,
   handleDelete,
   handleEdit,
-}) => {
+  handleCancel,
+}: Props) {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} id={id}>
       <span>{title}</span>
-      {dish ? (
+      {dish || oldDish ? (
         <div className={styles.body}>
-          <div onClick={handleView} style={{ width: '100%' }} role="button" tabIndex={0}>
-            <DishCardSmall dish={dish} />
-          </div>
-          <div className={styles.btnGroup}>
-            {handleDelete && (
-              <button
-                className={styles.actionBtn}
-                data-action="delete"
-                onClick={handleDelete}
-                type="button"
-              >
-                <Image src={deleteIcon} alt="delete" />
-                Удалить
-              </button>
-            )}
-            {handleEdit && (
-              <button
-                className={styles.actionBtn}
-                data-action="edit"
-                onClick={handleEdit}
-                type="button"
-              >
-                <Image src={editIcon} alt="edit" />
-                Изменить
-              </button>
-            )}
-          </div>
+          {dish && oldDish && (
+            <>
+              <div className={styles.dishGroup}>
+                <DishCardSmall
+                  dish={oldDish}
+                  className={styles.old}
+                  onClick={() => handleView && handleView(oldDish.id)}
+                />
+                <ArrowDownIcon />
+                <DishCardSmall onClick={() => handleView && handleView(dish.id)} dish={dish} />
+              </div>
+              <div className={styles.btnGroup}>
+                {handleCancel && (
+                  <button
+                    className={styles.actionBtn}
+                    data-action="edit"
+                    onClick={handleCancel}
+                    type="button"
+                  >
+                    Отменить изменения
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+          {dish && !oldDish && (
+            <>
+              <DishCardSmall dish={dish} onClick={() => handleView && handleView(dish.id)} />
+              <div className={styles.btnGroup}>
+                {handleDelete && (
+                  <button
+                    className={styles.actionBtn}
+                    data-action="delete"
+                    onClick={handleDelete}
+                    type="button"
+                  >
+                    <DeleteIcon />
+                    Удалить
+                  </button>
+                )}
+                {handleEdit && (
+                  <button
+                    className={styles.actionBtn}
+                    data-action="edit"
+                    onClick={handleEdit}
+                    type="button"
+                  >
+                    <EditIcon />
+                    Изменить
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+
+          {!dish && oldDish && (
+            <>
+              <DishCardSmall
+                dish={oldDish}
+                className={styles.old}
+                onClick={() => handleView && handleView(oldDish.id)}
+              />
+              <ThinButton onClick={handleAdd}>
+                <PlusIcon /> Добавить Блюдо
+              </ThinButton>
+            </>
+          )}
         </div>
       ) : (
-        <div className={styles.body} onClick={handleAdd} role="button" tabIndex={0}>
-          <span className={styles.label}>
-            <Image src={plusIcon} alt="+" /> Добавить Блюдо
-          </span>
-        </div>
+        <button className={styles.body} type="button" onClick={handleAdd}>
+          <ThinButton onClick={handleAdd}>
+            <PlusIcon /> Добавить Блюдо
+          </ThinButton>
+        </button>
       )}
     </div>
   );
-};
-
-export default PreferenceSection;
+}

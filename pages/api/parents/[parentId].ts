@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 
-import { Parent } from 'types/Parent';
+import { ParentWithChildren } from 'types/Parent';
 import exclude from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
@@ -54,7 +54,7 @@ const handler: NextApiHandler = async (req, res) => {
           },
         });
         const children = parentStudents.map((p) => p.student);
-        const parentWithChildren: Parent = { ...parent, children };
+        const parentWithChildren: ParentWithChildren = { ...parent, children };
 
         return res.send(parentWithChildren);
       }

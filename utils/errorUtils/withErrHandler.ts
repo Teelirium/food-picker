@@ -1,7 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { ZodError } from 'zod';
 
-import HttpError from 'utils/HttpError';
+import HttpError from 'utils/errorUtils/HttpError';
 
 function withErrHandler(handler: NextApiHandler) {
   return async (req: NextApiRequest, res: NextApiResponse) => {

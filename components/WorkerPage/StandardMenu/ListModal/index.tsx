@@ -22,15 +22,17 @@ async function fetchDishes(type: DishType) {
 const ListModal: React.FC<Props> = ({ toggle, toggleInfo, day, dishType }) => {
   const qClient = useQueryClient();
 
-  const query = useQuery(['dishesOfType', dishType], () => fetchDishes(dishType));
+  const query = useQuery(['dishesOfType', dishType], () => fetchDishes(dishType), {
+    staleTime: 1000 * 60 * 10,
+  });
 
   const mutation = useMutation(
     ({ dishId, day }: { dishId: number; day: number }) => {
       return axios.post(`/api/preferences/default?day=${day}`, { dishId });
     },
     {
-      onSuccess: () => {
-        qClient.invalidateQueries('defaults');
+      onSuccess: (data, { day }) => {
+        qClient.invalidateQueries(['defaults', day]);
         toggle();
       },
     },

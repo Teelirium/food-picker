@@ -19,6 +19,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "no-restricted-syntax": [0, "ForOfStatement"],
     "prettier/prettier": "warn",
     "@next/next/no-img-element": "off",
     "camelcase": ["warn", { "allow": ["unstable_"] }],
@@ -58,7 +59,7 @@
     "react/function-component-definition": [
       "warn",
       {
-        "namedComponents": "arrow-function"
+        "namedComponents": ["arrow-function", "function-declaration"]
       }
     ],
     "react/jsx-filename-extension": [
@@ -91,11 +92,11 @@
           "object",
           "type"
         ],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        }
+        "newlines-between": "always"
+        // "alphabetize": {
+        //   "order": "asc",
+        //   "caseInsensitive": true
+        // }
       }
     ],
     "import/extensions": [
