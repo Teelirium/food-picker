@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { getNextMonday } from 'utils/dateHelpers';
+import { addDays, getNextMonday } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
@@ -27,11 +27,11 @@ export const ordersRouter = router({
           dayMap[day]
         } at [${date.toLocaleDateString()}]`,
       );
-      const prevMonday = getNextMonday(date).addDays(-7);
+      const prevMonday = addDays(getNextMonday(date), -7);
       const orders = await prisma.order.findMany({
         where: {
           studentId,
-          date: prevMonday.addDays(day),
+          date: addDays(prevMonday, day),
         },
         select: {
           Dish: true,
