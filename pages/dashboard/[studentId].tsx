@@ -17,7 +17,7 @@ import { PlusIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import styles from 'styles/studentChoice.module.scss';
 import { PreferenceWithDish } from 'types/Preference';
-import { getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
+import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -210,7 +210,7 @@ export default function StudentChoice() {
       <footer className={styles.footer}>
         <p>
           Выбор возможен до{' '}
-          {getNextMonday(currentDate.current).addDays(-1).toLocaleDateString(undefined, {
+          {addDays(getNextMonday(currentDate.current), -1).toLocaleDateString(undefined, {
             month: 'numeric',
             day: 'numeric',
           })}

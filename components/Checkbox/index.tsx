@@ -1,14 +1,19 @@
 import classNames from 'classnames';
-import { FC, InputHTMLAttributes } from 'react';
+import { ForwardedRef, InputHTMLAttributes, forwardRef } from 'react';
 
 import styles from './Checkbox.module.scss';
 
-const Checkbox: FC<InputHTMLAttributes<HTMLInputElement>> = ({ children, className, ...props }) => (
+const Checkbox = (
+  { children, className, ...props }: InputHTMLAttributes<HTMLInputElement>,
+  ref: ForwardedRef<HTMLInputElement>,
+) => (
   <label className={classNames(styles.wrapper, className)}>
-    <input className={styles.input} type="checkbox" {...props} />
-    <span className={styles.checkbox} />
-    {children && <p className={styles.text}>{children}</p>}
+    <input className={styles.input} type="checkbox" ref={ref} {...props} />
+    <span className={classNames(styles.checkbox, 'checkbox__inner')} />
+    {children && <p className={classNames(styles.text, 'checkbox__text')}>{children}</p>}
   </label>
 );
 
-export default Checkbox;
+const CheckboxWithRef = forwardRef(Checkbox);
+
+export default CheckboxWithRef;

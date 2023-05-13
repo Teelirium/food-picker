@@ -6,10 +6,12 @@ export function getNextMonday(date: Date): Date {
   return nextMonday;
 }
 
-export function addDaysToDate(date: Date, dayCount: number): Date {
-  const dateCopy = new Date(date.valueOf());
-  dateCopy.setDate(dateCopy.getDate() + dayCount);
-  return dateCopy;
+/**
+ * Mutates the given date
+ */
+export function addDays(date: Date, dayCount: number): Date {
+  date.setDate(date.getDate() + dayCount);
+  return date;
 }
 
 export function stripTimeFromDate(date: Date): Date {

@@ -12,7 +12,7 @@ import LoadingSpinner from 'components/ui/LoadingSpinner';
 import menuIcon from 'public/svg/menu.svg';
 import parentStore from 'stores/ParentStore';
 import dayMap from 'utils/dayMap';
-import getFullName from 'utils/getFullName';
+import { getFullName } from 'utils/names';
 import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
 

@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import ModalWrapper from 'components/ModalWrapper';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import parentStore from 'stores/ParentStore';
-import getFullName from 'utils/getFullName';
+import { getFullName } from 'utils/names';
 import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
 

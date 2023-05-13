@@ -1,0 +1,197 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(0deg, #1b3a4b 0%, #3e1f47 100%);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+
+  .containerInner {
+    height: inherit;
+    flex-basis: 1300px;
+    display: flex;
+    flex-direction: column;
+    background: #181818;
+    border-radius: 45px;
+    padding: 30px 45px;
+    overflow: hidden;
+
+    @media (max-width: 450px) {
+      padding: 20px 24px;
+    }
+  }
+}
+
+.content {
+  max-width: 540px;
+  width: 100%;
+  margin: 34px auto 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  @media (max-width: 992px) {
+    max-width: 470px;
+  }
+}
+
+.formActions {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+
+  @media (max-width: 450px) {
+    gap: 20px;
+  }
+}
+
+.selectAllButton {
+  font-size: 14px;
+  padding: 5px 10px;
+  color: #fff;
+  background: #3b3b3b;
+  border-radius: 30px;
+}
+
+.searchLine {
+  &Wrapper {
+    flex: 1;
+    position: relative;
+    border: 2px solid #3d3d3d;
+    border-radius: 20px;
+  }
+
+  &Input {
+    background: transparent;
+    font-size: 18px;
+    width: 100%;
+    outline: none;
+    color: #fff;
+    padding: 6px 12px 6px 42px;
+
+    @media (max-width: 992px) {
+      font-size: 16px;
+    }
+
+    &::placeholder {
+      color: #b2b2b2;
+    }
+  }
+
+  &Icon {
+    position: absolute;
+    left: 12px;
+    top: 9px;
+    width: 21px;
+    height: 21px;
+
+    & > span {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.studentList {
+  overflow: auto;
+  flex: 1;
+  margin-top: 30px;
+
+  @media (max-width: 450px) {
+    margin-top: 16px;
+    padding: 0 16px;
+  }
+}
+
+.checkbox :global {
+  margin: 16px 0;
+
+  @media (max-width: 992px) {
+    margin: 12px 0;
+  }
+
+  .checkbox {
+    &__inner {
+      width: 28px;
+      height: 28px;
+
+      @media (max-width: 992px) {
+        width: 26px;
+        height: 26px;
+      }
+
+      &::before {
+        width: 22px;
+        height: 22px;
+
+        @media (max-width: 992px) {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    &__text {
+      font-size: 18px;
+      margin-left: 20px;
+
+      @media (max-width: 992px) {
+        font-size: 16px;
+        margin-left: 16px;
+      }
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.date {
+  color: #a8a8a8;
+  font-size: 18px;
+
+  @media (max-width: 992px) {
+    font-size: 16px;
+  }
+}
+
+.saveButton {
+  background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  border-radius: 30px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 18px;
+  display: flex;
+  gap: 10px;
+
+  @media (max-width: 992px) {
+    font-size: 16px;
+  }
+
+  &Number {
+    display: flex;
+  }
+
+  &Svg {
+    height: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+
+    @media (max-width: 992px) {
+      height: 16px !important;
+      min-height: 16px !important;
+      max-height: 16px !important;
+    }
+  }
+}

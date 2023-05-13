@@ -5,13 +5,13 @@ import { z } from 'zod';
 
 import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
 import { PreferenceWithDish } from 'types/Preference';
-import { addDaysToDate, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
+import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import prisma from 'utils/prismaClient';
 
 const handler: NextApiHandler = async (req, res) => {
   const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
-  const nextEndOfWeek = addDaysToDate(nextMonday, MAX_WEEKDAYS - 1);
+  const nextEndOfWeek = addDays(nextMonday, MAX_WEEKDAYS - 1);
   console.log(
     `Generating orders from ${nextMonday.toLocaleDateString()} to ${nextEndOfWeek.toLocaleDateString()}`,
   );
@@ -54,7 +54,7 @@ async function getPreorderForStudent(
 ) {
   const promises = WEEKDAYS.map(async (weekday) => {
     const preorder = await getPreferencesWithDefaults(studentId, weekday, defaults);
-    await createOrders(studentId, preorder, addDaysToDate(mondayDate, weekday));
+    await createOrders(studentId, preorder, addDays(mondayDate, weekday));
     return preorder;
   });
   return Promise.all(promises);

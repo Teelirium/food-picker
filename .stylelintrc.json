@@ -4,6 +4,7 @@
   "rules": {
     "property-no-vendor-prefix": null,
     "selector-class-pattern": "[A-Za-z]+",
+    "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["global"] }],
     "plugin/declaration-block-no-ignored-properties": true,
     "scss/at-rule-no-unknown": [
       true,
