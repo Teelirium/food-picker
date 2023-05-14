@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import LeftSideNavibar from 'components/LeftSideNavibar';
 import StandardMenu from 'components/WorkerPage/StandardMenu';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';

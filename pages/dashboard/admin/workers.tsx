@@ -1,8 +1,13 @@
-import styles from 'styles/admin.module.css';
+import styles from 'styles/admin.module.scss';
 import { GetServerSideProps, NextPage } from 'next';
 import verifyRole from 'utils/verifyRole';
 import { PrismaClient } from '@prisma/client';
 import { getServerSideSession } from 'utils/getServerSession';
+import Head from 'next/head';
+import LeftSideNavibar from 'components/LeftSideNavibar';
+
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const prisma = new PrismaClient();
 
@@ -38,7 +43,20 @@ type Props = {
 };
 
 const WorkersPage: NextPage<Props> = ({ adminName }) => {
-  return <>${adminName}</>;
+  const router = useRouter();
+  const [activeTab, setTab] = useState('Список учителей');
+
+  return (
+    <>
+      <Head>
+        <title>{activeTab}</title>
+      </Head>
+      <div className={styles.container}>
+        <LeftSideNavibar activePage={1} workerName={adminName} />
+        <div className={styles.content}></div>
+      </div>
+    </>
+  );
 };
 
 export default WorkersPage;

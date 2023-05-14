@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import LeftSideNavibar from 'components/LeftSideNavibar';
 import Orders from 'components/WorkerPage/Orders';
 import { GradeInfo } from 'pages/api/grades/total-orders';
 import styles from 'styles/worker.module.css';

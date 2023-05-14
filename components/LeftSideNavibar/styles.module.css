@@ -49,7 +49,7 @@
   content: "";
   width: 40px;
   height: 40px;
-  background-image: url("../../../public/img/triangle.png");
+  background-image: url("../../public/img/triangle.png");
   background-size: contain;
   transform: rotate(180deg);
   transition: transform 0.3s ease;

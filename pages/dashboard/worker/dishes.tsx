@@ -8,7 +8,7 @@ import { z } from 'zod';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import LeftSideNavibar from 'components/LeftSideNavibar';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
