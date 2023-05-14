@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  if (verifyRole(session, ['WORKER', 'ADMIN'])) {
+  if (verifyRole(session, ['WORKER'])) {
     return {
       redirect: {
         destination: '/dashboard/worker/dishes',
@@ -46,6 +46,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       redirect: {
         destination: '/dashboard/teacher',
+        permanent: false,
+      },
+    };
+  }
+
+  if (verifyRole(session, ['ADMIN'])) {
+    return {
+      redirect: {
+        destination: '/dashboard/admin',
         permanent: false,
       },
     };
