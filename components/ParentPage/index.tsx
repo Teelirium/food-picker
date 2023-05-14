@@ -2,40 +2,26 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
-import { HamburgerIcon, LogOutIcon, UserIcon } from 'components/ui/Icons';
+import { LogOutIcon, UserIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import parentStore from 'stores/ParentStore';
 import dayMap from 'utils/dayMap';
-import { getFullName, getInitials } from 'utils/names';
+import { getFullName } from 'utils/names';
 import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
 
-import Modal from './Modal';
 import styles from './styles.module.scss';
-
-const paramSchema = z.object({
-  student: idSchema.default(0),
-});
 
 function ParentPage() {
   const session = useSession();
-  const router = useRouter();
 
   const parentId = idSchema.optional().parse(session.data?.user.id);
 
   const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
-
-  const toggleModal = () => {
-    router.replace('', undefined, { shallow: true });
-  };
-
   return (
     <DashboardLayout>
       <header className={styles.header}>
