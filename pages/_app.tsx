@@ -1,6 +1,6 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import toast, { Toaster, resolveValue } from 'react-hot-toast';
@@ -21,7 +21,7 @@ const MyApp = ({ Component, pageProps }: AppProps<{ session: Session }>) => (
     <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
-    <ReactQueryDevtools initialIsOpen={false} />
+    {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     <Toaster position="bottom-right">
       {(t) => (
         <Notification onClick={() => toast.dismiss(t.id)} visible={t.visible} duration={t.duration}>
