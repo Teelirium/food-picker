@@ -23,7 +23,6 @@
     "@trpc/next": "^10.19.1",
     "@trpc/react-query": "^10.19.1",
     "@trpc/server": "^10.19.1",
-    "@types/datejs": "^0.0.33",
     "@types/swagger-ui-react": "^4.11.0",
     "@upstash/qstash": "^0.3.6",
     "axios": "^1.1.3",

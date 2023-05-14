@@ -107,3 +107,4 @@ const DebtList: FC<DebtListProps> = ({ gradeId, students }) => {
 };
 
 export default DebtList;
+
