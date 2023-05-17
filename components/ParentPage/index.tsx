@@ -23,11 +23,15 @@ function ParentPage() {
 
   const parentId = idSchema.optional().parse(session.data?.user.id);
   const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
+
   const selectedChild = parent?.children[parentStore.childIndex];
-  const { data } = trpc.preferences.totalCost.useQuery(
+
+  const { data, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
     { studentId: selectedChild?.id ?? NaN },
     { enabled: selectedChild !== undefined, staleTime: Infinity },
   );
+
+  const showSpinner = parentQuery.isFetching || totalCostQuery.isFetching;
 
   return (
     <DashboardLayout>
@@ -52,7 +56,7 @@ function ParentPage() {
           </Link>
         ))}
       </main>
-      {parentQuery.isLoading && (
+      {showSpinner && (
         <ModalWrapper provideContainer>
           <LoadingSpinner />
         </ModalWrapper>

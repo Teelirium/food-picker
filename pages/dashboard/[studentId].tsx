@@ -1,5 +1,6 @@
 import { Dish, DishType } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -22,6 +23,7 @@ import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
 import { toRubles } from 'utils/localisation';
+import { useSetPreferenceMutation } from 'utils/mutations';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import { trpc } from 'utils/trpc/client';
@@ -117,6 +119,8 @@ export default function StudentChoice() {
       return axios.delete(`/api/preferences/${prefId}`);
     },
     async onSuccess() {
+      const totalCostKey = getQueryKey(trpc.preferences.totalCost, { studentId });
+      queryClient.invalidateQueries({ queryKey: totalCostKey });
       queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
     },
     async onError() {
@@ -124,14 +128,7 @@ export default function StudentChoice() {
     },
   });
 
-  const setPreferenceMutation = trpc.preferences.setPreference.useMutation({
-    async onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
-    },
-    async onError() {
-      toast.error('Не удалось установить предпочтение');
-    },
-  });
+  const setPreferenceMutation = useSetPreferenceMutation();
 
   const showSpinner =
     preferencesQuery.isFetching ||

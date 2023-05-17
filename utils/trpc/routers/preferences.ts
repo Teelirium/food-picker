@@ -1,10 +1,9 @@
-import { Dish, DishType, Preference } from '@prisma/client';
+import { DishType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
-import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
-import maxDay from 'utils/maxDay';
+import { WEEKDAYS } from 'app.config';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -35,7 +34,7 @@ export const preferencesRouter = router({
       });
       if (!dish) throw new TRPCError({ code: 'NOT_FOUND', message: 'Блюдо не найдено' });
 
-      const existingPreference = await prisma.preference.findFirst({
+      const deleteExisting = prisma.preference.deleteMany({
         where: {
           studentId,
           dayOfWeek: day,
@@ -43,30 +42,17 @@ export const preferencesRouter = router({
             type: dish.type,
           },
         },
-        select: {
-          id: true,
+      });
+      const createNew = prisma.preference.create({
+        data: {
+          studentId,
+          dayOfWeek: day,
+          dishId,
         },
+        include: { Dish: true },
       });
 
-      const result = existingPreference
-        ? await prisma.preference.update({
-            where: {
-              id: existingPreference.id,
-            },
-            data: {
-              dishId,
-            },
-            include: { Dish: true },
-          })
-        : await prisma.preference.create({
-            data: {
-              studentId,
-              dayOfWeek: day,
-              dishId,
-            },
-            include: { Dish: true },
-          });
-
+      const [, result] = await prisma.$transaction([deleteExisting, createNew]);
       return result;
     }),
 
@@ -81,7 +67,7 @@ export const preferencesRouter = router({
     .query(async ({ input }) => {
       const { studentId } = input;
       const transactions = WEEKDAYS.map((day) =>
-        getTotalCosts(studentId, day).then((costs) =>
+        getPreferenceTotal(studentId, day).then((costs) =>
           costs.reduce((prev, cur) => prev + cur.price, 0),
         ),
       );
@@ -92,7 +78,7 @@ export const preferencesRouter = router({
     }),
 });
 
-async function getTotalCosts(studentId: number, dayOfWeek: number) {
+async function getPreferenceTotal(studentId: number, dayOfWeek: number) {
   const prefs: { price: number; type: DishType }[] =
     await prisma.$queryRaw`SELECT d.price, d.type, d.name FROM 
     Preference AS p JOIN Dish AS d ON p.dishId=d.id 
