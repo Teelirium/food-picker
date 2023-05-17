@@ -10,9 +10,11 @@ import { LogOutIcon, UserIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import parentStore from 'stores/ParentStore';
 import dayMap from 'utils/dayMap';
+import { toRubles } from 'utils/localisation';
 import { getFullName } from 'utils/names';
 import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
@@ -20,8 +22,13 @@ function ParentPage() {
   const session = useSession();
 
   const parentId = idSchema.optional().parse(session.data?.user.id);
-
   const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
+  const selectedChild = parent?.children[parentStore.childIndex];
+  const { data } = trpc.preferences.totalCost.useQuery(
+    { studentId: selectedChild?.id ?? NaN },
+    { enabled: selectedChild !== undefined, staleTime: Infinity },
+  );
+
   return (
     <DashboardLayout>
       <header className={styles.header}>
@@ -29,15 +36,16 @@ function ParentPage() {
           <LogOutIcon style={{ transform: 'rotate(180deg)' }} />
         </button>
         <h1 className={styles.daySelect_childName}>
-          {parent ? getFullName(parent.children[parentStore.childIndex]) : ''}
+          {selectedChild ? getFullName(selectedChild) : ''}
         </h1>
+        <div className={styles.headerLabels}>
+          <span>Стоимость питания за неделю: {JSON.stringify(data)}</span>
+          <span>Текущая задолженность: {selectedChild && toRubles(selectedChild.debt)}</span>
+        </div>
       </header>
       <main className={styles.daySelect}>
         {dayMap.slice(0, 5).map((day, i) => (
-          <Link
-            href={parent ? `/dashboard/${parent.children[parentStore.childIndex].id}?day=${i}` : ''}
-            key={i}
-          >
+          <Link href={selectedChild ? `/dashboard/${selectedChild.id}?day=${i}` : ''} key={i}>
             <div className={styles.daySelect_dayOfTheWeek}>
               <span>{day}</span>
             </div>

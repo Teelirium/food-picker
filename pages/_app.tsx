@@ -21,7 +21,7 @@ const MyApp = ({ Component, pageProps }: AppProps<{ session: Session }>) => (
     <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
-    {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+    <ReactQueryDevtools initialIsOpen={false} />
     <Toaster position="bottom-right">
       {(t) => (
         <Notification onClick={() => toast.dismiss(t.id)} visible={t.visible} duration={t.duration}>

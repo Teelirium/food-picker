@@ -1,20 +1,21 @@
 import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
+import { signIn } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 import Button from 'components/Button';
 import Checkbox from 'components/Checkbox';
 import { getServerSideSession } from 'utils/getServerSession';
+import { trpc } from 'utils/trpc/client';
 import verifyRole from 'utils/verifyRole';
 
 import dishImage from '../public/img/authDish.png';
 import dishCircleImage from '../public/img/authDishCircle.png';
-import styles from '../styles/login.module.scss';
-import { trpc } from 'utils/trpc/client';
+
+import styles from './login.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSideSession(ctx);
