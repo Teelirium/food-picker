@@ -16,6 +16,7 @@ import PreferenceSection from 'components/PreferenceSection';
 import ThinButton from 'components/ThinButton';
 import { PlusIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
+import { useSetPreferenceMutation } from 'modules/preference/mutations';
 import { PreferenceWithDish } from 'modules/preference/types';
 import styles from 'styles/studentChoice.module.scss';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
@@ -23,7 +24,6 @@ import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
 import { toRubles } from 'utils/localisation';
-import { useSetPreferenceMutation } from 'utils/mutations';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import { trpc } from 'utils/trpc/client';
@@ -101,6 +101,7 @@ export default function StudentChoice() {
     { staleTime: 10 * 60 * 1000 },
   );
 
+  // get from query instead
   const totalCost: number = useMemo(() => {
     if (!preferences || !orders) {
       return 0;

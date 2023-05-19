@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
@@ -10,6 +12,7 @@ import { LogOutIcon, UserIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import parentStore from 'stores/ParentStore';
 import dayMap from 'utils/dayMap';
+import deleteEmptyParams from 'utils/deleteEmptyParams';
 import { toRubles } from 'utils/localisation';
 import { getFullName } from 'utils/names';
 import { getParent } from 'utils/queries/parent';
@@ -18,13 +21,19 @@ import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
+const paramSchema = z.object({
+  student: idSchema.default(0),
+});
+
 function ParentPage() {
   const session = useSession();
+  const router = useRouter();
+  const { student } = paramSchema.parse(router.query);
 
   const parentId = idSchema.optional().parse(session.data?.user.id);
   const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
 
-  const selectedChild = parent?.children[parentStore.childIndex];
+  const selectedChild = parent?.children[student];
 
   const { data, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
     { studentId: selectedChild?.id ?? NaN },
@@ -52,6 +61,7 @@ function ParentPage() {
           <Link href={selectedChild ? `/dashboard/${selectedChild.id}?day=${i}` : ''} key={i}>
             <div className={styles.daySelect_dayOfTheWeek}>
               <span>{day}</span>
+              {/* <span>{data && data[i]}</span> */}
             </div>
           </Link>
         ))}
@@ -68,6 +78,13 @@ function ParentPage() {
             key={child.id}
             type="button"
             onClick={() => {
+              router.replace(
+                { pathname: '', query: deleteEmptyParams({ ...router.query, student: idx }) },
+                undefined,
+                {
+                  shallow: true,
+                },
+              );
               parentStore.setChildIndex(idx);
             }}
           >

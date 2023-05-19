@@ -1,4 +1,5 @@
 import { Grade, Student, StudentPresence } from '@prisma/client';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { GetServerSideProps, NextPage } from 'next';
@@ -6,7 +7,6 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import { z } from 'zod';
 
 import Checkbox from 'components/Checkbox';

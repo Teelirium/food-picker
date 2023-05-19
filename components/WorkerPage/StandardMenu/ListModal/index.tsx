@@ -1,9 +1,10 @@
 import { Dish, DishType } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import ModalWrapper from 'components/ModalWrapper';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
+import LoadingSpinner from 'components/ui/LoadingSpinner';
 
 import styles from './styles.module.scss';
 
@@ -32,18 +33,22 @@ const ListModal: React.FC<Props> = ({ toggle, toggleInfo, day, dishType }) => {
     },
     {
       onSuccess: (data, { day }) => {
-        qClient.invalidateQueries(['defaults', day]);
+        qClient.invalidateQueries({ queryKey: ['defaults', day] });
         toggle();
       },
     },
   );
 
+  const showSpinner = query.isFetching || mutation.isLoading;
+
   return (
     <ModalWrapper toggle={toggle}>
       <div className={styles.container}>
-        {/* TODO some popup idk */}
-        {query.isLoading && 'Загрузка...'}
-        {mutation.isLoading && 'Блюдо выбирается...'}
+        {showSpinner && (
+          <ModalWrapper provideContainer>
+            <LoadingSpinner />
+          </ModalWrapper>
+        )}
         {query.isSuccess && (
           <>
             <ul className={styles.list}>

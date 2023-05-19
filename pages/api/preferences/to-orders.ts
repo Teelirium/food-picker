@@ -15,7 +15,7 @@ import prisma from 'utils/prismaClient';
 
 // at least this is O(n)
 const handler: NextApiHandler = async (req, res) => {
-  const nextMonday = getNextMonday(stripTimeFromDate(new Date('2023-05-14')));
+  const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
   const nextEndOfWeek = addDays(nextMonday, MAX_WEEKDAYS - 1);
   console.log(
     `Generating orders from ${nextMonday.toLocaleDateString()} to ${nextEndOfWeek.toLocaleDateString()}`,

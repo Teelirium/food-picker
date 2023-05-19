@@ -10,7 +10,7 @@ import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
@@ -36,11 +36,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-type Props = {
+type PageProps = {
   workerName: string;
 };
 
-const StandardMenuPage: NextPage<Props> = ({ workerName }) => {
+const StandardMenuPage: NextPage<PageProps> = ({ workerName }) => {
   return (
     <>
       <Head>

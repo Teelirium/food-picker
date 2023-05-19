@@ -1,10 +1,10 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import toast, { Toaster, resolveValue } from 'react-hot-toast';
-import { QueryClient, QueryClientProvider } from 'react-query';
 
 import Notification from 'components/Notification';
 import 'styles/globals.css';

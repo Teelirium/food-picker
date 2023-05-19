@@ -1,9 +1,9 @@
 import { Dish } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useQuery } from 'react-query';
 
 import ModalWrapper from 'components/ModalWrapper';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
