@@ -101,19 +101,25 @@ export default function StudentChoice() {
     { staleTime: 10 * 60 * 1000 },
   );
 
-  // get from query instead
-  const totalCost: number = useMemo(() => {
-    if (!preferences || !orders) {
-      return 0;
-    }
+  const { data: totalCosts, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
+    { studentId },
+    {
+      staleTime: Infinity,
+    },
+  );
 
-    let cost = 0;
-    for (const type of Object.keys(DishType) as DishType[]) {
-      const dish = preferences?.get(type)?.Dish ?? orders?.get(type);
-      cost += dish?.price ?? 0;
-    }
-    return cost;
-  }, [preferences, orders]);
+  // const totalCost: number = useMemo(() => {
+  //   if (!preferences || !orders) {
+  //     return 0;
+  //   }
+
+  //   let cost = 0;
+  //   for (const type of Object.keys(DishType) as DishType[]) {
+  //     const dish = preferences?.get(type)?.Dish ?? orders?.get(type);
+  //     cost += dish?.price ?? 0;
+  //   }
+  //   return cost;
+  // }, [preferences, orders]);
 
   const deletePreferenceMutation = useMutation({
     async mutationFn(prefId: number) {
@@ -122,7 +128,9 @@ export default function StudentChoice() {
     async onSuccess() {
       const totalCostKey = getQueryKey(trpc.preferences.totalCost, { studentId });
       queryClient.invalidateQueries({ queryKey: totalCostKey });
-      queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
+
+      const preferencesKey = ['preferences', { studentId, day }];
+      queryClient.invalidateQueries({ queryKey: preferencesKey });
     },
     async onError() {
       toast.error('Не удалось удалить предпочтение');
@@ -134,6 +142,7 @@ export default function StudentChoice() {
   const showSpinner =
     preferencesQuery.isFetching ||
     ordersQuery.isFetching ||
+    totalCostQuery.isFetching ||
     deletePreferenceMutation.isLoading ||
     setPreferenceMutation.isLoading;
   const showError = preferencesQuery.isError || ordersQuery.isError;
@@ -213,7 +222,7 @@ export default function StudentChoice() {
             day: 'numeric',
           })}
         </p>
-        <p>Итого: {toRubles(totalCost)}</p>
+        <p>Итого: {totalCosts && toRubles(totalCosts.costsPerDay[day])}</p>
       </footer>
     </DashboardLayout>
   );

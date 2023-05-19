@@ -35,7 +35,7 @@ function ParentPage() {
 
   const selectedChild = parent?.children[student];
 
-  const { data, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
+  const { data: totalCosts, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
     { studentId: selectedChild?.id ?? NaN },
     { enabled: selectedChild !== undefined, staleTime: Infinity },
   );
@@ -52,7 +52,7 @@ function ParentPage() {
           {selectedChild ? getFullName(selectedChild) : ''}
         </h1>
         <div className={styles.headerLabels}>
-          <span>Стоимость питания за неделю: {JSON.stringify(data)}</span>
+          <span>Стоимость питания за неделю: {totalCosts && toRubles(totalCosts.total)}</span>
           <span>Текущая задолженность: {selectedChild && toRubles(selectedChild.debt)}</span>
         </div>
       </header>

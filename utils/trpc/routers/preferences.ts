@@ -71,10 +71,10 @@ export const preferencesRouter = router({
           costs.reduce((prev, cur) => prev + cur.price, 0),
         ),
       );
-      const costs = await Promise.all(transactions);
+      const costsPerDay = await Promise.all(transactions);
       // return costs;
-      const total = costs.reduce((prev, cur) => prev + cur, 0);
-      return { total, costs };
+      const total = costsPerDay.reduce((prev, cur) => prev + cur, 0);
+      return { total, costsPerDay };
     }),
 });
 
