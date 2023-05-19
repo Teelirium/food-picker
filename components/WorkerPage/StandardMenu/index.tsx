@@ -1,12 +1,15 @@
+import { DishType } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { z } from 'zod';
 
-import { DishType } from '@prisma/client';
+import ModalWrapper from 'components/ModalWrapper';
 import PreferenceSection from 'components/PreferenceSection';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
+import LoadingSpinner from 'components/ui/LoadingSpinner';
 import { DefaultDishes } from 'pages/api/preferences/default';
 import dayMap from 'utils/dayMap';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
@@ -16,7 +19,6 @@ import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import idSchema from 'utils/schemas/idSchema';
 
-import { useQuery } from '@tanstack/react-query';
 import ListModal from './ListModal';
 import styles from './styles.module.scss';
 
@@ -36,7 +38,7 @@ async function getDishes(day: number) {
   return new Map(data.map((d) => [d.Dish.type, d.Dish]));
 }
 
-const StandardMenu: React.FC = () => {
+export default function StandardMenu() {
   const router = useRouter();
 
   const { day, dishType, dishId } = paramSchema.parse(router.query);
@@ -69,14 +71,18 @@ const StandardMenu: React.FC = () => {
     [router],
   );
 
+  const showSpinner = query.isFetching || query.isPreviousData;
+
   return (
     <div className={styles.container}>
-      {(query.isLoading || query.isPreviousData) && (
-        <div className={styles.spinner}>
-          <span>Загрузка...</span>
-        </div>
+      {showSpinner && (
+        <ModalWrapper provideContainer>
+          <LoadingSpinner />
+        </ModalWrapper>
       )}
       <header className={styles.header}>
+        <h1>Стандартное питание</h1>
+        <h2>Стандартное питание на неделю устанавливается по умолчанию для всех учеников</h2>
         <ul>
           {dayMap.slice(0, maxDay).map((d, i) => (
             <Link key={d} href={{ pathname: router.basePath, query: { day: i } }} shallow>
@@ -99,7 +105,6 @@ const StandardMenu: React.FC = () => {
             />
           ))}
       </main>
-      <footer className={styles.footer}>(Меню повторяется каждую неделю)</footer>
       {dishType && (
         <ListModal
           day={day}
@@ -115,6 +120,4 @@ const StandardMenu: React.FC = () => {
       {dishId !== undefined && <DishAboutModal dishId={dishId} />}
     </div>
   );
-};
-
-export default StandardMenu;
+}

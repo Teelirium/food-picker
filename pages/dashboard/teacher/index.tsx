@@ -9,7 +9,6 @@ import AttendanceList from 'components/Teacher/AttendanceList';
 import DebtList from 'components/Teacher/DebtList';
 import Navibar from 'components/Teacher/Navibar';
 import TeacherModal from 'components/Teacher/TeacherModal';
-
 import styles from 'styles/teacher.module.scss';
 import { getServerSideSession } from 'utils/getServerSession';
 import { getFullName, getInitials } from 'utils/names';

@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { NumericFormat } from 'react-number-format';
 import { toast } from 'react-hot-toast';
+import { NumericFormat } from 'react-number-format';
 
 import useWindowSize from 'hooks/useWindowSize';
 import magnifierIcon from 'public/svg/magnifier.svg';
@@ -107,4 +107,3 @@ const DebtList: FC<DebtListProps> = ({ gradeId, students }) => {
 };
 
 export default DebtList;
-

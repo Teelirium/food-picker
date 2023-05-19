@@ -3,13 +3,11 @@
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 2fr 1fr;
-  margin-bottom: 1.6rem;
-  padding: 1rem;
 
-  position: -webkit-sticky;
+  // margin-bottom: 1.6rem;
+  padding: 1rem;
   position: sticky;
   top: 0;
-
   z-index: 1;
   background-color: var(--dark-bg-color);
 
@@ -21,7 +19,6 @@
 .icon {
   height: 100%;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;

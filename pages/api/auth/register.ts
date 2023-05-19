@@ -1,13 +1,16 @@
+import { TRPCError } from '@trpc/server';
 import { hash } from 'bcryptjs';
 
-import { UserFormData, UserData } from 'types/UserData';
+import { UserData, UserFormData } from 'types/UserData';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import prisma from 'utils/prismaClient';
 
-import type { NextApiHandler } from 'next';
-
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   switch (req.method) {
     case 'POST': {
+      if (process.env.NODE_ENV !== 'production') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'низя' });
+      }
       const { user } = req.body as { user: UserFormData };
       console.log('Registering user: ', user);
       const password = await hash(user.password, 12);
@@ -41,14 +44,12 @@ const handler: NextApiHandler = async (req, res) => {
           });
           break;
         default:
-          return res.status(422).send('Invalid role');
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Неверная роль' });
       }
-      return res.send('OK');
+      return res.status(201).send('Created');
     }
 
     default:
-      return res.status(405).send('Method not allowed');
+      throw new TRPCError({ code: 'METHOD_NOT_SUPPORTED' });
   }
-};
-
-export default handler;
+});

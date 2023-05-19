@@ -1,7 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import { PreferenceWithDish } from 'types/Preference';
+import { PreferenceWithDish } from 'modules/preference/types';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';

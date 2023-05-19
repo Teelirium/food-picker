@@ -12,20 +12,27 @@
 
 .header {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   align-items: center;
-  justify-content: flex-start;
-  gap: 3rem;
-  padding: 22px 24px 0;
-  margin-bottom: 22px;
-  cursor: pointer;
+  gap: 0.6rem;
+  padding: 1rem 2.4rem;
   -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+
+  &Labels {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .menuButton {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 0 0 auto;
+  filter: brightness(80%);
   padding: 1.6rem;
   min-height: 6rem;
   min-width: 6rem;
@@ -34,28 +41,42 @@
   border-radius: 50%;
   position: relative;
   z-index: 0;
+  transition: all 150ms;
 
   * {
     position: relative;
   }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
-.daySelect_childName {
-  color: white;
-  font-size: 20px;
-  max-width: 300px;
-  user-select: none;
-  text-align: center;
-}
-
-.daySelect_daysContainer {
+.daySelect {
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
-  justify-content: center;
-  padding: 0 15px;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  width: 100%;
+  gap: 2rem;
+  padding: 0 1.6rem;
+  padding-bottom: 2rem;
   -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+  overflow-y: auto;
+
+  &_childName {
+    color: white;
+    font-size: 20px;
+    user-select: none;
+    text-align: center;
+    flex: 1 1 0;
+    justify-self: flex-start;
+  }
+
+  a {
+    width: 100%;
+  }
 }
 
 .daySelect_dayOfTheWeek {
@@ -64,14 +85,62 @@
   justify-content: center;
   width: 100%;
   padding: 4.5rem 9.6rem;
-  background: linear-gradient(to right, #3e1f47, #144552);
+  background: var(--lr-gradient-1);
   border-radius: 30px;
-  margin-bottom: 28px;
   cursor: pointer;
   user-select: none;
+
+  span {
+    color: white;
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
 }
 
-.daySelect_dayOfTheWeek span {
-  color: white;
-  font-size: 20px;
+.footer {
+  // position: fixed;
+  flex: 0 0 auto;
+  bottom: 0;
+  height: 8rem;
+  width: 100%;
+  background: var(--lr-gradient-1);
+  padding: 0.6rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: hidden;
+  overflow-x: auto;
+  user-select: none;
+
+  &::-webkit-scrollbar {
+    height: 0.4rem;
+  }
+
+  &Item {
+    flex: 1 0 auto;
+    font-size: 1.6rem;
+    max-width: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &Text {
+      max-width: inherit;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &Icon {
+      width: 4rem;
+      filter: brightness(70%);
+
+      &Active {
+        filter: brightness(1000%) contrast(1000%);
+        color: lightblue;
+        mix-blend-mode: overlay;
+      }
+    }
+  }
 }

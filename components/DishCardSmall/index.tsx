@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { MouseEventHandler } from 'react';
 
 import { toRubles } from 'utils/localisation';
+
 import styles from './styles.module.scss';
 
 type Props = {
@@ -23,8 +24,8 @@ export default function DishCardSmall({ dish, onClick, className }: Props) {
         <img src={dish.imgURL} alt={dish.name} loading="lazy" />
       </div>
       <div className={styles.info}>
-        <strong>{dish.name}</strong>
-        <span>{toRubles(dish.price)}</span>
+        <strong className={styles.name}>{dish.name}</strong>
+        <span className={styles.price}>{toRubles(dish.price)}</span>
       </div>
     </div>
   );
