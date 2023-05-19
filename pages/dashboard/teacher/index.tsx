@@ -1,18 +1,14 @@
 import { Grade, Student, StudentPresence } from '@prisma/client';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import AttendanceList from 'components/Teacher/AttendanceList';
 import DebtList from 'components/Teacher/DebtList';
 import Navibar from 'components/Teacher/Navibar';
 import TeacherModal from 'components/Teacher/TeacherModal';
-
 import styles from 'styles/teacher.module.scss';
 import { getServerSideSession } from 'utils/getServerSession';
 import { getFullName, getInitials } from 'utils/names';

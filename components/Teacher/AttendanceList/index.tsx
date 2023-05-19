@@ -1,10 +1,10 @@
 import { Student, StudentPresence } from '@prisma/client';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 
 import Checkbox from 'components/Checkbox';
