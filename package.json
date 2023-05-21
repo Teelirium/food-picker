@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "studio": "npx prisma studio",
-    "build": "next build && npx prisma generate",
+    "build": "npx prisma generate && next build",
     "start": "next start",
+    "studio": "npx prisma studio",
     "test": "jest --watch",
     "lint": "npm run lint:next && npm run lint:es && npm run lint:css",
     "lint:next": "next lint",
