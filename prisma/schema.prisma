@@ -86,6 +86,7 @@ model Dish {
   weightGrams Int
   ingredients String
   calories    Int
+  isHidden    Boolean      @default(false)
   type        DishType
   preferences Preference[]
   Orders      Order[]

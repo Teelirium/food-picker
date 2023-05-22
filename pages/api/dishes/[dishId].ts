@@ -1,6 +1,7 @@
-import { NextApiHandler } from 'next';
+import { TRPCError } from '@trpc/server';
 
 import { PartialDish } from 'types/Dish';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
@@ -16,14 +17,18 @@ import verifyRole from 'utils/verifyRole';
  *  delete:
  *    summary: Удаляет блюдо
  */
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   const dishId = idSchema.parse(req.query.dishId);
   if (!dishId) {
-    return res.status(404).send('');
+    throw new TRPCError({ code: 'BAD_REQUEST' });
   }
 
   const session = await getServerSideSession({ req, res });
-  const isWorkerOrAdmin = !!session && verifyRole(session, ['WORKER', 'ADMIN']);
+  if (!session) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+
+  const isWorkerOrAdmin = verifyRole(session, ['WORKER', 'ADMIN']);
 
   switch (req.method) {
     case 'GET': {
@@ -33,52 +38,41 @@ const handler: NextApiHandler = async (req, res) => {
         },
       });
       if (!dish) {
-        return res.status(404).send('Dish not found');
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Такого блюда не существует' });
       }
       return res.send(dish);
     }
 
     case 'PATCH': {
       if (!isWorkerOrAdmin) {
-        return res.status(403).send('');
+        throw new TRPCError({ code: 'FORBIDDEN' });
       }
-
       const { partialDish } = req.body as { partialDish: PartialDish };
-      try {
-        const newDish = await prisma.dish.update({
-          where: { id: dishId },
-          data: partialDish,
-        });
-        return res.status(201).send(newDish);
-      } catch (err) {
-        console.error(err);
-        return res.status(500).send(err);
-      }
+      const newDish = await prisma.dish.update({
+        where: { id: dishId },
+        data: partialDish,
+      });
+      return res.status(201).send(newDish);
     }
 
-    case 'DELETE':
+    case 'DELETE': {
       if (!isWorkerOrAdmin) {
-        return res.status(403).send('');
+        throw new TRPCError({ code: 'FORBIDDEN' });
       }
-      try {
-        const removePrefsWithDish = prisma.preference.deleteMany({
-          where: { dishId },
-        });
-        const removeDish = prisma.dish.delete({
-          where: {
-            id: dishId,
-          },
-        });
-        await prisma.$transaction([removePrefsWithDish, removeDish]);
-        return res.send('OK');
-      } catch (err) {
-        console.error(err);
-        return res.status(500).send(err);
-      }
+      const removePrefsWithDish = prisma.preference.deleteMany({
+        where: { dishId },
+      });
+      const disableDish = prisma.dish.update({
+        where: {
+          id: dishId,
+        },
+        data: {},
+      });
+      await prisma.$transaction([removePrefsWithDish, disableDish]);
+      return res.send('OK');
+    }
 
     default:
-      return res.status(405).send('Method not allowed');
+      throw new TRPCError({ code: 'METHOD_NOT_SUPPORTED' });
   }
-};
-
-export default handler;
+});

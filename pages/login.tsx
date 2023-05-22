@@ -85,7 +85,6 @@ const Login: NextPage = () => {
         <div className={styles.sideImageDish}>
           <Image src={dishImage} alt="Центральное блюдо" />
         </div>
-
         <div className={styles.gradientBg}>
           <div className={styles.dashedBorder}>
             <div className={styles.sideImageDishesCircle}>
