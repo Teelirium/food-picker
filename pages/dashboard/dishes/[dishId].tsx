@@ -7,13 +7,13 @@ import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import { ChevronLeftIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
+import { DishService } from 'modules/dish/service';
 import { useSetPreferenceMutation } from 'modules/preference/mutations';
 import styles from 'styles/dishInfo.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
 import { getServerSideSession } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import { toRubles } from 'utils/localisation';
-import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
@@ -31,9 +31,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   if (
     !session ||
     !verifyRole(session, ['PARENT', 'ADMIN']) ||
-    (studentId !== undefined &&
-      !(await isParentOf(session, studentId)) &&
-      session.user.role === 'PARENT')
+    (studentId !== undefined && !(await isParentOf(session, studentId)))
   ) {
     return {
       redirect: {
@@ -43,16 +41,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 
-  const dish = await prisma.dish.findUniqueOrThrow({
-    where: {
-      id: dishId,
-    },
-  });
+  const dish = await DishService.getById(dishId);
+
+  if (!dish || dish.isHidden) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
       dish,
-      dishId,
       day: day ?? null,
       studentId: studentId ?? null,
     },
@@ -61,12 +60,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 
 type Props = {
   dish: Dish;
-  dishId: number;
   day: number | null;
   studentId: number | null;
 };
 
-const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
+const DishInfo: NextPage<Props> = ({ dish, day, studentId }) => {
   const router = useRouter();
 
   const setPreferenceMutation = useSetPreferenceMutation(() =>
@@ -78,7 +76,7 @@ const DishInfo: NextPage<Props> = ({ dish, day, studentId, dishId }) => {
   function handleChoose() {
     if (studentId === null || day === null) return;
 
-    setPreferenceMutation.mutate({ studentId, day, dishId });
+    setPreferenceMutation.mutate({ studentId, day, dishId: dish.id });
   }
 
   return (

@@ -9,6 +9,7 @@ import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
 import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import { DishService } from 'modules/dish/service';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const dishes = await prisma.dish.findMany();
+  const dishes = await DishService.getAll(undefined, true);
   const workerData = await prisma.worker.findUnique({
     where: {
       id: +session.user.id,

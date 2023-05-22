@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 
 import ModalWrapper from 'components/ModalWrapper';
-import { DishFormData } from 'types/Dish';
+import { DishFormData } from 'modules/dish/types';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 import { ModalMethod } from 'utils/schemas/modalMethodSchema';
 
@@ -79,7 +79,7 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
     }
   };
 
-  const onDelete = (dishId: number | undefined) => {
+  const onDelete = (dishId: number) => {
     axios
       .delete(`/api/dishes/${dishId}`)
       .then(() => {
@@ -233,7 +233,12 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
               Отмена
             </div>
             {method === 'UPDATE' ? (
-              <div className={styles.removeBtn} onClick={() => onDelete(dish?.id)}>
+              <div
+                className={styles.removeBtn}
+                onClick={() => {
+                  if (dish) onDelete(dish.id);
+                }}
+              >
                 Удалить
               </div>
             ) : null}

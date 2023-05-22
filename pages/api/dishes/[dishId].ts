@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 
-import { PartialDish } from 'types/Dish';
+import { DishService } from 'modules/dish/service';
+import { PartialDish } from 'modules/dish/types';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
@@ -32,11 +33,7 @@ export default withErrHandler(async (req, res) => {
 
   switch (req.method) {
     case 'GET': {
-      const dish = await prisma.dish.findUnique({
-        where: {
-          id: dishId,
-        },
-      });
+      const dish = await DishService.getById(dishId);
       if (!dish) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Такого блюда не существует' });
       }
@@ -66,10 +63,12 @@ export default withErrHandler(async (req, res) => {
         where: {
           id: dishId,
         },
-        data: {},
+        data: {
+          isHidden: true,
+        },
       });
       await prisma.$transaction([removePrefsWithDish, disableDish]);
-      return res.send('OK');
+      return res.end();
     }
 
     default:

@@ -1,6 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
+import { DishService } from 'modules/dish/service';
 import { PreferenceWithDish } from 'modules/preference/types';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
@@ -65,22 +66,15 @@ async function getHandler(day?: number) {
 async function postHandler(req: NextApiRequest, res: NextApiResponse, day = 0) {
   const { dishId } = bodySchema.parse(req.body);
 
-  const dishType = await prisma.dish.findUnique({
-    where: {
-      id: dishId,
-    },
-    select: {
-      type: true,
-    },
-  });
-  if (!dishType) return res.status(404).send('Dish not found');
+  const dish = await DishService.getById(dishId);
+  if (!dish) return res.status(404).send('Dish not found');
 
   const existingPref = await prisma.preference.findFirst({
     where: {
       isDefault: true,
       dayOfWeek: day,
       Dish: {
-        type: dishType.type,
+        type: dish.type,
       },
     },
   });
@@ -104,7 +98,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse, day = 0) {
         include: { Dish: true },
       });
 
-  return res.status(201).send('OK');
+  return res.status(201).end();
 }
 
 export default handler;
