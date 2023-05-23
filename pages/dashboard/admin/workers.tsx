@@ -4,7 +4,7 @@ import verifyRole from 'utils/verifyRole';
 import { PrismaClient } from '@prisma/client';
 import { getServerSideSession } from 'utils/getServerSession';
 import Head from 'next/head';
-import LeftSideNavibar from 'components/LeftSideNavibar';
+import LeftSideNavibar from 'components/SideNavibar';
 
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -52,7 +52,7 @@ const WorkersPage: NextPage<Props> = ({ adminName }) => {
         <title>{activeTab}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar activePage={1} workerName={adminName} />
+        <LeftSideNavibar role="ADMIN" activePage={0} workerName={adminName} />
         <div className={styles.content}></div>
       </div>
     </>
