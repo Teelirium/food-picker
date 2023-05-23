@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:16-alpine AS base
 
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
@@ -16,6 +16,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
 FROM base as runner
