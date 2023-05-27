@@ -27,29 +27,34 @@ export const ordersRouter = router({
           dayMap[day]
         } at [${date.toLocaleDateString()}]`,
       );
-      const prevMonday = addDays(getNextMonday(date), -7);
+      const nextMonday = getNextMonday(date);
+      const prevMonday = addDays(nextMonday, -7);
+      const neededDate = addDays(prevMonday, day);
       const orders = await prisma.order.findMany({
         where: {
           studentId,
-          date: addDays(prevMonday, day),
+          date: neededDate,
         },
         select: {
           Dish: true,
         },
       });
-
       if (orders.length === 0) {
         const defaults = await prisma.preference.findMany({
           where: {
+            dayOfWeek: day,
             isDefault: true,
           },
           select: {
             Dish: true,
           },
         });
+        console.log('Returned defaults');
+        // return new Map();
         return new Map(defaults.map((pref) => [pref.Dish.type, pref.Dish]));
       }
 
+      console.log('Returned orders');
       return new Map(
         orders.filter((order) => order.Dish).map((order) => [order.Dish!.type, order.Dish!]),
       );

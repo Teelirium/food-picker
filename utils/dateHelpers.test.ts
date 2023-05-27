@@ -1,12 +1,17 @@
 import { addDays, getNextMonday, stripTimeFromDate } from './dateHelpers';
 
 describe('getNextMonday', () => {
-  it('returns date of the next monday', () => {
+  it('works with a Monday', () => {
+    const initial = new Date('2023-05-15');
+    const result = getNextMonday(initial);
+    expect(result.toISOString()).toEqual(new Date('2023-05-22').toISOString());
+  });
+  it('works with a Tuesday', () => {
     const initial = new Date('2023-03-21');
     const result = getNextMonday(initial);
     expect(result.toISOString()).toEqual(new Date('2023-03-27').toISOString());
   });
-  it('works when given a Sunday', () => {
+  it('works with a Sunday', () => {
     const initial = new Date('2023-03-26');
     const result = getNextMonday(initial);
     expect(result.toISOString()).toEqual(new Date('2023-03-27').toISOString());

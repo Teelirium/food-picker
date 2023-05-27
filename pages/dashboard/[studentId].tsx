@@ -1,5 +1,6 @@
 import { Dish, DishType } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -15,8 +16,9 @@ import PreferenceSection from 'components/PreferenceSection';
 import ThinButton from 'components/ThinButton';
 import { PlusIcon } from 'components/ui/Icons';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
+import { useSetPreferenceMutation } from 'modules/preference/mutations';
+import { PreferenceWithDish } from 'modules/preference/types';
 import styles from 'styles/studentChoice.module.scss';
-import { PreferenceWithDish } from 'types/Preference';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
@@ -99,43 +101,48 @@ export default function StudentChoice() {
     { staleTime: 10 * 60 * 1000 },
   );
 
-  const totalCost: number = useMemo(() => {
-    if (!preferences || !orders) {
-      return 0;
-    }
+  const { data: totalCosts, ...totalCostQuery } = trpc.preferences.totalCost.useQuery(
+    { studentId },
+    {
+      staleTime: Infinity,
+    },
+  );
 
-    let cost = 0;
-    for (const type of Object.keys(DishType) as DishType[]) {
-      const dish = preferences?.get(type)?.Dish ?? orders?.get(type);
-      cost += dish?.price ?? 0;
-    }
-    return cost;
-  }, [preferences, orders]);
+  // const totalCost: number = useMemo(() => {
+  //   if (!preferences || !orders) {
+  //     return 0;
+  //   }
+
+  //   let cost = 0;
+  //   for (const type of Object.keys(DishType) as DishType[]) {
+  //     const dish = preferences?.get(type)?.Dish ?? orders?.get(type);
+  //     cost += dish?.price ?? 0;
+  //   }
+  //   return cost;
+  // }, [preferences, orders]);
 
   const deletePreferenceMutation = useMutation({
     async mutationFn(prefId: number) {
       return axios.delete(`/api/preferences/${prefId}`);
     },
     async onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
+      const totalCostKey = getQueryKey(trpc.preferences.totalCost, { studentId });
+      queryClient.invalidateQueries({ queryKey: totalCostKey });
+
+      const preferencesKey = ['preferences', { studentId, day }];
+      queryClient.invalidateQueries({ queryKey: preferencesKey });
     },
     async onError() {
       toast.error('Не удалось удалить предпочтение');
     },
   });
 
-  const setPreferenceMutation = trpc.preferences.setPreference.useMutation({
-    async onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['preferences', { studentId, day }] });
-    },
-    async onError() {
-      toast.error('Не удалось установить предпочтение');
-    },
-  });
+  const setPreferenceMutation = useSetPreferenceMutation();
 
   const showSpinner =
     preferencesQuery.isFetching ||
     ordersQuery.isFetching ||
+    totalCostQuery.isFetching ||
     deletePreferenceMutation.isLoading ||
     setPreferenceMutation.isLoading;
   const showError = preferencesQuery.isError || ordersQuery.isError;
@@ -215,7 +222,7 @@ export default function StudentChoice() {
             day: 'numeric',
           })}
         </p>
-        <p>Итого: {toRubles(totalCost)}</p>
+        <p>Итого: {totalCosts && toRubles(totalCosts.costsPerDay[day])}</p>
       </footer>
     </DashboardLayout>
   );

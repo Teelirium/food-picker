@@ -6,7 +6,8 @@
       "request": "attach",
       "name": "Attach",
       "port": 9229,
-      "localRoot": "${workspaceFolder}"
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "Next.js: debug server-side",
