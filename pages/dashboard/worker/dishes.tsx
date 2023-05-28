@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
+import LeftSideNavibar from 'components/SideNavibar';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
-import LeftSideNavibar from 'components/SideNavibar';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
@@ -77,11 +77,7 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName, userRole }) => {
         <title>{userRole}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar
-          role={userRole}
-          activePage={userRole === 'WORKER' ? 0 : 4}
-          workerName={workerName}
-        />
+        <LeftSideNavibar activePage={userRole === 'WORKER' ? 0 : 4} workerName={workerName} />
         <Dishes dishes={dishes} mealTime={mealTime} dishType={dishType} />
       </div>
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (

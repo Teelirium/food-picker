@@ -1,13 +1,9 @@
 import { verifySignature } from '@upstash/qstash/nextjs';
-import _ from 'lodash';
 import { NextApiHandler } from 'next';
 import { z } from 'zod';
 
 import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
-import {
-  getPreferencesWithDefaults,
-  old_getPreferencesWithDefaults,
-} from 'modules/preference/service';
+import { getPreferencesWithDefaults } from 'modules/preference/service';
 import { PreferenceWithDish } from 'modules/preference/types';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import withErrHandler from 'utils/errorUtils/withErrHandler';

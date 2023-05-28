@@ -1,12 +1,12 @@
-import styles from 'styles/admin.module.scss';
-import { GetServerSideProps, NextPage } from 'next';
-import verifyRole from 'utils/verifyRole';
 import { PrismaClient } from '@prisma/client';
-import { getServerSideSession } from 'utils/getServerSession';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import LeftSideNavibar from 'components/SideNavibar';
-
 import { useRouter } from 'next/router';
+
+import LeftSideNavibar from 'components/SideNavibar';
+import styles from 'styles/admin.module.scss';
+import { getServerSideSession } from 'utils/getServerSession';
+import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
@@ -50,8 +50,8 @@ const ClassesPage: NextPage<Props> = ({ adminName }) => {
         <title>Список классов</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role="ADMIN" activePage={3} workerName={adminName} />
-        <div className={styles.content}></div>
+        <LeftSideNavibar activePage={3} workerName={adminName} />
+        <div className={styles.content} />
       </div>
     </>
   );
