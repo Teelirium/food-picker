@@ -77,7 +77,11 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName, userRole }) => {
         <title>{userRole}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role={userRole} activePage={0} workerName={workerName} />
+        <LeftSideNavibar
+          role={userRole}
+          activePage={userRole === 'WORKER' ? 0 : 4}
+          workerName={workerName}
+        />
         <Dishes dishes={dishes} mealTime={mealTime} dishType={dishType} />
       </div>
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (

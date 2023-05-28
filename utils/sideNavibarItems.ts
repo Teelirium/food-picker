@@ -24,44 +24,44 @@ export const workerItems: SideNavItem[] = [
 export const adminItems: SideNavItem[] = [
   {
     title: 'Работники',
-    route: 'workers',
+    route: '../admin/workers',
     activeLogoUrl: '/img/activeDishes.png',
     inactiveLogoUrl: '/img/dishes.png',
   },
   {
     title: 'Родители',
-    route: 'parents',
+    route: '../admin/parents',
     activeLogoUrl: '/img/activeOrders.png',
     inactiveLogoUrl: '/img/orders.png',
   },
   {
     title: 'Ученики',
-    route: 'students',
+    route: '../admin/students',
     activeLogoUrl: '/img/activeStandardMenu.png',
     inactiveLogoUrl: '/img/standardMenu.png',
   },
   {
     title: 'Классы',
-    route: 'classes',
+    route: '../admin/classes',
     activeLogoUrl: '/img/activeDishes.png',
     inactiveLogoUrl: '/img/dishes.png',
   },
 
   {
     title: 'Блюда',
-    route: 'dishes',
+    route: '../worker/dishes',
     activeLogoUrl: '/img/activeDishes.png',
     inactiveLogoUrl: '/img/dishes.png',
   },
   {
     title: 'Заказы',
-    route: 'orders',
+    route: '../worker/orders',
     activeLogoUrl: '/img/activeOrders.png',
     inactiveLogoUrl: '/img/orders.png',
   },
   {
     title: 'Стандартное питание',
-    route: 'standard-menu',
+    route: '../worker/standard-menu',
     activeLogoUrl: '/img/activeStandardMenu.png',
     inactiveLogoUrl: '/img/standardMenu.png',
   },

@@ -50,7 +50,11 @@ const StandardMenuPage: NextPage<Props> = ({ userRole, workerName }) => {
         <title>Стандартное питание</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role={userRole} activePage={2} workerName={workerName} />
+        <LeftSideNavibar
+          role={userRole}
+          activePage={userRole === 'WORKER' ? 2 : 6}
+          workerName={workerName}
+        />
         <StandardMenu />
       </div>
     </>

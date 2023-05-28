@@ -75,7 +75,11 @@ const OrdersPage: NextPage<Props> = ({ userRole, workerName }) => {
         <title>Заказы</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role={userRole} activePage={1} workerName={workerName} />
+        <LeftSideNavibar
+          role={userRole}
+          activePage={userRole === 'WORKER' ? 1 : 5}
+          workerName={workerName}
+        />
         <Orders orders={orders} weekDay={day} />
       </div>
       {dishId !== undefined && <DishAboutModal dishId={dishId} />}
