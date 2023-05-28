@@ -105,7 +105,7 @@ export default function PreferenceSection({
         </div>
       ) : (
         <button className={styles.body} type="button" onClick={handleAdd}>
-          <ThinButton onClick={handleAdd}>
+          <ThinButton>
             <PlusIcon /> Добавить Блюдо
           </ThinButton>
         </button>

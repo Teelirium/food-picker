@@ -1,6 +1,5 @@
-import { NextApiHandler } from 'next';
-
 import { ParentWithChildren } from 'types/Parent';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import exclude from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
@@ -9,23 +8,8 @@ import prisma from 'utils/prismaClient';
  * /api/parents/{id}:
  *  get:
  *    summary: Получает родителя по id
- *    parameters:
- *      - in: path
- *        name: parentId
- *        schema:
- *          type: integer
- *          required: true
- *      - in: query
- *        name: children
- *        schema:
- *          type: boolean
- *    responses:
- *      200:
- *        description: Возвращает найденного родителя
- *      404:
- *        description: Родитель не найден
  */
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   const { parentId, children } = req.query;
 
   if (!parentId) {
@@ -53,8 +37,12 @@ const handler: NextApiHandler = async (req, res) => {
             student: true,
           },
         });
+
         const children = parentStudents.map((p) => p.student);
-        const parentWithChildren: ParentWithChildren = { ...parent, children };
+        const parentWithChildren: ParentWithChildren = {
+          ...parent,
+          children,
+        };
 
         return res.send(parentWithChildren);
       }
@@ -64,6 +52,4 @@ const handler: NextApiHandler = async (req, res) => {
     default:
       return res.status(405).send('Method not allowed');
   }
-};
-
-export default handler;
+});
