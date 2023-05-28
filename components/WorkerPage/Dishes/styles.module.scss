@@ -1,5 +1,5 @@
 .content {
-  width: 100%;
+  max-width: 1400px;
   height: inherit;
   display: flex;
   justify-content: center;
@@ -169,12 +169,18 @@
 
 .dishesContainer {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
-  overflow: hidden;
-  overflow-y: auto;
-  min-height: max-content;
-  max-height: calc(100vh - 130px);
+
+  &Inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    min-height: max-content;
+    max-height: calc(100vh - 130px);
+    width: 100%;
+    max-width: 950px;
+  }
 }

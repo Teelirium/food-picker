@@ -81,22 +81,24 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
         </div>
 
         <div className={styles.dishesContainer}>
-          {filteredDishes.map((dish) => (
-            <DishCard
-              key={dish.id}
-              dish={dish}
-              onClick={() =>
-                router.replace(
-                  {
-                    pathname: '',
-                    query: { ...router.query, modalMethod: 'GET', dishId: dish.id },
-                  },
-                  undefined,
-                  { shallow: true },
-                )
-              }
-            />
-          ))}
+          <div className={styles.dishesContainerInner}>
+            {filteredDishes.map((dish) => (
+              <DishCard
+                key={dish.id}
+                dish={dish}
+                onClick={() =>
+                  router.replace(
+                    {
+                      pathname: '',
+                      query: { ...router.query, modalMethod: 'GET', dishId: dish.id },
+                    },
+                    undefined,
+                    { shallow: true },
+                  )
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

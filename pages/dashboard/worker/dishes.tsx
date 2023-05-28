@@ -8,7 +8,7 @@ import { z } from 'zod';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import LeftSideNavibar from 'components/SideNavibar';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
@@ -44,11 +44,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
   const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`;
+  const userRole = session.user.role;
 
   return {
     props: {
       dishes,
       workerName,
+      userRole,
     },
   };
 };
@@ -56,9 +58,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 type Props = {
   dishes: Dish[];
   workerName: string;
+  userRole: string;
 };
 
-const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
+const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName, userRole }) => {
   const router = useRouter();
   const [currentDish, setCurrentDish] = useState<Dish | undefined>(undefined);
 
@@ -71,10 +74,14 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
   return (
     <>
       <Head>
-        <title>Блюда</title>
+        <title>{userRole}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar activePage={1} workerName={workerName} />
+        <LeftSideNavibar
+          role={userRole}
+          activePage={userRole === 'WORKER' ? 0 : 4}
+          workerName={workerName}
+        />
         <Dishes dishes={dishes} mealTime={mealTime} dishType={dishType} />
       </div>
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (

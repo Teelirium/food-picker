@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
+import LeftSideNavibar from 'components/SideNavibar';
 import Orders from 'components/WorkerPage/Orders';
 import { GradeInfo } from 'pages/api/grades/total-orders';
 import styles from 'styles/worker.module.css';
@@ -42,19 +42,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     },
   });
   const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`;
+  const userRole = session.user.role;
 
   return {
     props: {
+      userRole,
       workerName,
     },
   };
 };
 
 type Props = {
+  userRole: string;
   workerName: string;
 };
 
-const OrdersPage: NextPage<Props> = ({ workerName }) => {
+const OrdersPage: NextPage<Props> = ({ userRole, workerName }) => {
   const router = useRouter();
   const [orders, setOrders] = useState<GradeInfo>();
   const { day, dishId } = querySchema.parse(router.query);
@@ -72,7 +75,11 @@ const OrdersPage: NextPage<Props> = ({ workerName }) => {
         <title>Заказы</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar activePage={2} workerName={workerName} />
+        <LeftSideNavibar
+          role={userRole}
+          activePage={userRole === 'WORKER' ? 1 : 5}
+          workerName={workerName}
+        />
         <Orders orders={orders} weekDay={day} />
       </div>
       {dishId !== undefined && <DishAboutModal dishId={dishId} />}
