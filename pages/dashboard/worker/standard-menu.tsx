@@ -38,13 +38,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (ctx) => 
   };
 };
 
-type Props = {
+type PageProps = {
   userRole: string;
   workerName: string;
 };
 
-const StandardMenuPage: NextPage<Props> = ({ userRole, workerName }) => {
-
+const StandardMenuPage: NextPage<PageProps> = ({ userRole, workerName }) => {
   return (
     <>
       <Head>
