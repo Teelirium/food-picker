@@ -3,12 +3,12 @@ import { z } from 'zod';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
 
-import { auth, procedure, router, authTeacher } from '..';
+import { auth, authGradeOfTeacher, procedure, router } from '..';
 
 export const debtRouter = router({
   getDebtMap: procedure
     .use(auth(['ADMIN', 'TEACHER']))
-    .use(authTeacher)
+    .use(authGradeOfTeacher)
     .input(
       z.object({
         gradeId: idSchema,
@@ -32,7 +32,7 @@ export const debtRouter = router({
     }),
   setDebts: procedure
     .use(auth(['ADMIN', 'TEACHER']))
-    .use(authTeacher)
+    .use(authGradeOfTeacher)
     .input(z.object({ gradeId: idSchema, debts: z.record(z.coerce.number(), z.number()) }))
     .mutation(async ({ input }) => {
       const { gradeId, debts } = input;

@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import DashboardLayout from 'components/Dashboard/Layout';
@@ -15,7 +16,6 @@ import dayMap from 'utils/dayMap';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 import { toRubles } from 'utils/localisation';
 import { getFullName } from 'utils/names';
-import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
 import { trpc } from 'utils/trpc/client';
 
@@ -26,12 +26,24 @@ const paramSchema = z.object({
 });
 
 function ParentPage() {
-  const session = useSession();
+  const session = useSession({ required: true });
   const router = useRouter();
   const { student } = paramSchema.parse(router.query);
 
   const parentId = idSchema.optional().parse(session.data?.user.id);
-  const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
+
+  const { data: parent, ...parentQuery } = trpc.parents.getById.useQuery(
+    { id: parentId ?? NaN },
+    {
+      onError() {
+        toast.error('Не удалость получить информацию о родителе');
+      },
+      enabled: parentId !== undefined,
+      staleTime: Infinity,
+    },
+  );
+
+  // const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
 
   const selectedChild = parent?.children[student];
 
