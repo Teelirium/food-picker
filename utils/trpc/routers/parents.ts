@@ -2,7 +2,8 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { ParentService } from 'modules/parent/service';
-import { userSchema } from 'modules/user/types';
+import { parentCreateFormSchema, parentUpdateFormSchema } from 'modules/parent/types';
+import { userDataSchema } from 'modules/user/types';
 import idSchema from 'utils/schemas/idSchema';
 
 import { auth, authSelfAccess, procedure, router } from '..';
@@ -28,29 +29,21 @@ export const parentsRouter = router({
 
   create: procedure
     .use(auth(['ADMIN']))
-    .input(
-      z.object({
-        parent: userSchema,
-        studentIds: z.number().array(),
-      }),
-    )
+    .input(parentCreateFormSchema)
     .mutation(async (req) => {
       const { input } = req;
-      const newParent = await ParentService.create(input.parent, input.studentIds);
+      const { studentIds, ...parent } = input;
+      const newParent = await ParentService.create(parent, studentIds);
       return newParent;
     }),
 
   update: procedure
     .use(auth(['ADMIN']))
-    .input(
-      z.object({
-        parent: userSchema.extend({ id: idSchema }),
-        studentIds: z.number().array().optional(),
-      }),
-    )
+    .input(parentUpdateFormSchema)
     .mutation(async (req) => {
       const { input } = req;
-      const newParent = await ParentService.update(input.parent, input.studentIds);
+      const { studentIds, ...parent } = input;
+      const newParent = await ParentService.update(parent, studentIds);
       return newParent;
     }),
 
