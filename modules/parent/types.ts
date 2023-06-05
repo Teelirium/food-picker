@@ -13,5 +13,7 @@ export type ParentWithChildren = ParentDto & {
 export const parentCreateFormSchema = userDataSchema.extend({ studentIds: z.number().array() });
 export type ParentCreateForm = z.infer<typeof parentCreateFormSchema>;
 
-export const parentUpdateFormSchema = parentCreateFormSchema.extend({ id: idSchema });
+export const parentUpdateFormSchema = parentCreateFormSchema
+  .extend({ id: idSchema })
+  .partial({ password: true });
 export type ParentUpdateForm = z.infer<typeof parentUpdateFormSchema>;

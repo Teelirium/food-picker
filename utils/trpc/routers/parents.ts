@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import { ParentService } from 'modules/parent/service';
 import { parentCreateFormSchema, parentUpdateFormSchema } from 'modules/parent/types';
-import { userDataSchema } from 'modules/user/types';
 import idSchema from 'utils/schemas/idSchema';
 
 import { auth, authSelfAccess, procedure, router } from '..';
@@ -22,7 +21,7 @@ export const parentsRouter = router({
       const { input } = req;
       const parent = await ParentService.getByIdWithChildren(input.id);
       if (!parent) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Родитель не найден' });
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Данный родитель не найден' });
       }
       return parent;
     }),
@@ -42,8 +41,7 @@ export const parentsRouter = router({
     .input(parentUpdateFormSchema)
     .mutation(async (req) => {
       const { input } = req;
-      const { studentIds, ...parent } = input;
-      const newParent = await ParentService.update(parent, studentIds);
+      const newParent = await ParentService.update(input);
       return newParent;
     }),
 

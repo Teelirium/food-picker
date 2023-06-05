@@ -5,7 +5,7 @@ import { UserData } from 'modules/user/types';
 import exclude from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
-import { ParentDto } from './types';
+import { ParentDto, ParentUpdateForm } from './types';
 import { unwrapStudents } from './util';
 
 export const ParentService = {
@@ -62,8 +62,10 @@ export const ParentService = {
     return parentDto;
   },
 
-  async update(parent: Parent, studentIds?: number[]) {
-    const hashed = hashSync(parent.password, 12);
+  async update(parentInput: ParentUpdateForm) {
+    const { studentIds, ...parent } = parentInput;
+
+    const hashed = parent.password ? hashSync(parent.password, 12) : undefined;
     const newParent = await prisma.parent.update({
       where: {
         id: parent.id,

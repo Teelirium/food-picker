@@ -6,8 +6,9 @@ export default function exclude<Obj, Key extends keyof Obj>(
   object: Obj,
   keys: Key[],
 ): Omit<Obj, Key> {
+  const newObject = { ...object };
   for (const key of keys) {
-    delete object[key];
+    delete newObject[key];
   }
-  return object;
+  return newObject;
 }
