@@ -59,7 +59,7 @@ export const authSelfAccess = (role: UserRole) =>
 const gradeIdInputSchema = z.object({ gradeId: idSchema });
 export const authGradeOfTeacher = middleware(async ({ rawInput, ctx, next }) => {
   if (!ctx.session) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'Доступ запрещён' });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Вход не выполнен' });
   }
   const { gradeId } = gradeIdInputSchema.parse(rawInput);
   if (ctx.session.user.role === 'TEACHER') {

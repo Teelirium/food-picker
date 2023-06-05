@@ -1,4 +1,3 @@
-import { Parent } from '@prisma/client';
 import { hashSync } from 'bcryptjs';
 
 import { UserData } from 'modules/user/types';

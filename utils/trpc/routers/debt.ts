@@ -30,6 +30,7 @@ export const debtRouter = router({
       const map = Object.fromEntries(debts.map((v) => [v.id, v.debt]));
       return map;
     }),
+
   setDebts: procedure
     .use(auth(['ADMIN', 'TEACHER']))
     .use(authGradeOfTeacher)

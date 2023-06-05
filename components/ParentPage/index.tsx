@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
