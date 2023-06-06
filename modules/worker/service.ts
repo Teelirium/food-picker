@@ -1,6 +1,6 @@
 import { hashSync } from 'bcryptjs';
 
-import exclude from 'utils/exclude';
+import exclude, { excludeMut } from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
 import { WorkerCreateForm, WorkerDto, WorkerUpdateForm } from './types';
@@ -8,7 +8,7 @@ import { WorkerCreateForm, WorkerDto, WorkerUpdateForm } from './types';
 export const WorkerService = {
   async getAll() {
     const workers = await prisma.worker.findMany({});
-    const workerDtos = workers.map((w) => exclude(w, ['password'])) satisfies WorkerDto[];
+    const workerDtos = workers.map((w) => excludeMut(w, ['password'])) satisfies WorkerDto[];
     return workerDtos;
   },
 

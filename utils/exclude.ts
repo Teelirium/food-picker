@@ -2,13 +2,23 @@
  * tfw this is recommended by prisma
  * https://www.prisma.io/docs/concepts/components/prisma-client/excluding-fields
  */
-export default function exclude<Obj, Key extends keyof Obj>(
+export default function exclude<Obj, Keys extends keyof Obj>(
   object: Obj,
-  keys: Key[],
-): Omit<Obj, Key> {
+  keys: Keys[],
+): Omit<Obj, Keys> {
   const newObject = { ...object };
+  return excludeMut(newObject, keys);
+}
+
+/**
+ * Same as exclude except it mutates the given object
+ */
+export function excludeMut<Obj, Keys extends keyof Obj>(
+  object: Obj,
+  keys: Keys[],
+): Omit<Obj, Keys> {
   for (const key of keys) {
-    delete newObject[key];
+    delete object[key];
   }
-  return newObject;
+  return object;
 }

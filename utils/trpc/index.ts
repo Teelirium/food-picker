@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { UserRole } from 'types/UserData';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
-import idSchema from 'utils/schemas/idSchema';
+import idSchema, { idObjectSchema } from 'utils/schemas/idSchema';
 
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerSideSession(opts);
@@ -25,7 +25,10 @@ export const { router, procedure, middleware } = t;
 
 export const auth = (roles: UserRole[] = []) => {
   return middleware(({ ctx, next }) => {
-    if (!ctx.session || (roles.length > 0 && !roles.includes(ctx.session.user.role))) {
+    if (!ctx.session) {
+      throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Вход не выполнен' });
+    }
+    if (roles.length > 0 && !roles.includes(ctx.session.user.role)) {
       throw new TRPCError({ code: 'FORBIDDEN', message: 'Доступ запрещён' });
     }
     return next({
@@ -36,11 +39,10 @@ export const auth = (roles: UserRole[] = []) => {
   });
 };
 
-const idInputSchema = z.object({ id: idSchema });
 export const authSelfAccess = (role: UserRole) =>
   middleware((req) => {
     const { ctx, rawInput, next } = req;
-    const { id } = idInputSchema.parse(rawInput);
+    const { id } = idObjectSchema.parse(rawInput);
     if (!ctx.session) {
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Вход не выполнен' });
     }

@@ -1,7 +1,7 @@
 import { hashSync } from 'bcryptjs';
 
 import { UserData } from 'modules/user/types';
-import exclude from 'utils/exclude';
+import exclude, { excludeMut } from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
 import { ParentDto, ParentUpdateForm } from './types';
@@ -10,7 +10,7 @@ import { unwrapStudents } from './util';
 export const ParentService = {
   async getAll() {
     const parents = await prisma.parent.findMany({});
-    const parentDtos = parents.map((p) => exclude(p, ['password'])) satisfies ParentDto[];
+    const parentDtos = parents.map((p) => excludeMut(p, ['password'])) satisfies ParentDto[];
     return parentDtos;
   },
 
