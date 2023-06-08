@@ -1,5 +1,4 @@
 import { Dish } from '@prisma/client';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
