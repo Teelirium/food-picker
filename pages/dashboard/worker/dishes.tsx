@@ -15,7 +15,7 @@ import prisma from 'utils/prismaClient';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import idSchema from 'utils/schemas/idSchema';
 import mealTimeSchema from 'utils/schemas/mealTimeSchema';
-import modalMethodSchema from 'utils/schemas/modalMethodSchema';
+import { modalMethodSchema } from 'utils/schemas/modalMethodSchema';
 import verifyRole from 'utils/verifyRole';
 
 const querySchema = z.object({
