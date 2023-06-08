@@ -43,9 +43,9 @@ model Grade {
   letter     String    @db.Char(1)
   number     Int
   breakIndex Int       @default(0)
-  students   Student[]
   teacherId  Int       @unique
   teacher    Teacher   @relation(fields: [teacherId], references: [id])
+  students   Student[]
 }
 
 model Student {
@@ -122,7 +122,7 @@ model Order {
 
 model StudentPresence {
   id        Int      @id @default(autoincrement())
-  studentId Int
-  student   Student  @relation(fields: [studentId], references: [id])
   date      DateTime
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId Int
 }

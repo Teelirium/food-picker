@@ -1,0 +1,14 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background: linear-gradient(0deg, #1b3a4b 0%, #3e1f47 100%);
+
+  .content {
+    background: #1e1e1e;
+    display: flex;
+    height: 100%;
+    flex-basis: 1300px;
+    border-radius: 45px;
+  }
+}

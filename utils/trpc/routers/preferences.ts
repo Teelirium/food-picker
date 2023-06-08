@@ -8,12 +8,12 @@ import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 
-import { auth, authParent, procedure, router } from '..';
+import { auth, authChildOfParent, procedure, router } from '..';
 
 export const preferencesRouter = router({
   setPreference: procedure
     .use(auth(['PARENT']))
-    .use(authParent)
+    .use(authChildOfParent)
     .input(
       z.object({
         studentId: idSchema,
@@ -52,7 +52,7 @@ export const preferencesRouter = router({
 
   totalCost: procedure
     .use(auth(['PARENT', 'ADMIN']))
-    .use(authParent)
+    .use(authChildOfParent)
     .input(
       z.object({
         studentId: idSchema,

@@ -7,12 +7,12 @@ import dateSchema from 'utils/schemas/dateSchema';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 
-import { auth, authParent, procedure, router } from '..';
+import { auth, authChildOfParent, procedure, router } from '..';
 
 export const ordersRouter = router({
   getThisWeeksOrders: procedure
     .use(auth(['PARENT', 'ADMIN']))
-    .use(authParent)
+    .use(authChildOfParent)
     .input(
       z.object({
         studentId: idSchema,

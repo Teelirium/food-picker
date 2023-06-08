@@ -1,14 +1,15 @@
 import { Dish } from '@prisma/client';
+import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
+import LeftSideNavibar from 'components/SideNavibar';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
-import LeftSideNavibar from 'components/WorkerPage/LeftSideNavibar';
 import { DishService } from 'modules/dish/service';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -16,7 +17,7 @@ import prisma from 'utils/prismaClient';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import idSchema from 'utils/schemas/idSchema';
 import mealTimeSchema from 'utils/schemas/mealTimeSchema';
-import modalMethodSchema from 'utils/schemas/modalMethodSchema';
+import { modalMethodSchema } from 'utils/schemas/modalMethodSchema';
 import verifyRole from 'utils/verifyRole';
 
 const querySchema = z.object({
@@ -45,11 +46,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
   const workerName = `${workerData?.surname} ${workerData?.name} ${workerData?.middleName}`;
+  const userRole = session.user.role;
 
   return {
     props: {
       dishes,
       workerName,
+      userRole,
     },
   };
 };
@@ -57,9 +60,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 type Props = {
   dishes: Dish[];
   workerName: string;
+  userRole: string;
 };
 
-const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
+const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName, userRole }) => {
   const router = useRouter();
   const [currentDish, setCurrentDish] = useState<Dish | undefined>(undefined);
 
@@ -72,10 +76,10 @@ const WorkerIndexPage: NextPage<Props> = ({ dishes, workerName }) => {
   return (
     <>
       <Head>
-        <title>Блюда</title>
+        <title>{userRole}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar activePage={1} workerName={workerName} />
+        <LeftSideNavibar activePage={userRole === 'WORKER' ? 0 : 4} workerName={workerName} />
         <Dishes dishes={dishes} mealTime={mealTime} dishType={dishType} />
       </div>
       {modalMethod === 'POST' || modalMethod === 'UPDATE' ? (

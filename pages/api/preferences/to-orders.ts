@@ -1,5 +1,4 @@
 import { verifySignature } from '@upstash/qstash/nextjs';
-import _ from 'lodash';
 import { NextApiHandler } from 'next';
 import { z } from 'zod';
 

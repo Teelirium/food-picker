@@ -1,7 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { hash } from 'bcryptjs';
 
-import { UserData, UserFormData } from 'types/UserData';
+import { UserData } from 'modules/user/types';
+import { UserFormData } from 'types/UserData';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import prisma from 'utils/prismaClient';
 

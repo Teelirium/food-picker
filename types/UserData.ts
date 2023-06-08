@@ -1,15 +1,6 @@
+import { UserData } from 'modules/user/types';
+
 export type UserRole = 'PARENT' | 'TEACHER' | 'WORKER' | 'ADMIN';
-
-export type FullName = {
-  name: string;
-  surname: string;
-  middleName?: string | null;
-};
-
-export type UserData = FullName & {
-  username: string;
-  password: string;
-};
 
 export type UserFormData = {
   role: UserRole;

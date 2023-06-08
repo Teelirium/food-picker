@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { observer } from 'mobx-react';
 import { signOut, useSession } from 'next-auth/react';
 
@@ -6,8 +5,8 @@ import ModalWrapper from 'components/ModalWrapper';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import parentStore from 'stores/ParentStore';
 import { getFullName } from 'utils/names';
-import { getParent } from 'utils/queries/parent';
 import idSchema from 'utils/schemas/idSchema';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
@@ -15,7 +14,13 @@ const Modal = ({ toggle }: { toggle: () => void }) => {
   const session = useSession();
   const parentId = idSchema.optional().parse(session.data?.user.id);
 
-  const { data: parent, ...parentQuery } = useQuery(getParent(parentId));
+  const { data: parent } = trpc.parents.getById.useQuery(
+    { id: parentId ?? NaN },
+    {
+      enabled: parentId !== undefined,
+      staleTime: Infinity,
+    },
+  );
 
   if (!parent)
     return (

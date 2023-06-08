@@ -1,14 +1,16 @@
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
 import idSchema from 'utils/schemas/idSchema';
-import { z } from 'zod';
-import { auth, authTeacher, procedure, router } from '..';
+
+import { auth, authGradeOfTeacher, procedure, router } from '..';
 
 export const presenceRouter = router({
   getPresenceSet: procedure
     .use(auth(['ADMIN', 'TEACHER']))
-    .use(authTeacher)
+    .use(authGradeOfTeacher)
     .input(
       z.object({
         gradeId: idSchema,
@@ -37,7 +39,7 @@ export const presenceRouter = router({
 
   setPresences: procedure
     .use(auth(['ADMIN', 'TEACHER']))
-    .use(authTeacher)
+    .use(authGradeOfTeacher)
     .input(
       z.object({
         gradeId: idSchema,
