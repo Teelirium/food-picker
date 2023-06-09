@@ -1,6 +1,7 @@
 .content {
   max-width: 1400px;
-  height: inherit;
+  height: 100%;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -9,10 +10,11 @@
 }
 
 .contentInner {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  flex-basis: 1150px;
-  padding: 0 75px;
+  flex-basis: 100%;
+  padding: 2rem 7rem;
 }
 
 .mealTimeContainer {
@@ -142,45 +144,25 @@
   color: #181818;
 }
 
-.addDishBtn {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  background: rgb(255 255 255 / 16%);
-  border-radius: 100px;
-  width: 200px;
-  padding: 0 5px;
-  cursor: pointer;
-}
-
-.addDishBtn img {
-  width: 18px;
-  height: 18px;
-}
-
-.addDishBtn span {
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 20px;
-  color: #fff;
-  user-select: none;
-}
-
 .dishesContainer {
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
+  overflow: hidden;
+  overflow-y: auto;
+}
 
-  &Inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 20px;
-    overflow: hidden;
-    overflow-y: auto;
-    min-height: max-content;
-    max-height: calc(100vh - 130px);
-    width: 100%;
-    max-width: 950px;
+.dishList {
+  width: 100%;
+  max-width: 950px;
+  height: fit-content;
+  padding: 0 1rem;
+  display: grid;
+  align-items: start;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 1280px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

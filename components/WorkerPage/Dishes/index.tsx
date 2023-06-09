@@ -1,9 +1,11 @@
 import { Dish, DishType } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useMemo, FC } from 'react';
+import { FC, useMemo } from 'react';
 
+import ThinButton from 'components/ThinButton';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
+import { PlusIcon } from 'components/ui/Icons';
 import dishTypeMap from 'utils/dishTypeMap';
 import mealTimeMap from 'utils/mealTimeMap';
 
@@ -26,7 +28,7 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
   return (
     <div className={styles.content}>
       <div className={styles.contentInner}>
-        <div className={styles.mealTimeContainer}>
+        {/* <div className={styles.mealTimeContainer}>
           <div className={styles.mealTime}>
             {Array.from(mealTimeMap.entries()).map((meal) => (
               <Link
@@ -51,8 +53,7 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
             </button>
             <input type="text" placeholder="Поиск" />
           </form>
-        </div>
-
+        </div> */}
         <div className={styles.dishTypesContainer}>
           <div className={styles.dishTypes}>
             {Object.entries(dishTypeMap).map(([k, v]) => (
@@ -73,15 +74,15 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
             shallow
             replace
           >
-            <div className={styles.addDishBtn}>
-              <img src="/img/plus.png" alt="plus" />
+            <ThinButton>
+              <PlusIcon />
               <span>Добавить блюдо</span>
-            </div>
+            </ThinButton>
           </Link>
         </div>
 
-        <div className={styles.dishesContainer}>
-          <div className={styles.dishesContainerInner}>
+        <main className={styles.dishesContainer}>
+          <div className={styles.dishList}>
             {filteredDishes.map((dish) => (
               <DishCard
                 key={dish.id}
@@ -99,7 +100,7 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
               />
             ))}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
