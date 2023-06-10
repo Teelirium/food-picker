@@ -1,7 +1,7 @@
 import { Dish, DishType } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 
 import ThinButton from 'components/ThinButton';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
@@ -19,11 +19,6 @@ type Props = {
 
 const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
   const router = useRouter();
-
-  const filteredDishes = useMemo(
-    () => dishes.filter((dish) => dish.type === dishType),
-    [dishType, dishes],
-  );
 
   return (
     <div className={styles.content}>
@@ -83,7 +78,7 @@ const Dishes: FC<Props> = ({ dishes, mealTime, dishType }) => {
 
         <main className={styles.dishesContainer}>
           <div className={styles.dishList}>
-            {filteredDishes.map((dish) => (
+            {dishes.map((dish) => (
               <DishCard
                 key={dish.id}
                 dish={dish}

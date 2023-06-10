@@ -1,3 +1,5 @@
+import { dishesRouter } from 'modules/dish/router';
+
 import { procedure, router } from '..';
 
 import { debtRouter } from './debt';
@@ -11,6 +13,7 @@ import { teachersRouter } from './teachers';
 import { workersRouter } from './workers';
 
 export const appRouter = router({
+  dishes: dishesRouter,
   debt: debtRouter,
   presence: presenceRouter,
   orders: ordersRouter,
