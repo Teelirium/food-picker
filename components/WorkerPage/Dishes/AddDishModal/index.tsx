@@ -1,13 +1,16 @@
 import { Dish, DishType } from '@prisma/client';
+import { useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
 import axios from 'axios';
-import Router, { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import { useRouter } from 'next/router';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import ModalWrapper from 'components/ModalWrapper';
-import { DishFormData } from 'types/Dish';
+import { DishFormData } from 'modules/dish/types';
 import deleteEmptyParams from 'utils/deleteEmptyParams';
 import { ModalMethod } from 'utils/schemas/modalMethodSchema';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
@@ -17,10 +20,29 @@ interface Props {
   dishType?: DishType;
 }
 
+const getHeaderDishType = (dishType?: DishType) => {
+  switch (dishType) {
+    case 'PRIMARY':
+      return 'первого блюда';
+    case 'SECONDARY':
+      return 'горячего';
+    case 'SIDE':
+      return 'гарнира';
+    case 'DRINK':
+      return 'напитка';
+    case 'EXTRA':
+      return 'дополнительного';
+    default:
+      return '';
+  }
+};
+
 const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
-  const { register, handleSubmit } = useForm<DishFormData>();
   const router = useRouter();
-  const toggle = useCallback(() => {
+  const qClient = useQueryClient();
+  const { register, handleSubmit } = useForm<DishFormData>();
+
+  const toggleSelf = () =>
     router.replace(
       {
         pathname: '',
@@ -31,7 +53,11 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
         shallow: true,
       },
     );
-  }, [router]);
+
+  const refetch = (dishId?: number) => {
+    qClient.invalidateQueries(getQueryKey(trpc.dishes.getAll));
+    if (dishId) qClient.invalidateQueries(['query.data', dishId]);
+  };
 
   const onSubmit = handleSubmit((data) => {
     switch (method) {
@@ -40,10 +66,10 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
           .post('/api/dishes/', { dish: data })
           .then(() => {
             console.log('Блюдо добавлено!');
-            Router.reload();
+            refetch();
           })
           .catch(console.error);
-        toggle();
+        toggleSelf();
         break;
       }
 
@@ -52,53 +78,51 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
           .patch(`/api/dishes/${dish?.id}`, { partialDish: data })
           .then(() => {
             console.log('Блюдо изменено!');
-            Router.reload();
+            refetch(dish?.id);
           })
-          .catch(console.log);
-        toggle();
+          .catch(console.error);
+        toggleSelf();
         break;
       }
+
       default:
+        return;
     }
   });
 
-  const headerDishType = (dishType: DishType | undefined) => {
-    switch (dishType) {
-      case 'PRIMARY':
-        return 'первого блюда';
-      case 'SECONDARY':
-        return 'горячего';
-      case 'SIDE':
-        return 'гарнира';
-      case 'DRINK':
-        return 'напитка';
-      case 'EXTRA':
-        return 'дополнительного';
-      default:
-        return '';
-    }
+  const restore = trpc.dishes.restore.useMutation();
+
+  const onRestore = (dishId: number) => {
+    restore
+      .mutateAsync({ id: dishId })
+      .then(() => {
+        console.log(`Блюдо ${dishId} восстановлено`);
+        refetch(dishId);
+      })
+      .catch(console.error);
+    toggleSelf();
   };
 
-  const onDelete = (dishId: number | undefined) => {
+  const onDelete = (dishId: number) => {
     axios
       .delete(`/api/dishes/${dishId}`)
       .then(() => {
-        // console.log('Блюдо удалено!');
-        Router.reload();
+        console.log('Блюдо удалено!');
+        refetch(dishId);
       })
-      .catch(console.log);
-    toggle();
+      .catch(console.error);
+    toggleSelf();
   };
 
   return (
-    <ModalWrapper toggle={toggle}>
+    <ModalWrapper toggle={toggleSelf}>
       <div className={styles.container}>
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.header}>
             {method === 'POST'
-              ? `Добавление ${headerDishType(dishType)}`
-              : `Редактирование ${headerDishType(dishType)}`}
-            <div className={styles.closeBtn} onClick={toggle}>
+              ? `Добавление ${getHeaderDishType(dishType)}`
+              : `Редактирование ${getHeaderDishType(dishType)}`}
+            <div className={styles.closeBtn} onClick={toggleSelf}>
               <img src="/img/close.png" alt="close" width={20} height={20} />
             </div>
           </div>
@@ -229,14 +253,22 @@ const AddDishModal: React.FC<Props> = ({ method, dish, dishType }) => {
           />
 
           <div className={styles.formBtns}>
-            <div className={styles.cancelBtn} onClick={toggle}>
+            <div className={styles.cancelBtn} onClick={toggleSelf}>
               Отмена
             </div>
-            {method === 'UPDATE' ? (
-              <div className={styles.removeBtn} onClick={() => onDelete(dish?.id)}>
-                Удалить
+            {method === 'UPDATE' && dish && (
+              <div
+                className={styles.removeBtn}
+                onClick={() => {
+                  if (dish.isHidden) {
+                    return onRestore(dish.id);
+                  }
+                  onDelete(dish.id);
+                }}
+              >
+                {dish.isHidden ? 'Восстановить' : 'Удалить'}
               </div>
-            ) : null}
+            )}
             <button className={styles.submitBtn} type="submit">
               Сохранить
             </button>

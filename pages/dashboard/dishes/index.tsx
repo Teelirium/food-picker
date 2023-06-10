@@ -8,6 +8,7 @@ import DashboardLayout from 'components/Dashboard/Layout';
 import ModalWrapper from 'components/ModalWrapper';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
+import { DishService } from 'modules/dish/service';
 import { useSetPreferenceMutation } from 'modules/preference/mutations';
 import styles from 'styles/dishes.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
@@ -42,11 +43,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 
-  const dishes = await prisma.dish.findMany({
-    where: {
-      type,
-    },
-  });
+  const dishes = await DishService.getAll(type);
 
   return {
     props: {

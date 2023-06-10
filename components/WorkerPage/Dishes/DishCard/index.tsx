@@ -1,4 +1,5 @@
 import { Dish } from '@prisma/client';
+import classNames from 'classnames';
 import React from 'react';
 
 import styles from './styles.module.scss';
@@ -13,7 +14,7 @@ const DishCard: React.FC<Props> = ({ dish, onClick, onButtonClick }) => {
   return (
     <div
       onClick={onClick}
-      className={styles.container}
+      className={classNames(styles.container, dish.isHidden && styles.disabled)}
       style={{ backgroundImage: `url(${dish.imgURL})` }}
     >
       <div className={styles.info}>

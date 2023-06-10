@@ -1,7 +1,9 @@
-import { NextApiHandler } from 'next';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { DishFormData } from 'types/Dish';
+import { DishService } from 'modules/dish/service';
+import { DishFormData } from 'modules/dish/types';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
@@ -19,22 +21,17 @@ const paramSchema = z.object({
  *  post:
  *    summary: Добавляет блюдо в базу данных.
  */
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   const session = await getServerSideSession({ req, res });
-  const isWorkerOrAdmin = !!session && verifyRole(session, ['WORKER', 'ADMIN']);
+  if (!session) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+  const isWorkerOrAdmin = verifyRole(session, ['WORKER', 'ADMIN']);
 
   const { type } = paramSchema.parse(req.query);
 
   switch (req.method) {
     case 'GET': {
-      if (!session) {
-        return res.status(401).send('');
-      }
-      const dishes = await prisma.dish.findMany({
-        where: {
-          type,
-        },
-      });
+      const dishes = await DishService.getAll(type);
       return res.json(dishes);
     }
 
@@ -58,6 +55,4 @@ const handler: NextApiHandler = async (req, res) => {
     default:
       return res.status(405).send('Method not allowed');
   }
-};
-
-export default handler;
+});

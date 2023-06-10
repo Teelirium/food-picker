@@ -1,24 +1,34 @@
+.btn {
+  background: linear-gradient(90deg, #304362 0%, #662666 100%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  border-radius: 30px;
+  padding: 8px 18px;
+  transition: 200ms transform;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .container {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 8px;
   height: 200px;
-  width: 300px;
+
+  // width: 300px;
   border-radius: 30px;
   padding: 0 22px 14px;
   box-shadow: inset 0 -60px 50px rgb(0 0 0 / 50%);
   cursor: pointer;
-
   background: gray;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-
   text-align: start;
   font-size: 18px;
   color: #fff;
-
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -38,14 +48,6 @@
   }
 }
 
-.btn {
-  background: linear-gradient(90deg, #304362 0%, #662666 100%);
-  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
-  border-radius: 30px;
-  padding: 8px 18px;
-
-  transition: 200ms transform;
-  &:active {
-    transform: scale(0.95);
-  }
+.disabled {
+  filter: brightness(70%);
 }
