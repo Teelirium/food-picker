@@ -11,7 +11,10 @@ import prisma from 'utils/prismaClient';
 
 // at least this is O(n)
 const handler: NextApiHandler = async (req, res) => {
-  const nextMonday = getNextMonday(stripTimeFromDate(new Date()));
+  const now = new Date();
+  const today = stripTimeFromDate(now);
+  const nextMonday = getNextMonday(today);
+  const prevMonday = addDays(nextMonday, -7);
   const nextEndOfWeek = addDays(nextMonday, MAX_WEEKDAYS - 1);
   console.log(
     `Generating orders from ${nextMonday.toLocaleDateString()} to ${nextEndOfWeek.toLocaleDateString()}`,
@@ -27,21 +30,60 @@ const handler: NextApiHandler = async (req, res) => {
       },
     },
   });
-  // await resetDebt();
 
   const start = new Date();
-  const preorders: PreferenceWithDish[][][] = await Promise.all(
-    WEEKDAYS.map((day) => getPreordersForDay(day, students, nextMonday)),
-  );
-  const allDebts = await Promise.all(
-    students.map((student) => addDebt(student.id, nextMonday, nextEndOfWeek)),
-  );
+
+  // const preorders: PreferenceWithDish[][][] = await Promise.all(
+  //   WEEKDAYS.map((day) => getPreordersForDay(day, students, nextMonday)),
+  // );
+
+  const debtMap = await getDebtMap(prevMonday, nextMonday);
+  // await resetDebt();
+  const newStudents = await addDebts(debtMap);
+  res.send(debtMap);
   console.log('Took', Date.now() - start.getTime(), 'ms in total');
-  res.send('Orders and debts generated successfully');
+  // res.send('Orders and debts generated successfully');
 };
 
 // export default withErrHandler(handler);
 export default verifySignature(withErrHandler(handler));
+
+async function addDebts(debtMap: Record<number, number>) {
+  const actions = Object.entries(debtMap).map(([studentId, debt]) => {
+    return prisma.student.update({
+      where: {
+        id: +studentId,
+      },
+      data: {
+        debt: {
+          increment: debt,
+        },
+      },
+    });
+  });
+  return prisma.$transaction(actions);
+}
+
+async function getDebtMap(from: Date, to: Date) {
+  const orders = await prisma.order.findMany({
+    where: {
+      date: {
+        gte: from,
+        lt: to,
+      },
+    },
+    select: {
+      studentId: true,
+      cost: true,
+    },
+  });
+  const map = orders.reduce((prev, cur) => {
+    if (!prev[cur.studentId]) prev[cur.studentId] = 0;
+    prev[cur.studentId] += cur.cost;
+    return prev;
+  }, {} as Record<number, number>);
+  return map;
+}
 
 async function getPreordersForDay(dayOfWeek: number, students: { id: number }[], nextMonday: Date) {
   // const defaults = await prisma.preference.findMany({
@@ -89,13 +131,11 @@ async function resetDebt() {
   });
 }
 
-async function addDebt(studentId: number, dateFrom: Date, dateTo: Date) {
-  const total = await getTotalOrderCost(studentId, dateFrom, dateTo);
+async function addDebt(studentId: number, total: number) {
   await prisma.student.update({
     where: { id: studentId },
     data: { debt: { increment: total } },
   });
-  return [studentId, total];
 }
 
 const totalOrderCostSchema = z.object({ total: z.coerce.number() }).array();
