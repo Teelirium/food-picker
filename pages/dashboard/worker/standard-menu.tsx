@@ -10,7 +10,7 @@ import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (ctx) => {
   const session = await getServerSideSession(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
@@ -38,19 +38,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-type Props = {
+type PageProps = {
   userRole: string;
   workerName: string;
 };
 
-const StandardMenuPage: NextPage<Props> = ({ userRole, workerName }) => {
+const StandardMenuPage: NextPage<PageProps> = ({ userRole, workerName }) => {
   return (
     <>
       <Head>
         <title>Стандартное питание</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role={userRole} activePage={2} workerName={workerName} />
+        <LeftSideNavibar activePage={userRole === 'WORKER' ? 2 : 6} workerName={workerName} />
         <StandardMenu />
       </div>
     </>

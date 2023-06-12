@@ -143,7 +143,7 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
         <title>Список учеников</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role="ADMIN" activePage={2} workerName={adminName} />
+        <LeftSideNavibar activePage={2} workerName={adminName} />
         <div className={styles.content}>
           <div className={styles.contentInner}>
             <div className={styles.title}>Список учеников</div>

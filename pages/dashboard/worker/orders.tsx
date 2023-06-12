@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import LeftSideNavibar from 'components/SideNavibar';
+import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Orders from 'components/WorkerPage/Orders';
 import { GradeInfo } from 'pages/api/grades/total-orders';
 import styles from 'styles/worker.module.css';
@@ -75,7 +75,7 @@ const OrdersPage: NextPage<Props> = ({ userRole, workerName }) => {
         <title>Заказы</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role={userRole} activePage={1} workerName={workerName} />
+        <LeftSideNavibar activePage={userRole === 'WORKER' ? 1 : 5} workerName={workerName} />
         <Orders orders={orders} weekDay={day} />
       </div>
       {dishId !== undefined && <DishAboutModal dishId={dishId} />}

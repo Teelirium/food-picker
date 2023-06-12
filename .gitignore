@@ -2,6 +2,8 @@
 .env
 .vscode
 
+/pages/api/test.ts
+
 # dependencies
 /node_modules
 /.pnp

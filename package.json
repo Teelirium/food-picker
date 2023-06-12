@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "npx prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "studio": "npx prisma studio",
     "test": "jest --watch",
@@ -36,7 +36,7 @@
     "lodash": "^4.17.21",
     "mobx": "^6.7.0",
     "mobx-react": "^7.6.0",
-    "next": "^13.4.1",
+    "next": "^13.4.3",
     "next-auth": "^4.22.1",
     "next-swagger-doc": "^0.3.6",
     "react": "^18.2.0",

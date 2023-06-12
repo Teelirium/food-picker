@@ -24,7 +24,7 @@ const paramSchema = z.object({
   isModalOpen: modalSchema.optional(),
 });
 
-const paramSchemaServerside = z.object({
+const serverParamSchema = z.object({
   gradeId: idSchema.optional(),
   page: teacherPage.default('attendance'),
   isModalOpen: modalSchema.optional(),
@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const teacherInitials = getInitials(teacher);
   const grades = teacher.Grades;
 
-  const { gradeId } = paramSchemaServerside.parse(ctx.query);
+  const { gradeId } = serverParamSchema.parse(ctx.query);
 
   if (gradeId === undefined) {
     if (grades.length === 0) {

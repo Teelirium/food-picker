@@ -1,4 +1,4 @@
-import { FullName } from 'types/UserData';
+import { FullName } from 'modules/user/types';
 
 export function getFullName(user: FullName) {
   const fullName = `${user.surname} ${user.name}`;

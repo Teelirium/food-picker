@@ -1,19 +1,20 @@
-import router from 'next/router';
-import { signOut } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { workerItems, adminItems } from 'utils/sideNavibarItems';
-import styles from './styles.module.css';
+import { signOut, useSession } from 'next-auth/react';
+import { useState } from 'react';
+
+import { adminItems, workerItems } from 'utils/sideNavibarItems';
+
 import NavElement from './NavElement';
+import styles from './styles.module.css';
 
 type Props = {
-  role: string;
   activePage: number;
   workerName: string;
 };
 
-const LeftSideNavibar: React.FC<Props> = ({ role, activePage, workerName }) => {
+const LeftSideNavibar: React.FC<Props> = ({ activePage, workerName }) => {
   const [isLogoutVisible, setLogoutVisible] = useState(false);
-  const items = role === 'ADMIN' ? adminItems : workerItems;
+  const session = useSession({ required: true });
+  const items = session.data?.user.role === 'ADMIN' ? adminItems : workerItems;
   const tabsList = items.map((item, index) => {
     return (
       <NavElement

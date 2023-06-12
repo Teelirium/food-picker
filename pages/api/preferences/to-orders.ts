@@ -1,13 +1,9 @@
 import { verifySignature } from '@upstash/qstash/nextjs';
-import _ from 'lodash';
 import { NextApiHandler } from 'next';
 import { z } from 'zod';
 
 import { MAX_WEEKDAYS, WEEKDAYS } from 'app.config';
-import {
-  getPreferencesWithDefaults,
-  old_getPreferencesWithDefaults,
-} from 'modules/preference/service';
+import { PreferenceService } from 'modules/preference/service';
 import { PreferenceWithDish } from 'modules/preference/types';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
@@ -60,7 +56,7 @@ async function getPreordersForDay(dayOfWeek: number, students: { id: number }[],
   const targetDate = addDays(nextMonday, dayOfWeek);
   const preorders: PreferenceWithDish[][] = await Promise.all(
     students.map(async (student) => {
-      const preorder = await getPreferencesWithDefaults(student.id, dayOfWeek);
+      const preorder = await PreferenceService.getWithDefaults(student.id, dayOfWeek);
       await createOrders(student.id, preorder, targetDate);
       return preorder;
     }),

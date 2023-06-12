@@ -21,6 +21,7 @@ export function unflattenDish(prefAndDish: Preference & Dish): PreferenceWithDis
       ingredients: prefAndDish.ingredients,
       type: prefAndDish.type,
       calories: prefAndDish.calories,
+      isHidden: prefAndDish.isHidden,
     },
   } satisfies PreferenceWithDish;
 

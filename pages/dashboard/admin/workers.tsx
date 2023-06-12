@@ -80,7 +80,7 @@ const WorkersPage: NextPage<Props> = ({ adminName, teachers, workers }) => {
         <title>{title}</title>
       </Head>
       <div className={styles.container}>
-        <LeftSideNavibar role="ADMIN" activePage={0} workerName={adminName} />
+        <LeftSideNavibar activePage={0} workerName={adminName} />
         <div className={styles.content}>
           <div className={styles.contentInner}>
             <div className={styles.title}>{title}</div>
