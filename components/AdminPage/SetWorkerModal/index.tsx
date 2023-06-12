@@ -1,9 +1,11 @@
 import { FC } from 'react';
 import { Teacher, Worker } from '@prisma/client';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { ModalMethod } from 'utils/schemas/modalMethodSchema';
 import ModalWrapper from 'components/ModalWrapper';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
@@ -19,8 +21,7 @@ type TForm = {
   surname: string;
   middleName: string | null;
   username: string;
-  newPassword: string;
-  newPasswordRepeat: string;
+  password: string;
 };
 
 const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
@@ -28,12 +29,80 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     defaultValues: { surname: person?.surname, name: person?.name, middleName: person?.middleName },
   });
 
-  const onSubmit = handleSubmit((values: TForm) => {
-    console.log(values);
+  const createTeacherMutation = trpc.teachers.create.useMutation({
+    onError: () => toast.error('При создании учителя возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Учитель успешно создан');
+      close();
+    },
+  });
+  const updateTeacherMutation = trpc.teachers.update.useMutation({
+    onError: () => toast.error('При обновлении данных учителя возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Учитель успешно сохранен');
+      close();
+    },
+  });
+  const deleteTeacherMutation = trpc.teachers.delete.useMutation({
+    onError: () => toast.error('Не удалось удалить учителя'),
+    onSuccess: () => {
+      toast.success('Учитель успешно удален');
+      close();
+    },
   });
 
-  const onDelete = (personId?: number) => {
-    console.log(personId);
+  const createWorkerMutation = trpc.workers.create.useMutation({
+    onError: () => toast.error('При создании повара возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Повар успешно создан');
+      close();
+    },
+  });
+  const updateWorkerMutation = trpc.workers.update.useMutation({
+    onError: () => toast.error('При обновлении данных повара возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Повар успешно сохранен');
+      close();
+    },
+  });
+  const deleteWorkerMutation = trpc.workers.delete.useMutation({
+    onError: () => toast.error('Не удалось удалить повара'),
+    onSuccess: () => {
+      toast.success('Повар успешно удален');
+      close();
+    },
+  });
+
+  const onSubmit = handleSubmit((values: TForm) => {
+    console.log(values);
+    if (method === 'POST') {
+      if (personType === 'teacher') {
+        createTeacherMutation.mutate(values);
+      } else {
+        createWorkerMutation.mutate({ role: 'WORKER', ...values });
+      }
+    }
+
+    if (method === 'UPDATE' && person) {
+      if (personType === 'teacher') {
+        updateTeacherMutation.mutate({ ...values, id: person.id, username: person.username });
+      } else {
+        updateWorkerMutation.mutate({
+          ...values,
+          id: person.id,
+          username: person.username,
+          role: 'WORKER',
+        });
+      }
+    }
+  });
+
+  const onDelete = (personId: number) => {
+    if (personType === 'teacher') {
+      deleteTeacherMutation.mutate({ id: personId });
+    } else {
+      deleteWorkerMutation.mutate({ id: personId });
+    }
   };
 
   const header = (() => {
@@ -78,14 +147,9 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
               </div>
             )}
 
-            <span>Новый пароль:</span>
+            <span>{method === 'POST' ? 'Пароль:' : 'Новый пароль:'}</span>
             <div className={styles.inputBorder}>
-              <input type="text" className={styles.formInput} {...register('newPassword')} />
-            </div>
-
-            <span>Повторите пароль:</span>
-            <div className={styles.inputBorder}>
-              <input type="text" className={styles.formInput} {...register('newPasswordRepeat')} />
+              <input type="text" className={styles.formInput} {...register('password')} />
             </div>
           </div>
 
@@ -93,13 +157,13 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
             <div className={styles.cancelBtn} onClick={close}>
               Отмена
             </div>
-            {method === 'UPDATE' ? (
-              <div className={styles.removeBtn} onClick={() => onDelete(person?.id)}>
+            {method === 'UPDATE' && person ? (
+              <div className={styles.removeBtn} onClick={() => onDelete(person.id)}>
                 Удалить
               </div>
             ) : null}
             <button className={styles.submitBtn} type="submit">
-              Сохранить
+              {method === 'POST' ? 'Создать' : 'Сохранить'}
             </button>
           </div>
         </form>
