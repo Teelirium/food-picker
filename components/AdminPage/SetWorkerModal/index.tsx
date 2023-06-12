@@ -18,6 +18,7 @@ type TForm = {
   name: string;
   surname: string;
   middleName: string | null;
+  username: string;
   newPassword: string;
   newPasswordRepeat: string;
 };
@@ -67,6 +68,15 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
             <div className={styles.inputBorder}>
               <input type="text" className={styles.formInput} {...register('middleName')} />
             </div>
+
+            <span>Логин:</span>
+            {person ? (
+              <div className={styles.formUsername}>{person.username}</div>
+            ) : (
+              <div className={styles.inputBorder}>
+                <input type="text" className={styles.formInput} {...register('username')} />
+              </div>
+            )}
 
             <span>Новый пароль:</span>
             <div className={styles.inputBorder}>
