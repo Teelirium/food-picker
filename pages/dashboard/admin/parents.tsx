@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import LeftSideNavibar from 'components/SideNavibar';
-import styles from 'styles/admin.module.scss';
+import styles from 'styles/adminParents.module.scss';
 import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 

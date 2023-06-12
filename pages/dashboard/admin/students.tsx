@@ -82,8 +82,6 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
     return studentGrade.letter === currentGradeLetter;
   });
 
-  console.log(filteredStudents);
-
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [openedPerson, setOpenedPerson] = useState<Student>();
 
@@ -115,7 +113,7 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
     },
   ];
 
-  const pagination = usePagination({ pageSize: 3, total: filteredStudents.length });
+  const pagination = usePagination({ pageSize: 20, total: filteredStudents.length });
   const { set: setPagination } = pagination;
   const filteredStudentsPage = filteredStudents.slice(
     pagination.pageSize * (pagination.current - 1),

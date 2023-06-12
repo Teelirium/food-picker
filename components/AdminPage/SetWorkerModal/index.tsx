@@ -74,7 +74,6 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
   });
 
   const onSubmit = handleSubmit((values: TForm) => {
-    console.log(values);
     if (method === 'POST') {
       if (personType === 'teacher') {
         createTeacherMutation.mutate(values);
