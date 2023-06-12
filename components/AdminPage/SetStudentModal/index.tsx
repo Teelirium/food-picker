@@ -2,10 +2,12 @@ import { FC } from 'react';
 import { Grade, Student } from '@prisma/client';
 import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 
 import { ModalMethod } from 'utils/schemas/modalMethodSchema';
 import ModalWrapper from 'components/ModalWrapper';
 import optionFinder from 'utils/selectOptionFinder';
+import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
 
@@ -20,7 +22,7 @@ type TForm = {
   name: string;
   surname: string;
   middleName: string | null;
-  gradeId: number | null;
+  gradeId: number;
 };
 
 const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
@@ -29,16 +31,44 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
       surname: student?.surname,
       name: student?.name,
       middleName: student?.middleName,
-      gradeId: student?.gradeId,
+      gradeId: student?.gradeId || undefined,
+    },
+  });
+
+  const createStudentMutation = trpc.students.create.useMutation({
+    onError: () => toast.error('При создании ученика возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Ученик успешно создан');
+      close();
+    },
+  });
+  const updateStudentMutation = trpc.students.update.useMutation({
+    onError: () => toast.error('При обновлении данных ученика возникла ошибка'),
+    onSuccess: () => {
+      toast.success('Ученик успешно сохранен');
+      close();
+    },
+  });
+  const deleteStudentMutation = trpc.students.delete.useMutation({
+    onError: () => toast.error('Не удалось удалить ученика'),
+    onSuccess: () => {
+      toast.success('Ученик успешно удален');
+      close();
     },
   });
 
   const onSubmit = handleSubmit((values: TForm) => {
-    console.log(values);
+    if (method === 'POST') {
+      createStudentMutation.mutate(values);
+    }
+
+    if (method === 'UPDATE' && student) {
+      updateStudentMutation.mutate({ ...values, id: student.id });
+    }
   });
 
-  const onDelete = (personId?: number) => {
-    console.log(personId);
+  const onDelete = (studentId: number) => {
+    deleteStudentMutation.mutate({ id: studentId });
   };
 
   const gradeOptions = grades.map((grade) => ({
@@ -83,6 +113,7 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
                   value={optionFinder(gradeOptions, field.value)}
                   onChange={(val: any) => field.onChange(val?.value)}
                   ref={field.ref}
+                  placeholder="Класс"
                 />
               )}
             />
@@ -92,8 +123,8 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
             <div className={styles.cancelBtn} onClick={close}>
               Отмена
             </div>
-            {method === 'UPDATE' ? (
-              <div className={styles.removeBtn} onClick={() => onDelete(student?.id)}>
+            {method === 'UPDATE' && student ? (
+              <div className={styles.removeBtn} onClick={() => onDelete(student.id)}>
                 Удалить
               </div>
             ) : null}
