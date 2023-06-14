@@ -31,6 +31,15 @@ export const WorkerService = {
     return workerDto;
   },
 
+  async createMany(workers: WorkerCreateForm[]) {
+    return prisma.worker.createMany({
+      data: workers.map((w) => ({
+        ...w,
+        password: hashSync(w.password, 12),
+      })),
+    });
+  },
+
   async update(worker: WorkerUpdateForm) {
     const hashed = worker.password ? hashSync(worker.password, 12) : undefined;
     const newWorker = await prisma.worker.update({

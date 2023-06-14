@@ -9,6 +9,7 @@ import * as Papa from 'papaparse';
 import { transliterate } from 'transliteration';
 
 import { FullName } from 'modules/user/types';
+import { WorkerService } from 'modules/worker/service';
 import { WorkerCreateForm } from 'modules/worker/types';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSessionWithOpts } from 'utils/getServerSession';
@@ -77,12 +78,8 @@ export default withErrHandler(async (req, res) => {
       }
 
       const data = await readCsvFile(csvFile.filepath);
-      const parsed = data
-        .slice(1)
-        .map((line) => Papa.parse<string[]>(line).data)
-        .flat();
-
-      const workers = parsed.map((el) => {
+      const parsed = data.map((line) => Papa.parse<string[]>(line).data).flat();
+      const workers = parsed.slice(1).map((el) => {
         const fullName = {
           surname: el[0],
           name: el[1],
@@ -104,7 +101,13 @@ export default withErrHandler(async (req, res) => {
         return dto;
       });
 
-      return res.json(workers);
+      await WorkerService.createMany(workers);
+
+      const respData = Papa.unparse(workers);
+      res.setHeader('Content-disposition', 'attachment; filename=workers.csv');
+      res.setHeader('Content-type', 'text/csv');
+      res.write(respData);
+      return res.end();
     }
     default:
       throw new TRPCError({ code: 'METHOD_NOT_SUPPORTED' });
