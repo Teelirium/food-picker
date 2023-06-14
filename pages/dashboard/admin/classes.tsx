@@ -55,8 +55,6 @@ const ClassesPage: NextPage<Props> = ({ adminName }) => {
   const { data: students, refetch: refetchStudents } = trpc.students.getAll.useQuery({});
   const { data: teachers, refetch: refetchTeachers } = trpc.teachers.getAll.useQuery();
 
-  console.log(grades);
-
   const classModal = useModal();
   const [openedClass, setOpenedClass] = useState<NonNullable<typeof grades>[number]>();
 

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Teacher, Worker } from '@prisma/client';
+import { Grade, Teacher, Worker } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -11,9 +11,10 @@ import styles from './styles.module.scss';
 
 interface Props {
   method: ModalMethod;
-  person?: Worker | Teacher;
+  person?: Omit<Worker, 'password'> | Omit<Teacher & { Grades: Grade[] }, 'password'>;
   personType: 'worker' | 'teacher';
   close: () => void;
+  onChangeWorker: () => void;
 }
 
 type TForm = {
@@ -24,7 +25,7 @@ type TForm = {
   password: string;
 };
 
-const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
+const SetWorkerModal: FC<Props> = ({ method, person, personType, close, onChangeWorker }) => {
   const { register, handleSubmit } = useForm<TForm>({
     defaultValues: { surname: person?.surname, name: person?.name, middleName: person?.middleName },
   });
@@ -33,6 +34,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('При создании учителя возникла ошибка'),
     onSuccess: () => {
       toast.success('Учитель успешно создан');
+      onChangeWorker();
       close();
     },
   });
@@ -40,6 +42,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('При обновлении данных учителя возникла ошибка'),
     onSuccess: () => {
       toast.success('Учитель успешно сохранен');
+      onChangeWorker();
       close();
     },
   });
@@ -47,6 +50,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('Не удалось удалить учителя'),
     onSuccess: () => {
       toast.success('Учитель успешно удален');
+      onChangeWorker();
       close();
     },
   });
@@ -55,6 +59,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('При создании повара возникла ошибка'),
     onSuccess: () => {
       toast.success('Повар успешно создан');
+      onChangeWorker();
       close();
     },
   });
@@ -62,6 +67,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('При обновлении данных повара возникла ошибка'),
     onSuccess: () => {
       toast.success('Повар успешно сохранен');
+      onChangeWorker();
       close();
     },
   });
@@ -69,6 +75,7 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close }) => {
     onError: () => toast.error('Не удалось удалить повара'),
     onSuccess: () => {
       toast.success('Повар успешно удален');
+      onChangeWorker();
       close();
     },
   });

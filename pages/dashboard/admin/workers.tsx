@@ -1,5 +1,5 @@
 import { GetServerSideProps, NextPage } from 'next';
-import { PrismaClient, Teacher, Worker } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import { getServerSideSession } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 import styles from 'styles/adminWorkers.module.scss';
 import SetWorkerModal from 'components/AdminPage/SetWorkerModal';
+import { trpc } from 'utils/trpc/client';
 
 const prisma = new PrismaClient();
 
@@ -33,32 +34,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       id: +session.user.id,
     },
   });
-  const workers = await prisma.worker.findMany({ where: { role: 'WORKER' } });
-  const teachers = await prisma.teacher.findMany();
 
   const adminName = `${adminData?.surname} ${adminData?.name} ${adminData?.middleName}`;
 
   return {
     props: {
       adminName,
-      teachers,
-      workers,
     },
   };
 };
 
 type Props = {
   adminName: string;
-  teachers: Teacher[];
-  workers: Worker[];
 };
 
 type TForm = {
   search: string;
 };
 
-const WorkersPage: NextPage<Props> = ({ adminName, teachers, workers }) => {
+const WorkersPage: NextPage<Props> = ({ adminName }) => {
   const router = useRouter();
+
   const [activeTab, setTab] = useState<'teachers' | 'workers'>('teachers');
   const title = activeTab === 'teachers' ? 'Список учителей' : 'Список поваров';
 
@@ -67,12 +63,25 @@ const WorkersPage: NextPage<Props> = ({ adminName, teachers, workers }) => {
   });
   const search = useWatch({ control, name: 'search' });
 
-  const filteredPersons = (activeTab === 'teachers' ? teachers : workers).filter((worker) =>
+  const { data: workers, refetch: refetchWorkers } = trpc.workers.getAllWorkers.useQuery();
+  const { data: teachers, refetch: refetchTeachers } = trpc.teachers.getAll.useQuery();
+
+  const filteredTeachers = (teachers || []).filter((worker) =>
     worker.surname.toLowerCase().includes(search.toLowerCase()),
   );
+  const filteredWorkers = (workers || []).filter((worker) =>
+    worker.surname.toLowerCase().includes(search.toLowerCase()),
+  );
+  const filteredPersons = activeTab === 'teachers' ? filteredTeachers : filteredWorkers;
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [openedPerson, setOpenedPerson] = useState<Worker | Teacher>();
+  const [openedPerson, setOpenedPerson] =
+    useState<NonNullable<typeof workers | typeof teachers>[number]>();
+
+  const refetchAllData = () => {
+    refetchTeachers();
+    refetchWorkers();
+  };
 
   return (
     <>
@@ -160,6 +169,7 @@ const WorkersPage: NextPage<Props> = ({ adminName, teachers, workers }) => {
           method={openedPerson ? 'UPDATE' : 'POST'}
           personType={activeTab === 'teachers' ? 'teacher' : 'worker'}
           person={openedPerson}
+          onChangeWorker={refetchAllData}
         />
       )}
     </>
