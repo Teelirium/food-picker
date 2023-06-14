@@ -1,24 +1,19 @@
-import { PrismaClient } from '@prisma/client';
-import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import LeftSideNavibar from 'components/SideNavibar';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Orders from 'components/WorkerPage/Orders';
-import { GradeInfo } from 'pages/api/grades/total-orders';
 import styles from 'styles/worker.module.css';
 import { getServerSideSession } from 'utils/getServerSession';
+import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
 
-const prisma = new PrismaClient();
-
-const querySchema = z.object({
+const paramSchema = z.object({
   day: dayOfWeekSchema.default(0),
   dishId: idSchema.optional(),
   breakIndex: z.coerce.number().min(0).max(7).default(0),
@@ -59,27 +54,17 @@ type Props = {
 
 const OrdersPage: NextPage<Props> = ({ userRole, workerName }) => {
   const router = useRouter();
-  const [orders, setOrders] = useState<GradeInfo>();
-  const { day, dishId } = querySchema.parse(router.query);
-
-  useEffect(() => {
-    axios
-      .get(`/api/grades/total-orders?day=${day}`)
-      .then((response) => setOrders(response.data))
-      .catch((err) => console.error(err.message));
-  }, [day]);
+  const { day, dishId } = paramSchema.parse(router.query);
 
   return (
-    <>
+    <div className={styles.container}>
       <Head>
         <title>Заказы</title>
       </Head>
-      <div className={styles.container}>
-        <LeftSideNavibar activePage={userRole === 'WORKER' ? 1 : 5} workerName={workerName} />
-        <Orders orders={orders} weekDay={day} />
-      </div>
+      <LeftSideNavibar activePage={userRole === 'WORKER' ? 1 : 5} workerName={workerName} />
+      <Orders weekDay={day} />
       {dishId !== undefined && <DishAboutModal dishId={dishId} />}
-    </>
+    </div>
   );
 };
 

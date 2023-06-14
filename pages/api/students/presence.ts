@@ -1,8 +1,8 @@
-import { NextApiHandler } from 'next';
+import { TRPCError } from '@trpc/server';
 import { Session } from 'next-auth';
 import { z } from 'zod';
 
-import { stripTimeFromDate } from 'utils/dateHelpers';
+import { PresenceService } from 'modules/presence/service';
 import HttpError from 'utils/errorUtils/HttpError';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
@@ -50,15 +50,15 @@ async function verify(session: Session, gradeId: number) {
  *  delete:
  *    summary: Удаляет все записи об присутствии ученика в некоторый день
  */
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   const session = await getServerSideSession({ req, res });
   if (!session) {
-    throw new HttpError('Unauthorized', 401);
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 
   const { gradeId, date } = paramSchema.parse(req.query);
   if (!(await verify(session, gradeId))) {
-    throw new HttpError('Forbidden', 403);
+    throw new TRPCError({ code: 'FORBIDDEN' });
   }
 
   switch (req.method) {
@@ -88,6 +88,7 @@ const handler: NextApiHandler = async (req, res) => {
           id: true,
         },
       });
+
       if (!existing) {
         await prisma.studentPresence.create({
           data: {
@@ -97,41 +98,14 @@ const handler: NextApiHandler = async (req, res) => {
         });
         return res.send('OK');
       }
+
       return res.send('Запись уже существует');
     }
     case 'PUT': {
       const { students } = z.object({ students: z.array(idSchema) }).parse(req.body);
-      const count = await prisma.student.count({
-        where: {
-          id: {
-            in: students,
-          },
-          gradeId,
-        },
-      });
-      if (count !== students.length && students.length !== 0) {
-        throw new HttpError(
-          'Один из учеников не существует либо не обучается в данном классе',
-          404,
-        );
-      }
 
-      await prisma.studentPresence.deleteMany({
-        where: {
-          student: {
-            gradeId,
-          },
-          date,
-        },
-      });
+      await PresenceService.createMany(gradeId, students, date);
 
-      await prisma.studentPresence.createMany({
-        data: students.map((id) => ({
-          studentId: id,
-          date,
-        })),
-        skipDuplicates: true,
-      });
       return res.send('OK');
     }
     case 'DELETE': {
@@ -149,9 +123,7 @@ const handler: NextApiHandler = async (req, res) => {
       return res.status(405).send('Method not allowed');
     }
   }
-};
-
-export default withErrHandler(handler);
+});
 
 async function handleGet(date: Date, gradeId: number) {
   const students = await prisma.studentPresence.findMany({

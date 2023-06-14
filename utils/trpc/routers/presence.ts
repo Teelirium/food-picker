@@ -1,6 +1,6 @@
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { PresenceService } from 'modules/presence/service';
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -50,36 +50,6 @@ export const presenceRouter = router({
     .mutation(async ({ input }) => {
       const { gradeId, students, date } = input;
 
-      const count = await prisma.student.count({
-        where: {
-          id: {
-            in: students,
-          },
-          gradeId,
-        },
-      });
-      if (count !== students.length) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Один из учеников не существует либо не обучается в данном классе',
-        });
-      }
-
-      await prisma.studentPresence.deleteMany({
-        where: {
-          studentId: {
-            in: students,
-          },
-          date,
-        },
-      });
-
-      await prisma.studentPresence.createMany({
-        data: students.map((id) => ({
-          studentId: id,
-          date,
-        })),
-        skipDuplicates: true,
-      });
+      await PresenceService.createMany(gradeId, students, date);
     }),
 });

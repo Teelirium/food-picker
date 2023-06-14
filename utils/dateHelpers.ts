@@ -13,5 +13,5 @@ export function addDays(date: Date, dayCount: number): Date {
 }
 
 export function stripTimeFromDate(date: Date): Date {
-  return new Date(date.toJSON().split('T')[0]);
+  return new Date(date.toISOString().split('T')[0]);
 }

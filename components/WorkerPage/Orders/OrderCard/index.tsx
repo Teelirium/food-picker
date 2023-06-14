@@ -1,15 +1,17 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { GradeInfo } from 'pages/api/grades/total-orders';
+import { GradeOrders } from 'modules/orders/types';
+import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 
 import styles from './styles.module.scss';
 
 type Props = {
-  order: GradeInfo[number];
+  order: GradeOrders;
+  weekDay: number;
 };
 
-const OrderCard: React.FC<Props> = ({ order }) => {
+const OrderCard: React.FC<Props> = ({ order, weekDay }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(false);
 
@@ -19,11 +21,15 @@ const OrderCard: React.FC<Props> = ({ order }) => {
     });
   };
 
-  const ordersTable = order.dishes.map((dish) => {
+  const selectedDay = addDays(getNextMonday(stripTimeFromDate(new Date())), -7 + weekDay);
+
+  const dishesForDay = order.dishes[selectedDay.toISOString()] || {};
+
+  const ordersTable = Object.values(dishesForDay).map((dish) => {
     return (
-      <div key={dish.id + crypto.randomUUID()} className={styles.dishRow}>
+      <div key={dish.id} className={styles.dishRow}>
         <div className={styles.dishTd}>{dish.name}</div>
-        <div className={styles.dishTd}>{dish._count.preferences}</div>
+        <div className={styles.dishTd}>{dish.count}</div>
         <div className={styles.dishTd}>{dish.weightGrams}</div>
         <div className={styles.dishTd}>
           <div className={styles.aboutBtn} onClick={() => openModal(dish.id)}>
@@ -34,7 +40,8 @@ const OrderCard: React.FC<Props> = ({ order }) => {
     );
   });
 
-  if (!order) return null;
+  if (!order.grade) return null;
+
   return (
     <div className={styles.orderContainer}>
       <div
@@ -42,8 +49,8 @@ const OrderCard: React.FC<Props> = ({ order }) => {
         onClick={() => setOpen(!isOpen)}
       >
         <div className={styles.orderInfo}>
-          <span>{`${order.number}  ${order.letter} класс`}</span>
-          <span>{`${order.breakIndex + 1} переменна`}</span>
+          <span>{`${order.grade.number}  ${order.grade.letter} класс`}</span>
+          <span>{`${order.grade.breakIndex + 1} перемена`}</span>
         </div>
         <img
           src="/img/arrow.png"
@@ -58,7 +65,7 @@ const OrderCard: React.FC<Props> = ({ order }) => {
           <div className={styles.orderTableHeads}>
             <div className={styles.orderTableHead}>Блюдо</div>
             <div className={styles.orderTableHead}>Количество</div>
-            <div className={styles.orderTableHead}>гр/шт</div>
+            <div className={styles.orderTableHead}>гр./шт.</div>
             <div className={styles.orderTableHead}>Дополнительно</div>
           </div>
           {ordersTable}

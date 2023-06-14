@@ -128,7 +128,6 @@ const TeacherIndexPage: NextPage<Props> = ({
       <div className={styles.container}>
         <div className={styles.containerInner}>
           <Navibar grade={currentGrade} selectedPage={page} teacherFio={teacherInitials} />
-
           {page === 'attendance' ? (
             <AttendanceList gradeId={gradeId} presenceList={presenceList} students={students} />
           ) : (

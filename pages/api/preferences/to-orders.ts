@@ -22,14 +22,14 @@ const handler: NextApiHandler = async (req, res) => {
 
   const students = await prisma.student.findMany({ select: { id: true } });
 
-  await prisma.order.deleteMany({
-    where: {
-      date: {
-        gte: nextMonday,
-        lte: nextEndOfWeek,
-      },
-    },
-  });
+  // await prisma.order.deleteMany({
+  //   where: {
+  //     date: {
+  //       gte: nextMonday,
+  //       lte: nextEndOfWeek,
+  //     },
+  //   },
+  // });
 
   const start = new Date();
 
@@ -39,14 +39,13 @@ const handler: NextApiHandler = async (req, res) => {
 
   const debtMap = await getDebtMap(prevMonday, nextMonday);
   // await resetDebt();
-  const newStudents = await addDebts(debtMap);
+  // const newStudents = await addDebts(debtMap);
   res.send(debtMap);
   console.log('Took', Date.now() - start.getTime(), 'ms in total');
-  // res.send('Orders and debts generated successfully');
 };
 
-// export default withErrHandler(handler);
-export default verifySignature(withErrHandler(handler));
+export default withErrHandler(handler);
+// export default verifySignature(withErrHandler(handler));
 
 async function addDebts(debtMap: Record<number, number>) {
   const actions = Object.entries(debtMap).map(([studentId, debt]) => {
@@ -67,6 +66,7 @@ async function addDebts(debtMap: Record<number, number>) {
 async function getDebtMap(from: Date, to: Date) {
   const orders = await prisma.order.findMany({
     where: {
+      isActive: true,
       date: {
         gte: from,
         lt: to,
