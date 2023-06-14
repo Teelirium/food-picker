@@ -65,7 +65,7 @@ export default withErrHandler(async (req, res) => {
 
       const csvFile = files.csv as formidable.File | undefined;
       if (!csvFile) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Не найден файл в поле `csv`' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Не найден файл в поле формы `csv`' });
       }
       console.log(csvFile.filepath);
 
