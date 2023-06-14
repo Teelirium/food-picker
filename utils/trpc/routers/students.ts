@@ -9,12 +9,12 @@ import idSchema from 'utils/schemas/idSchema';
 import { auth, procedure, router } from '..';
 
 export const studentsRouter = router({
-  getAll: procedure
+  getManyByClass: procedure
     .use(auth(['ADMIN']))
     .input(gradeNamePartialSchema)
     .query(async (req) => {
       const { input } = req;
-      const students = await StudentService.getAll(input);
+      const students = await StudentService.getManyByClass(input);
       return students;
     }),
 

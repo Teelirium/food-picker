@@ -81,3 +81,12 @@ export const ChevronRight: IconFC = (props) => (
     <polyline points="9 18 15 12 9 6" />
   </svg>
 );
+
+export const Trash: IconFC = (props) => (
+  <svg viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M21.8327 12V25.3333H11.166V12H21.8327ZM19.8327 4H13.166L11.8327 5.33333H7.16602V8H25.8327V5.33333H21.166L19.8327 4ZM24.4993 9.33333H8.49935V25.3333C8.49935 26.8 9.69935 28 11.166 28H21.8327C23.2993 28 24.4993 26.8 24.4993 25.3333V9.33333Z"
+      fill="white"
+    />
+  </svg>
+);
