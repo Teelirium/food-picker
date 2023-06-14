@@ -17,6 +17,15 @@
   }
 }
 
+.error {
+  background-color: #db330daf;
+
+  &:hover,
+  &:active {
+    background-color: #db330dce;
+  }
+}
+
 .x {
   position: absolute;
   top: 10px;
