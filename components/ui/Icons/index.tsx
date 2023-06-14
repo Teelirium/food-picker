@@ -10,6 +10,9 @@ export const PlusIcon = () => <Image src={plusIcon} alt="+" />;
 export const EditIcon = () => <Image src={editIcon} alt="edit" />;
 export const DeleteIcon = () => <Image src={deleteIcon} alt="delete" />;
 export const HamburgerIcon = () => <Image src={menuIcon} alt="menu" width={30} height={30} />;
+export const ExcelIcon = ({ size }: { size: number }) => (
+  <Image src="/img/Excel.png" alt="excel" width={size} height={size} />
+);
 
 export const XCircleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

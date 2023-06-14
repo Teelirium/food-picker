@@ -1,23 +1,23 @@
 import classNames from 'classnames';
-import { MouseEventHandler, PropsWithChildren } from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
 import styles from './styles.module.scss';
 
-type Props = PropsWithChildren<{
-  onClick?: MouseEventHandler<HTMLElement>;
-}>;
-
-export default function ThinButton({ onClick, children }: Props) {
-  if (onClick) {
+export default function ThinButton({
+  asDiv = false,
+  children,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement> & { asDiv?: boolean }) {
+  if (!asDiv) {
     return (
-      <button
-        className={classNames(styles.container, styles.clickable)}
-        onClick={onClick}
-        type="button"
-      >
+      <button className={classNames(styles.container, styles.clickable)} type="button" {...rest}>
         {children}
       </button>
     );
   }
-  return <div className={styles.container}>{children}</div>;
+  return (
+    <div className={styles.container} {...(rest as React.HTMLAttributes<HTMLDivElement>)}>
+      {children}
+    </div>
+  );
 }

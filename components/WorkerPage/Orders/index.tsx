@@ -41,16 +41,6 @@ const Orders: React.FC<Props> = ({ weekDay }) => {
               </Link>
             ))}
           </div>
-          {/* <div className={styles.excelBtn}>
-            <img
-              src="/img/Excel.png"
-              alt="excel"
-              width={25}
-              height={25}
-              className={styles.excelImg}
-            />
-            <span>Выгрузить в Excel</span>
-          </div> */}
         </div>
         <div className={styles.ordersContainer}>
           {totalOrdersQuery.isLoading && <LoadingSpinner />}

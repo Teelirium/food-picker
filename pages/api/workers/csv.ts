@@ -104,8 +104,8 @@ export default withErrHandler(async (req, res) => {
       await WorkerService.createMany(workers);
 
       const respData = Papa.unparse(workers);
-      res.setHeader('Content-disposition', 'attachment; filename=workers.csv');
-      res.setHeader('Content-type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="workers.csv"');
+      res.setHeader('Content-Type', 'text/csv');
       res.write(respData);
       return res.end();
     }

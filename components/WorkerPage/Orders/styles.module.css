@@ -63,27 +63,6 @@
   color: #181818;
 }
 
-.excelBtn {
-  display: flex;
-  flex-direction: row;
-  height: 37px;
-  background-color: rgb(255 255 255 / 16%);
-  border-radius: 100px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-  cursor: pointer;
-  user-select: none;
-  min-width: 220px;
-}
-
-.excelBtn span {
-  font-weight: 400;
-  font-size: 18px;
-  letter-spacing: 0.1px;
-  color: #fff;
-}
-
 .ordersContainer {
   height: inherit;
   overflow: hidden;
