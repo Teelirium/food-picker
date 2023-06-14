@@ -36,8 +36,9 @@ export default withErrHandler(async (req, res) => {
       const outStream = createReadStream(csv.filepath, { encoding: 'utf-8' });
       outStream.on('data', (data) => {
         console.log(data);
+        res.send(data);
+        outStream.close();
       });
-      res.end();
       return;
     }
     default:
