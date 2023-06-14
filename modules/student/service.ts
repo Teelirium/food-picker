@@ -4,7 +4,7 @@ import prisma from 'utils/prismaClient';
 import { StudentCreateForm, StudentDto, StudentUpdateForm } from './types';
 
 export const StudentService = {
-  async getManyByClass(grade: GradeNamePartial) {
+  async getAll(grade: GradeNamePartial) {
     const students = await prisma.student.findMany({
       where: {
         grade,

@@ -23,6 +23,7 @@ export const GradeService = {
       },
       include: {
         teacher: teacherSelect,
+        students: true,
       },
     });
     return grades satisfies GradeDto[];

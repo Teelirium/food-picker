@@ -63,7 +63,7 @@ const ParentsPage: NextPage<PageProps> = ({ adminName }) => {
   const search = useWatch({ control, name: 'search' });
 
   const { data: parents, refetch: refetchParents } = trpc.parents.getAll.useQuery();
-  const { data: students, refetch: refetchStudents } = trpc.students.getManyByClass.useQuery({});
+  const { data: students, refetch: refetchStudents } = trpc.students.getAll.useQuery({});
 
   const filteredParents = (parents || []).filter((parent) =>
     parent.surname.toLowerCase().includes(search.toLowerCase()),
@@ -94,7 +94,7 @@ const ParentsPage: NextPage<PageProps> = ({ adminName }) => {
 
   const pagination = usePagination({ pageSize: 20, total: filteredParents.length });
   const { set: setPagination } = pagination;
-  const filteredStudentsPage = filteredParents.slice(
+  const filteredParentsPage = filteredParents.slice(
     pagination.pageSize * (pagination.current - 1),
     pagination.pageSize * pagination.current,
   );
@@ -129,7 +129,7 @@ const ParentsPage: NextPage<PageProps> = ({ adminName }) => {
                 <Image src={magnifierIcon} alt="" />
               </div>
             </label>
-            <div className={styles.students}>
+            <div className={styles.parents}>
               <Table
                 rowProps={{
                   onClick: (parent) => {
@@ -139,7 +139,7 @@ const ParentsPage: NextPage<PageProps> = ({ adminName }) => {
                 }}
                 columns={tableColumns}
                 className={styles.table}
-                data={filteredStudentsPage}
+                data={filteredParentsPage}
               />
 
               <Pagination pagination={pagination} />
