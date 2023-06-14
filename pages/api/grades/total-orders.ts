@@ -1,14 +1,17 @@
 import { DishType, Prisma } from '@prisma/client';
-import { NextApiHandler } from 'next';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { OrderService } from 'modules/orders/service';
+import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
+import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
-import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
+import dateSchema from 'utils/schemas/dateSchema';
 import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
-  day: dayOfWeekSchema.optional(),
+  date: dateSchema,
 });
 
 export type GradeInfo = Awaited<ReturnType<typeof handleGet>>;
@@ -19,32 +22,39 @@ type DishWithOrders = Prisma.DishGetPayload<{
 
 /**
  * @swagger
- * /api/grades/total-orders:
+ * /api/grades/total-orders?date={}:
  *  get:
  *    summary: Получает список классов с количеством заказанных блюд в каждом
  *    parameters:
  *    - in: query
- *      name: day
- *      description: День по которому фильтровать заказы
+ *      name: date
+ *      description: Дата, относительно её возвращаются заказы на неделю
  */
-const handler: NextApiHandler = async (req, res) => {
+export default withErrHandler(async (req, res) => {
   const session = await getServerSideSession({ req, res });
 
-  if (!session) return res.status(401).end();
-  if (!verifyRole(session, ['ADMIN', 'TEACHER', 'WORKER'])) return res.status(403).end();
+  if (!session) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+  if (!verifyRole(session, ['ADMIN', 'TEACHER', 'WORKER'])) {
+    throw new TRPCError({ code: 'FORBIDDEN' });
+  }
 
   switch (req.method) {
     case 'GET': {
-      const { day } = paramSchema.parse(req.query);
-      return res.json(await handleGet(day));
+      const { date } = paramSchema.parse(req.query);
+      const today = stripTimeFromDate(date);
+      const nextMonday = getNextMonday(today);
+      const prevMonday = addDays(nextMonday, -7);
+      const newData = await OrderService.getTotal(prevMonday, nextMonday);
+      // const data = await handleGet(day);
+      return res.json(newData);
     }
     default: {
-      return res.status(405).end();
+      throw new TRPCError({ code: 'METHOD_NOT_SUPPORTED' });
     }
   }
-};
-
-export default handler;
+});
 
 async function handleGet(day?: number) {
   const defaultPrefs = await prisma.preference.findMany({

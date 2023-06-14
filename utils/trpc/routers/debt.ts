@@ -43,18 +43,17 @@ export const debtRouter = router({
         select: { id: true, debt: true },
       });
 
-      oldDebts.forEach(async (oldDebt) => {
-        if (debts[oldDebt.id] === oldDebt.debt) {
-          return;
-        }
-        await prisma.student.update({
+      const actions = oldDebts.map((oldDebt) =>
+        prisma.student.update({
           where: {
             id: oldDebt.id,
           },
           data: {
             debt: debts[oldDebt.id],
           },
-        });
-      });
+        }),
+      );
+
+      await prisma.$transaction(actions);
     }),
 });

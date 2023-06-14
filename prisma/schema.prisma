@@ -43,8 +43,8 @@ model Grade {
   letter     String    @db.Char(1)
   number     Int
   breakIndex Int       @default(0)
-  teacherId  Int       @unique
   teacher    Teacher   @relation(fields: [teacherId], references: [id])
+  teacherId  Int
   students   Student[]
 }
 
@@ -54,9 +54,9 @@ model Student {
   surname         String
   middleName      String?
   debt            Int               @default(0)
-  parentStudent   ParentStudent[]
   grade           Grade?            @relation(fields: [gradeId], references: [id])
   gradeId         Int?
+  parentStudent   ParentStudent[]
   preferences     Preference[]
   Orders          Order[]
   StudentPresence StudentPresence[]
@@ -114,8 +114,9 @@ model Order {
   id        Int      @id @default(autoincrement())
   date      DateTime
   cost      Int
-  Dish      Dish?    @relation(fields: [dishId], references: [id])
-  dishId    Int?
+  isActive  Boolean  @default(false)
+  Dish      Dish     @relation(fields: [dishId], references: [id])
+  dishId    Int
   Student   Student  @relation(fields: [studentId], references: [id])
   studentId Int
 }

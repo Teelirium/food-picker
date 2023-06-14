@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -28,16 +28,18 @@ type TForm = {
 
 const AttendanceList: FC<AttendanceListProps> = ({ gradeId, presenceList, students }) => {
   const date = dayjs();
-
   const defaultPresenceSet = new Set(presenceList.map(({ studentId }) => studentId));
+  const { register, handleSubmit, setValue, watch } = useForm<TForm>();
+
   const defaultPresence = students.reduce((acc: Record<number, boolean>, { id }) => {
     acc[id] = defaultPresenceSet.has(id);
     return acc;
   }, {});
 
-  const { register, handleSubmit, setValue, watch } = useForm<TForm>({
-    defaultValues: { presence: defaultPresence },
-  });
+  useEffect(() => {
+    setValue('presence', defaultPresence);
+  }, [gradeId]);
+
   const search = watch('search') || '';
   const presence = watch('presence') || {};
 
@@ -66,6 +68,7 @@ const AttendanceList: FC<AttendanceListProps> = ({ gradeId, presenceList, studen
       const studentPresentList = Object.entries(updatedPresence)
         .filter(([, isPresent]) => isPresent)
         .map(([id]) => +id);
+
       return axios.put(
         '/api/students/presence',
         { students: studentPresentList },

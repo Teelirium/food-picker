@@ -24,7 +24,7 @@ const MyApp = ({ Component, pageProps }: AppProps<{ session: Session }>) => (
     <ReactQueryDevtools initialIsOpen={false} />
     <Toaster position="bottom-right">
       {(t) => (
-        <Notification onClick={() => toast.dismiss(t.id)} visible={t.visible} duration={t.duration}>
+        <Notification onClick={() => toast.dismiss(t.id)} {...t}>
           {resolveValue(t.message, t)}
         </Notification>
       )}
