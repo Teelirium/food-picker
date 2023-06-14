@@ -1,6 +1,5 @@
 import { DishType, Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { NextApiHandler } from 'next';
 import { z } from 'zod';
 
 import { OrderService } from 'modules/orders/service';
@@ -8,11 +7,11 @@ import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
 import { getServerSideSession } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
-import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
+import dateSchema from 'utils/schemas/dateSchema';
 import verifyRole from 'utils/verifyRole';
 
 const paramSchema = z.object({
-  day: dayOfWeekSchema.optional(),
+  date: dateSchema,
 });
 
 export type GradeInfo = Awaited<ReturnType<typeof handleGet>>;
@@ -43,9 +42,8 @@ export default withErrHandler(async (req, res) => {
 
   switch (req.method) {
     case 'GET': {
-      const { day } = paramSchema.parse(req.query);
-      const now = new Date();
-      const today = stripTimeFromDate(now);
+      const { date } = paramSchema.parse(req.query);
+      const today = stripTimeFromDate(date);
       const nextMonday = getNextMonday(today);
       const prevMonday = addDays(nextMonday, -7);
       const newData = await OrderService.getTotal(prevMonday, nextMonday);

@@ -21,7 +21,7 @@ const Orders: React.FC<Props> = ({ weekDay }) => {
   const router = useRouter();
   const [breakIndex, setBreakIndex] = useState(0);
 
-  const { data: orders, ...totalOrdersQuery } = useQuery(totalOrdersQueryOpts);
+  const { data: orders, ...totalOrdersQuery } = useQuery(totalOrdersQueryOpts(new Date()));
 
   return (
     <div className={styles.content}>

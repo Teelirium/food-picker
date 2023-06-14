@@ -22,7 +22,7 @@ export const OrderService = {
 
     const mapByGrades = groupBy(totals, (e) => e.Student.grade?.id);
 
-    const final = Object.fromEntries(
+    const total = Object.fromEntries(
       Object.entries(mapByGrades).map(([gradeId, entry]) => {
         const mapByDates = groupBy(entry, (e) => e.date.toISOString());
 
@@ -44,7 +44,6 @@ export const OrderService = {
       }),
     ) satisfies TotalOrders;
 
-    console.log(final);
-    return final;
+    return total;
   },
 };

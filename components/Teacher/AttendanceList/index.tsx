@@ -68,7 +68,7 @@ const AttendanceList: FC<AttendanceListProps> = ({ gradeId, presenceList, studen
       const studentPresentList = Object.entries(updatedPresence)
         .filter(([, isPresent]) => isPresent)
         .map(([id]) => +id);
-      console.log(studentPresentList);
+
       return axios.put(
         '/api/students/presence',
         { students: studentPresentList },
