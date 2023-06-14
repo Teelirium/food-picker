@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { DishService } from 'modules/dish/service';
 import { PreferenceWithDish } from 'modules/preference/types';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -26,7 +26,7 @@ const bodySchema = z.object({
  *    summary: Добавляет блюдо в стандартное меню
  */
 const handler: NextApiHandler = async (req, res) => {
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) {
     return res.status(401).send('');
   }

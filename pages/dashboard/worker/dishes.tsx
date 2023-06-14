@@ -12,7 +12,7 @@ import Dishes from 'components/WorkerPage/Dishes';
 import AddDishModal from 'components/WorkerPage/Dishes/AddDishModal';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import styles from 'styles/worker.module.css';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -29,7 +29,7 @@ const querySchema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {

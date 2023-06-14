@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 
 import Button from 'components/Button';
 import Checkbox from 'components/Checkbox';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import { trpc } from 'utils/trpc/client';
 import verifyRole from 'utils/verifyRole';
 
@@ -18,7 +18,7 @@ import dishCircleImage from '../public/img/authDishCircle.png';
 import styles from './login.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
   if (!session) {
     return {
       props: {},

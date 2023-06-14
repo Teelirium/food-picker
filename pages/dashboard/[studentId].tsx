@@ -22,7 +22,7 @@ import styles from 'styles/studentChoice.module.scss';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import dayMap from 'utils/dayMap';
 import dishTypeMap from 'utils/dishTypeMap';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import { toRubles } from 'utils/localisation';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -35,7 +35,7 @@ const paramSchema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['PARENT', 'ADMIN'])) {
     return {

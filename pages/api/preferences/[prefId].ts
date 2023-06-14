@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import prisma from 'utils/prismaClient';
 import verifyRole from 'utils/verifyRole';
@@ -16,7 +16,7 @@ const handler: NextApiHandler = async (req, res) => {
   });
   if (!preference || preference.studentId === null) return res.status(404).send('');
 
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) return res.status(401).send('');
 
   const allowed = verifyRole(session, ['PARENT', 'ADMIN']);

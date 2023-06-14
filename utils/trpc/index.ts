@@ -4,12 +4,12 @@ import SuperJSON from 'superjson';
 import { z } from 'zod';
 
 import { UserRole } from 'types/UserData';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema, { idObjectSchema } from 'utils/schemas/idSchema';
 
 export const createContext = async (opts: CreateNextContextOptions) => {
-  const session = await getServerSideSession(opts);
+  const session = await getServerSessionWithOpts(opts);
   return {
     session,
   };

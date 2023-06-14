@@ -3,13 +3,13 @@ import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
 import { UserFormData, UserRole } from '../types/UserData';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['ADMIN'])) {
     return {

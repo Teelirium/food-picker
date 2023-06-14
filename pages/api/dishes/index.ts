@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { DishService } from 'modules/dish/service';
 import { DishFormData } from 'modules/dish/types';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dishTypeSchema from 'utils/schemas/dishTypeSchema';
 import verifyRole from 'utils/verifyRole';
@@ -22,7 +22,7 @@ const paramSchema = z.object({
  *    summary: Добавляет блюдо в базу данных.
  */
 export default withErrHandler(async (req, res) => {
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
   const isWorkerOrAdmin = verifyRole(session, ['WORKER', 'ADMIN']);

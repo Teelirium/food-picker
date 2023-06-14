@@ -12,7 +12,7 @@ import { DishService } from 'modules/dish/service';
 import { useSetPreferenceMutation } from 'modules/preference/mutations';
 import styles from 'styles/dishes.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
@@ -28,7 +28,7 @@ const paramSchema = z.object({
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { type, studentId } = paramSchema.parse(ctx.query);
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (
     !session ||

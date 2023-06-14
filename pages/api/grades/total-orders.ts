@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { OrderService } from 'modules/orders/service';
 import { addDays, getNextMonday, stripTimeFromDate } from 'utils/dateHelpers';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
 import verifyRole from 'utils/verifyRole';
@@ -31,7 +31,7 @@ type DishWithOrders = Prisma.DishGetPayload<{
  *      description: Дата, относительно её возвращаются заказы на неделю
  */
 export default withErrHandler(async (req, res) => {
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
 
   if (!session) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });

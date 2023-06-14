@@ -11,7 +11,7 @@ import { DishService } from 'modules/dish/service';
 import { useSetPreferenceMutation } from 'modules/preference/mutations';
 import styles from 'styles/dishInfo.module.scss';
 import dishTypeMap from 'utils/dishTypeMap';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import { toRubles } from 'utils/localisation';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
@@ -26,7 +26,7 @@ const querySchema = z.object({
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { dishId, day, studentId } = querySchema.parse(ctx.query);
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (
     !session ||

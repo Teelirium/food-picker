@@ -10,7 +10,7 @@ import DebtList from 'components/Teacher/DebtList';
 import Navibar from 'components/Teacher/Navibar';
 import TeacherModal from 'components/Teacher/TeacherModal';
 import styles from 'styles/teacher.module.scss';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import { getFullName, getInitials } from 'utils/names';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
@@ -31,7 +31,7 @@ const serverParamSchema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['TEACHER'])) {
     return {

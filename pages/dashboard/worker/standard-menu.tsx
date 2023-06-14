@@ -5,13 +5,13 @@ import Head from 'next/head';
 import LeftSideNavibar from 'components/SideNavibar';
 import StandardMenu from 'components/WorkerPage/StandardMenu';
 import styles from 'styles/worker.module.css';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {

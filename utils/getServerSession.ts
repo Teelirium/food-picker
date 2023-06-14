@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 
 import { options } from 'pages/api/auth/[...nextauth]';
 
-export async function getServerSideSession(
+export async function getServerSessionWithOpts(
   ctx: GetServerSidePropsContext | { req: NextApiRequest; res: NextApiResponse },
 ) {
   const session = await getServerSession(ctx.req, ctx.res, options);

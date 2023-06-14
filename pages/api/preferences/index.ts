@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import withErrHandler from 'utils/errorUtils/withErrHandler';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import isParentOf from 'utils/isParentOf';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
@@ -16,7 +16,7 @@ const paramSchema = z.object({
 export default withErrHandler(async (req, res) => {
   const { day, studentId } = paramSchema.parse(req.query);
 
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) return res.status(401).send('');
 
   const isParent = await isParentOf(session, studentId);

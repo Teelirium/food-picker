@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { DishService } from 'modules/dish/service';
 import { PartialDish } from 'modules/dish/types';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import idSchema from 'utils/schemas/idSchema';
 import verifyRole from 'utils/verifyRole';
@@ -24,7 +24,7 @@ export default withErrHandler(async (req, res) => {
     throw new TRPCError({ code: 'BAD_REQUEST' });
   }
 
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }

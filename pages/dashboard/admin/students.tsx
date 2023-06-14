@@ -5,13 +5,13 @@ import { useRouter } from 'next/router';
 
 import LeftSideNavibar from 'components/SideNavibar';
 import styles from 'styles/admin.module.scss';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import verifyRole from 'utils/verifyRole';
 
 const prisma = new PrismaClient();
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {

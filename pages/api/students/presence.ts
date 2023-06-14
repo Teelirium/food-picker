@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { PresenceService } from 'modules/presence/service';
 import HttpError from 'utils/errorUtils/HttpError';
 import withErrHandler from 'utils/errorUtils/withErrHandler';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dateSchema from 'utils/schemas/dateSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -51,7 +51,7 @@ async function verify(session: Session, gradeId: number) {
  *    summary: Удаляет все записи об присутствии ученика в некоторый день
  */
 export default withErrHandler(async (req, res) => {
-  const session = await getServerSideSession({ req, res });
+  const session = await getServerSessionWithOpts({ req, res });
   if (!session) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }

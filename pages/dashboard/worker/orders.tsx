@@ -7,7 +7,7 @@ import LeftSideNavibar from 'components/SideNavibar';
 import DishAboutModal from 'components/WorkerPage/DishAboutModal';
 import Orders from 'components/WorkerPage/Orders';
 import styles from 'styles/worker.module.css';
-import { getServerSideSession } from 'utils/getServerSession';
+import { getServerSessionWithOpts } from 'utils/getServerSession';
 import prisma from 'utils/prismaClient';
 import dayOfWeekSchema from 'utils/schemas/dayOfWeekSchema';
 import idSchema from 'utils/schemas/idSchema';
@@ -20,7 +20,7 @@ const paramSchema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const session = await getServerSideSession(ctx);
+  const session = await getServerSessionWithOpts(ctx);
 
   if (!session || !verifyRole(session, ['WORKER', 'ADMIN'])) {
     return {
