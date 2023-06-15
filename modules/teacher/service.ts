@@ -1,5 +1,6 @@
 import { hashSync } from 'bcryptjs';
 
+import { GradeInfo } from 'modules/grade/types';
 import { excludeMut } from 'utils/exclude';
 import prisma from 'utils/prismaClient';
 
@@ -41,6 +42,28 @@ export const TeacherService = {
     });
     const teacherDto = excludeMut(newTeacher, ['password']) satisfies TeacherDto;
     return teacherDto;
+  },
+
+  async createMany(teachers: (TeacherCreateForm & GradeInfo)[]) {
+    const actions = teachers.map((t) => {
+      return prisma.teacher.create({
+        data: {
+          surname: t.surname,
+          name: t.name,
+          middleName: t.middleName,
+          username: t.username,
+          password: hashSync(t.password, 12),
+          Grades: {
+            create: {
+              breakIndex: t.breakIndex,
+              letter: t.letter,
+              number: t.number,
+            },
+          },
+        },
+      });
+    });
+    return prisma.$transaction(actions);
   },
 
   async update(teacher: TeacherUpdateForm) {

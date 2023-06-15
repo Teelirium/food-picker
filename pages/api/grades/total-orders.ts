@@ -14,7 +14,7 @@ const paramSchema = z.object({
   date: dateSchema,
 });
 
-export type GradeInfo = Awaited<ReturnType<typeof handleGet>>;
+export type GradeOrderInfo = Awaited<ReturnType<typeof handleGet>>;
 
 type DishWithOrders = Prisma.DishGetPayload<{
   select: { id: true; name: true; weightGrams: true; type: true };

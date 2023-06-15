@@ -12,6 +12,12 @@ export const WorkerService = {
     return workerDtos;
   },
 
+  async getAllWorkers() {
+    const workers = await prisma.worker.findMany({ where: { role: 'WORKER' } });
+    const workerDtos = workers.map((w) => excludeMut(w, ['password'])) satisfies WorkerDto[];
+    return workerDtos;
+  },
+
   async getById(id: number) {
     const worker = await prisma.worker.findUnique({ where: { id } });
     if (!worker) return worker;

@@ -1,0 +1,204 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  padding: 15px 15px 0 40px;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex-basis: 710px;
+  background: #181818;
+  border-radius: 20px;
+
+  label {
+    margin-bottom: 2rem;
+  }
+
+  span {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 29px;
+    color: #fff;
+  }
+}
+
+.header {
+  position: relative;
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-around;
+  color: #fff;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  cursor: default;
+  user-select: none;
+  margin-bottom: 2rem;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+  background: black;
+  box-shadow: inset 0 4px 4px rgb(0 0 0 / 25%);
+  user-select: none;
+  cursor: pointer;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 20px 32px;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.formInput {
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background: #181818;
+  color: #fff;
+  padding: 4px 14px;
+  width: 100%;
+  font-size: 18px;
+}
+
+.inputBorder {
+  display: inline-flex;
+  background: linear-gradient(to right, #3e1f47, #144552);
+  padding: 2px;
+  border-radius: 30px;
+}
+
+.formUsername {
+  color: #fff;
+}
+
+.children {
+  display: grid;
+  grid-template-columns: 30px 1fr 40px 30px;
+  gap: 8px 16px;
+  font-size: 18px;
+  color: #fff;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.child {
+  &Number {
+    color: #565756;
+  }
+
+  &Remove {
+    &Button {
+      background: linear-gradient(269.98deg, #4b0808 0.02%, #6e1b05 99.98%);
+      border-radius: 30px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 21px;
+        height: 21px;
+      }
+    }
+  }
+}
+
+.addChildButton {
+  background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  border-radius: 30px;
+  color: #fff;
+  align-self: flex-end;
+  padding: 8px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.formBtns {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  align-items: center;
+  justify-content: space-between;
+  width: 400px;
+  margin-bottom: 15px;
+}
+
+.submitBtn {
+  min-height: 50px;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, #272640 0%, #3e1f47 100%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  border-radius: 30px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.removeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(269.98deg, #4b0808 0.02%, #6e1b05 99.98%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  padding: 10px 18px;
+  min-height: 50px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 30px;
+  gap: 6px;
+
+  svg {
+    height: 28px;
+  }
+}
+
+.cancelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 10px 18px;
+  background: linear-gradient(270deg, #272640 0%, #144552 100%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 35%);
+  border-radius: 30px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  user-select: none;
+  cursor: pointer;
+}

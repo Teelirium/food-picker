@@ -1,0 +1,75 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.stickyTop {
+  position: sticky;
+  top: 0;
+}
+
+.head,
+.search {
+  padding-bottom: 10px;
+  display: grid;
+  align-items: end;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  width: fit-content;
+  min-width: 100%;
+  background: #1e1e1e;
+
+  & > div {
+    padding: 5px 11px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 22px;
+  }
+}
+
+.search {
+  &HiddenSubmitButton {
+    display: none;
+    position: absolute;
+  }
+}
+
+.body {
+  display: grid;
+  row-gap: 15px;
+}
+
+.row {
+  display: grid;
+  border: 1px solid var(--border-grey);
+  border-radius: 10px;
+  min-height: 53px;
+  background-color: #212121;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  width: 100%;
+  box-sizing: border-box;
+
+  &Error {
+    background-color: var(--background-red);
+  }
+}
+
+.cell {
+  padding: 5px 11px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 18px;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-grey);
+  }
+
+  &Actions {
+    display: flex;
+
+    button {
+      line-height: 0;
+    }
+  }
+}

@@ -9,6 +9,7 @@ export const gradeNameSchema = z.object({
   number: z.number(),
 });
 export type GradeName = z.infer<typeof gradeNameSchema>;
+export type GradeInfo = GradeName & { breakIndex: number };
 
 export const gradeNamePartialSchema = gradeNameSchema.partial();
 export type GradeNamePartial = z.infer<typeof gradeNamePartialSchema>;

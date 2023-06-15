@@ -6,7 +6,7 @@ import { FC } from 'react';
 import ThinButton from 'components/ThinButton';
 import DishCard from 'components/WorkerPage/Dishes/DishCard';
 import { PlusIcon } from 'components/ui/Icons';
-import dishTypeMap from 'utils/dishTypeMap';
+import dishTypeMap from 'modules/dish/dishTypeMap';
 import mealTimeMap from 'utils/mealTimeMap';
 
 import styles from './styles.module.scss';
