@@ -10,12 +10,14 @@ import optionFinder from 'utils/selectOptionFinder';
 import { trpc } from 'utils/trpc/client';
 
 import styles from './styles.module.scss';
+import Icon from 'components/Icon';
 
 interface Props {
   method: ModalMethod;
   student?: Student;
   close: () => void;
   grades: Grade[];
+  onChangeStudent: () => void;
 }
 
 type TForm = {
@@ -25,7 +27,7 @@ type TForm = {
   gradeId: number;
 };
 
-const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
+const SetStudentModal: FC<Props> = ({ method, student, close, grades, onChangeStudent }) => {
   const { register, handleSubmit, control } = useForm<TForm>({
     defaultValues: {
       surname: student?.surname,
@@ -39,6 +41,7 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
     onError: () => toast.error('При создании ученика возникла ошибка'),
     onSuccess: () => {
       toast.success('Ученик успешно создан');
+      onChangeStudent();
       close();
     },
   });
@@ -46,6 +49,7 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
     onError: () => toast.error('При обновлении данных ученика возникла ошибка'),
     onSuccess: () => {
       toast.success('Ученик успешно сохранен');
+      onChangeStudent();
       close();
     },
   });
@@ -53,6 +57,7 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
     onError: () => toast.error('Не удалось удалить ученика'),
     onSuccess: () => {
       toast.success('Ученик успешно удален');
+      onChangeStudent();
       close();
     },
   });
@@ -81,7 +86,7 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
       <div className={styles.container}>
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.header}>
-            {method === 'POST' ? 'Добавление' : 'Редактирование'} профиля ученика
+            {method === 'POST' ? 'Добавление' : 'Редактирование'} ученика
             <div className={styles.closeBtn} onClick={close}>
               <img src="/img/close.png" alt="close" width={20} height={20} />
             </div>
@@ -104,30 +109,35 @@ const SetStudentModal: FC<Props> = ({ method, student, close, grades }) => {
             </div>
 
             <span>Класс:</span>
-            <Controller
-              name="gradeId"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  options={gradeOptions}
-                  value={optionFinder(gradeOptions, field.value)}
-                  onChange={(val: any) => field.onChange(val?.value)}
-                  ref={field.ref}
-                  placeholder="Класс"
-                />
-              )}
-            />
+            <div className={styles.inputBorder}>
+              <Controller
+                name="gradeId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    options={gradeOptions}
+                    value={optionFinder(gradeOptions, field.value)}
+                    onChange={(val: any) => field.onChange(val?.value)}
+                    ref={field.ref}
+                    placeholder="Класс"
+                    classNamePrefix="setStudentSelect"
+                    className={styles.setStudentSelect}
+                  />
+                )}
+              />
+            </div>
           </div>
 
           <div className={styles.formBtns}>
-            <div className={styles.cancelBtn} onClick={close}>
-              Отмена
-            </div>
             {method === 'UPDATE' && student ? (
               <div className={styles.removeBtn} onClick={() => onDelete(student.id)}>
+                <Icon.Trash />
                 Удалить
               </div>
             ) : null}
+            <div className={styles.cancelBtn} onClick={close}>
+              Отмена
+            </div>
             <button className={styles.submitBtn} type="submit">
               Сохранить
             </button>

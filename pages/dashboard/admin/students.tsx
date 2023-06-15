@@ -1,5 +1,5 @@
 import { GetServerSideProps, NextPage } from 'next';
-import { Grade, PrismaClient, Student } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -16,6 +16,8 @@ import styles from 'styles/adminStudents.module.scss';
 import Table, { TColumn } from 'components/Table';
 import Pagination, { usePagination } from 'components/Pagination';
 import SetStudentModal from 'components/AdminPage/SetStudentModal';
+import { trpc } from 'utils/trpc/client';
+import Icon from 'components/Icon';
 
 const prisma = new PrismaClient();
 
@@ -36,29 +38,23 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       id: +session.user.id,
     },
   });
-  const students = await prisma.student.findMany();
-  const grades = await prisma.grade.findMany();
   const adminName = `${adminData?.surname} ${adminData?.name} ${adminData?.middleName}`;
 
   return {
     props: {
       adminName,
-      students,
-      grades,
     },
   };
 };
 
 type Props = {
   adminName: string;
-  students: Student[];
-  grades: Grade[];
 };
 
 type TForm = {
   search: string;
 };
-const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
+const StudentsPage: NextPage<Props> = ({ adminName }) => {
   const router = useRouter();
 
   const { register, control } = useForm<TForm>({
@@ -66,26 +62,35 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
   });
   const search = useWatch({ control, name: 'search' });
 
-  const groupedGradesDict = groupBy(grades, 'number');
+  const { data: students, refetch: refetchStudents } = trpc.students.getAll.useQuery({});
+  const { data: grades, refetch: refetchGrades } = trpc.grades.getAll.useQuery({});
+
+  const sortedGrades = (grades || []).sort((a, b) => {
+    const classNumbersDifference = a.number - b.number;
+    if (classNumbersDifference !== 0) return classNumbersDifference;
+
+    const classLetterDifference = a.letter.localeCompare(b.letter);
+    return classLetterDifference;
+  });
+
+  const groupedGradesDict = groupBy(sortedGrades, 'number');
   const groupedGrades = Object.entries(groupedGradesDict);
 
   const [currentGradeNumber, setCurrentGradeNumber] = useState<string>();
   const [currentGradeLetter, setCurrentGradeLetter] = useState<string>();
 
-  const filteredStudents = students.filter((student) => {
+  const filteredStudents = (students || []).filter((student) => {
     if (!student.surname.toLowerCase().includes(search.toLowerCase())) return false;
-    const studentGrade = grades.find(({ id }) => id === student.gradeId);
-    if (!studentGrade) return false;
     if (!currentGradeNumber) return true;
-    if (studentGrade.number.toString() !== currentGradeNumber) return false;
+    if (student.grade?.number.toString() !== currentGradeNumber) return false;
     if (!currentGradeLetter) return true;
-    return studentGrade.letter === currentGradeLetter;
+    return student.grade?.letter === currentGradeLetter;
   });
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [openedPerson, setOpenedPerson] = useState<Student>();
+  const [openedStudent, setOpenedPerson] = useState<NonNullable<typeof students>[number]>();
 
-  const tableColumns: TColumn<Student>[] = [
+  const tableColumns: TColumn<NonNullable<typeof students>[number]>[] = [
     {
       key: 'surname',
       title: 'Фамилия',
@@ -101,10 +106,7 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
     {
       key: 'grade',
       title: 'Класс',
-      render: ({ record: student }) => {
-        const grade = grades.find(({ id }) => id === student.gradeId);
-        return grade ? `${grade.number} ${grade.letter}` : null;
-      },
+      render: ({ record: student }) => `${student.grade?.number} ${student.grade?.letter}`,
     },
     {
       key: 'debt',
@@ -133,6 +135,11 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
   const setGradeLetter = (letter: string) => {
     setCurrentGradeLetter(letter !== currentGradeLetter ? letter : undefined);
     setPagination({ current: 1 });
+  };
+
+  const refetchAllData = () => {
+    refetchStudents();
+    refetchGrades();
   };
 
   return (
@@ -218,7 +225,8 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
                       setIsOpenModal(true);
                     }}
                   >
-                    Добавить пользователя
+                    <Icon.Plus />
+                    Добавить ученика
                   </button>
                   <button type="button" className={styles.buttonExportExcel}>
                     Выгрузить в Excel
@@ -233,9 +241,10 @@ const StudentsPage: NextPage<Props> = ({ adminName, students, grades }) => {
       {isOpenModal && (
         <SetStudentModal
           close={() => setIsOpenModal(false)}
-          method={openedPerson ? 'UPDATE' : 'POST'}
-          student={openedPerson}
-          grades={grades}
+          method={openedStudent ? 'UPDATE' : 'POST'}
+          student={openedStudent}
+          grades={grades || []}
+          onChangeStudent={refetchAllData}
         />
       )}
     </>

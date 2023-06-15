@@ -14,6 +14,7 @@ import verifyRole from 'utils/verifyRole';
 import styles from 'styles/adminWorkers.module.scss';
 import SetWorkerModal from 'components/AdminPage/SetWorkerModal';
 import { trpc } from 'utils/trpc/client';
+import Icon from 'components/Icon';
 
 const prisma = new PrismaClient();
 
@@ -152,6 +153,7 @@ const WorkersPage: NextPage<Props> = ({ adminName }) => {
                     setIsOpenModal(true);
                   }}
                 >
+                  <Icon.Plus />
                   Добавить пользователя
                 </button>
                 <button type="button" className={styles.buttonExportExcel}>

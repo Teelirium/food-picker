@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { ModalMethod } from 'utils/schemas/modalMethodSchema';
 import ModalWrapper from 'components/ModalWrapper';
 import { trpc } from 'utils/trpc/client';
+import Icon from 'components/Icon';
 
 import styles from './styles.module.scss';
 
@@ -160,14 +161,15 @@ const SetWorkerModal: FC<Props> = ({ method, person, personType, close, onChange
           </div>
 
           <div className={styles.formBtns}>
-            <div className={styles.cancelBtn} onClick={close}>
-              Отмена
-            </div>
             {method === 'UPDATE' && person ? (
               <div className={styles.removeBtn} onClick={() => onDelete(person.id)}>
+                <Icon.Trash />
                 Удалить
               </div>
             ) : null}
+            <div className={styles.cancelBtn} onClick={close}>
+              Отмена
+            </div>
             <button className={styles.submitBtn} type="submit">
               {method === 'POST' ? 'Создать' : 'Сохранить'}
             </button>

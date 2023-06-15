@@ -10,6 +10,7 @@ import ModalWrapper from 'components/ModalWrapper';
 import optionFinder from 'utils/selectOptionFinder';
 import { trpc } from 'utils/trpc/client';
 import { getFullName } from 'utils/names';
+import Icon from 'components/Icon';
 
 import styles from './styles.module.scss';
 
@@ -145,6 +146,8 @@ const SetClassModal: FC<Props> = ({ method, grade, teachers, close, onChangeGrad
                     onChange={(val: any) => field.onChange(val?.value)}
                     ref={field.ref}
                     placeholder="Учитель"
+                    classNamePrefix="setClassSelect"
+                    className={styles.setClassSelect}
                   />
                 )}
               />
@@ -171,14 +174,15 @@ const SetClassModal: FC<Props> = ({ method, grade, teachers, close, onChangeGrad
           </div>
 
           <div className={styles.formBtns}>
-            <div className={styles.cancelBtn} onClick={close}>
-              Отмена
-            </div>
             {method === 'UPDATE' && grade ? (
               <div className={styles.removeBtn} onClick={() => onDelete(grade.id)}>
+                <Icon.Trash />
                 Удалить
               </div>
             ) : null}
+            <div className={styles.cancelBtn} onClick={close}>
+              Отмена
+            </div>
             <button className={styles.submitBtn} type="submit">
               Сохранить
             </button>

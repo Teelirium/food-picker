@@ -14,6 +14,7 @@ import Pagination, { usePagination } from 'components/Pagination';
 import { trpc } from 'utils/trpc/client';
 import { getFullName } from 'utils/names';
 import SetClassModal from 'components/AdminPage/SetClassModal';
+import Icon from 'components/Icon';
 
 const prisma = new PrismaClient();
 
@@ -136,6 +137,7 @@ const ClassesPage: NextPage<Props> = ({ adminName }) => {
                     classModal.open();
                   }}
                 >
+                  <Icon.Plus />
                   Добавить класс
                 </button>
                 <button type="button" className={styles.buttonExportExcel}>

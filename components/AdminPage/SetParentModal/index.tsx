@@ -94,16 +94,16 @@ const SetParentModal: FC<Props> = ({ method, parent, close, students, onChangePa
     }
   });
 
-  const deleteChild = (studentId: number) => {
-    setStudentIds((studentIds) => studentIds.filter((id) => id !== studentId));
-  };
-
-  const onDelete = (studentId: number) => {
-    deleteParentMutation.mutate({ id: studentId });
+  const onDelete = (parentId: number) => {
+    deleteParentMutation.mutate({ id: parentId });
   };
 
   const addChild = (studentId: number) => {
     setStudentIds((studentIds) => [...studentIds, studentId]);
+  };
+
+  const deleteChild = (studentId: number) => {
+    setStudentIds((studentIds) => studentIds.filter((id) => id !== studentId));
   };
 
   return (
@@ -112,7 +112,7 @@ const SetParentModal: FC<Props> = ({ method, parent, close, students, onChangePa
         <div className={styles.container}>
           <form className={styles.form} onSubmit={onSubmit}>
             <div className={styles.header}>
-              {method === 'POST' ? 'Добавление' : 'Редактирование'} профиля ученика
+              {method === 'POST' ? 'Добавление' : 'Редактирование'} профиля родителя
               <div className={styles.closeBtn} onClick={close}>
                 <img src="/img/close.png" alt="close" width={20} height={20} />
               </div>
@@ -180,18 +180,20 @@ const SetParentModal: FC<Props> = ({ method, parent, close, students, onChangePa
               className={styles.addChildButton}
               onClick={studentExplorerModal.open}
             >
+              <Icon.PlusCircle />
               Добавить ребенка
             </button>
 
             <div className={styles.formBtns}>
-              <div className={styles.cancelBtn} onClick={close}>
-                Отмена
-              </div>
               {method === 'UPDATE' && parent ? (
                 <div className={styles.removeBtn} onClick={() => onDelete(parent.id)}>
+                  <Icon.Trash />
                   Удалить
                 </div>
               ) : null}
+              <div className={styles.cancelBtn} onClick={close}>
+                Отмена
+              </div>
               <button className={styles.submitBtn} type="submit">
                 Сохранить
               </button>

@@ -16,6 +16,7 @@ import Pagination, { usePagination } from 'components/Pagination';
 import Table, { TColumn } from 'components/Table';
 import SetParentModal from 'components/AdminPage/SetParentModal';
 import useModal from 'hooks/useModal';
+import Icon from 'components/Icon';
 
 const prisma = new PrismaClient();
 
@@ -153,6 +154,7 @@ const ParentsPage: NextPage<PageProps> = ({ adminName }) => {
                     parentModal.open();
                   }}
                 >
+                  <Icon.Plus />
                   Добавить пользователя
                 </button>
                 <button type="button" className={styles.buttonExportExcel}>
