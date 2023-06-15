@@ -1,0 +1,51 @@
+.list {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  margin: 16px;
+}
+
+.navButton {
+  color: #cdcdcd;
+  height: 36px;
+  width: 36px;
+  border-radius: 6px;
+  line-height: 0;
+  transition: 0.25s;
+
+  &:disabled {
+    color: #999;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 24px;
+  }
+
+  &List {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.numList {
+  display: flex;
+  gap: 4px;
+}
+
+.pageButton {
+  color: #888;
+  font-size: 19px;
+  font-weight: 600;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 6px;
+  padding: 0 6px;
+  transition: 0.25s;
+
+  &Current {
+    background: var(--main);
+    color: #fff;
+  }
+}

@@ -13,6 +13,11 @@ export const workersRouter = router({
     return workers;
   }),
 
+  getAllWorkers: procedure.use(auth(['ADMIN'])).query(async () => {
+    const workers = await WorkerService.getAllWorkers();
+    return workers;
+  }),
+
   getById: procedure
     .use(auth(['ADMIN', 'WORKER']))
     .use(authSelfAccess('WORKER'))

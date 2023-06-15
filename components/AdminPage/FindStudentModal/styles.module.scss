@@ -1,0 +1,120 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 500px;
+  max-width: 500px;
+  background: #181818;
+  border-radius: 20px;
+
+  label {
+    margin-bottom: 2rem;
+  }
+
+  span {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #fff;
+  }
+}
+
+.header {
+  position: relative;
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-around;
+  color: #fff;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  cursor: default;
+  user-select: none;
+  margin-bottom: 2rem;
+}
+
+.searchLine {
+  &Wrapper {
+    flex: 1;
+    position: relative;
+    border: 2px solid #3d3d3d;
+    border-radius: 20px;
+  }
+
+  &Input {
+    background: transparent;
+    font-size: 18px;
+    width: 100%;
+    outline: none;
+    color: #fff;
+    padding: 6px 12px 6px 42px;
+
+    @media (max-width: 992px) {
+      font-size: 16px;
+    }
+
+    &::placeholder {
+      color: #b2b2b2;
+    }
+  }
+
+  &Icon {
+    position: absolute;
+    left: 12px;
+    top: 9px;
+    width: 21px;
+    height: 21px;
+
+    & > span {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.table :global {
+  .table {
+    &__head,
+    &__row {
+      grid-template-columns: minmax(300px, 3fr) minmax(80px, 1fr);
+    }
+
+    &__row {
+      cursor: pointer;
+    }
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+  background: black;
+  box-shadow: inset 0 4px 4px rgb(0 0 0 / 25%);
+  user-select: none;
+  cursor: pointer;
+}

@@ -9,7 +9,15 @@ import { unwrapStudents } from './util';
 
 export const ParentService = {
   async getAll() {
-    const parents = await prisma.parent.findMany({});
+    const parents = await prisma.parent.findMany({
+      include: {
+        parentStudent: {
+          include: {
+            student: { include: { grade: true } },
+          },
+        },
+      },
+    });
     const parentDtos = parents.map((p) => excludeMut(p, ['password'])) satisfies ParentDto[];
     return parentDtos;
   },
